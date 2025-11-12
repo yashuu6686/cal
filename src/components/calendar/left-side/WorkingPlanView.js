@@ -23,6 +23,13 @@ import dayjs from "dayjs";
 // import CommonErrorDialogBox from "@/components/CommonDialogBox";
 import { toast } from "react-toastify";
 import CommonDialogBox from "@/components/CommonDialogBox";
+import {
+  addSlotToDay,
+  removeSlotFromDay,
+  updateSlotInDay,
+  updateEvents,
+} from "@/redux/store/slices/calendarSlice";
+
 
 
 const days = [
@@ -67,31 +74,19 @@ const WorkingPlanView = ({ disabled = false }) => {
       serviceType: "",
     };
 
-    dispatch({
-      type: "calendar/addSlotToDay",
-      payload: { day, slot: newSlot },
-    });
+   dispatch(addSlotToDay({ day, slot: newSlot }));
     
   };
 
   const handleDeleteSlot = (day, slotId) => {
-    dispatch({
-      type: "calendar/removeSlotFromDay",
-      payload: { day, slotId },
-    });
-    dispatch({
-      type: "calendar/updateEvents",
-    });
+   dispatch(removeSlotFromDay({ day, slotId }));
+dispatch(updateEvents());
     setOpenDelete(false);
     setSlotToDelete(null);
   };
 
   const handleSlotChange = (day, slotId, field, value) => {
-    dispatch({
-      type: "calendar/updateSlotInDay",
-      payload: { day, slotId, field, value },
-
-    });
+   dispatch(updateSlotInDay({ day, slotId, field, value }));
     
   };
 
@@ -142,7 +137,7 @@ const flattenErrors = (obj, result = []) => {
         <Box
           sx={{
             background: "rgb(198, 228, 251)",
-            p: 1,
+            p: 0.6,
             borderRadius: 3,
             border: "1px solid #90caf9",
             mb: 1,
@@ -185,8 +180,8 @@ const flattenErrors = (obj, result = []) => {
                     alignItems: "center",
                     justifyContent: "space-between",
                     bgcolor: "#f5f9ff",
-                    px: 2,
-                    py: 1,
+                    px: 1,
+                    py: 0.5,
                   }}
                 >
                   <Stack direction="row" alignItems="center" spacing={2}>
@@ -243,7 +238,7 @@ const flattenErrors = (obj, result = []) => {
                 </Box>
 
                 {/* Slots Content */}
-                <Box sx={{ p: 2 }}>
+                <Box sx={{ p: 1 }}>
                   {daySlots.length === 0 ? (
                     <Typography
                       variant="body2"
@@ -294,6 +289,7 @@ const flattenErrors = (obj, result = []) => {
                                   gap: 1,
                                 }}
                               >
+                                
                                 <TextField
                                   select
                                   disabled={disabled}

@@ -10,7 +10,8 @@ import {
   ortho,
   tooth,
   cardio,
-} from "../../../../pages/tables/component/index";
+} from "../../../../pages/tables/component/";
+
 import axios from "axios";
 
 export const createDoctorCalendar = createAsyncThunk(
@@ -50,12 +51,16 @@ export const createDoctorCalendar = createAsyncThunk(
           day: dayObj.day,
           breaks: state.breaks
             .filter((b) => b.days?.includes(dayObj.day))
-            .map((b) => ({
-              breakStartTime: b.startTime
-                ? dayjs(b.startTime).format("HH:mm")
-                : null,
-              breakEndTime: b.endTime ? dayjs(b.endTime).format("HH:mm") : null,
-            })),
+            .map((b) => {
+              const start = dayjs(b.startTime);
+              const end = dayjs(b.endTime);
+              return {
+                breakStartTime:
+                  b.startTime && start.isValid() ? start.format("HH:mm") : null,
+                breakEndTime:
+                  b.endTime && end.isValid() ? end.format("HH:mm") : null,
+              };
+            }),
           services: dayObj.slots.map((slot) => ({
             keyIdentifier:
               slot.serviceType === "Video Call"
@@ -88,7 +93,7 @@ export const createDoctorCalendar = createAsyncThunk(
   }
 );
 
-// ✅ Helper Functions
+
 const dayToNumber = {
   Sunday: 0,
   Monday: 1,
@@ -107,11 +112,6 @@ const getNextDayOfWeek = (dayNum) => {
   return now.clone().add(daysToAdd, "days");
 };
 
-const generateObjectId = () => {
-  const timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
-  const randomValue = Math.random().toString(16).substring(2, 18);
-  return (timestamp + randomValue).substring(0, 24);
-};
 
 const initialState = {
   dataOfService: [
@@ -181,21 +181,20 @@ const calendarSlice = createSlice({
   initialState,
   reducers: {
     // ===== SERVICE & SPECIALITY ACTIONS =====
-   toggleService: (state, action) => {
-  const service = action.payload;
-  const exists = state.selectedServices.some(
-    (s) => s.type === service.type && s.time === service.time
-  );
+    toggleService: (state, action) => {
+      const service = action.payload;
+      const exists = state.selectedServices.some(
+        (s) => s.type === service.type && s.time === service.time
+      );
 
-  if (exists) {
-    state.selectedServices = state.selectedServices.filter(
-      (s) => !(s.type === service.type && s.time === service.time)
-    );
-  } else {
-    state.selectedServices.push(service);
-  }
-},
-
+      if (exists) {
+        state.selectedServices = state.selectedServices.filter(
+          (s) => !(s.type === service.type && s.time === service.time)
+        );
+      } else {
+        state.selectedServices.push(service);
+      }
+    },
 
     toggleSpeciality: (state, action) => {
       const speciality = action.payload;
@@ -273,10 +272,8 @@ const calendarSlice = createSlice({
       const duration = service ? parseInt(service.time) : 15;
       const newSlotId = nanoid();
 
-     const slotSpeciality =
-  speciality ||
-  state.selectedSpecialities.map((s) => s.type) ||
-  ["General"];
+      const slotSpeciality = speciality ||
+        state.selectedSpecialities.map((s) => s.type) || ["General"];
 
       state.weekSchedule = state.weekSchedule.map((item) =>
         days.includes(item.day)
@@ -431,11 +428,11 @@ const calendarSlice = createSlice({
                   .toDate()
               : null,
             serviceType: slot.serviceType,
-           specialities: Array.isArray(slot.speciality)
-  ? slot.speciality
-  : typeof slot.speciality === "string"
-  ? slot.speciality.split(",").map(s => s.trim())
-  : [],
+            specialities: Array.isArray(slot.speciality)
+              ? slot.speciality
+              : typeof slot.speciality === "string"
+              ? slot.speciality.split(",").map((s) => s.trim())
+              : [],
           });
         });
       });

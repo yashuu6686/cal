@@ -5,15 +5,15 @@ import * as yup from "yup";
 export const workingPlanSchema = yup.object().shape({
   weekSchedule: yup
     .mixed()
-    .test(
-      "has-slots",
-      "Please add at least one time slot",
-      function (weekSchedule) {
-        if (!weekSchedule || !Array.isArray(weekSchedule)) return false;
-        const hasSlots = weekSchedule.some((day) => day?.slots?.length > 0);
-        return hasSlots;
-      }
-    )
+    // .test(
+    //   "has-slots",
+    //   "Please add at least one time slot",
+    //   function (weekSchedule) {
+    //     if (!weekSchedule || !Array.isArray(weekSchedule)) return false;
+    //     const hasSlots = weekSchedule.some((day) => day?.slots?.length > 0);
+    //     return hasSlots;
+    //   }
+    // )
     .test("validate-slots", function (weekSchedule) {
       if (!weekSchedule || !Array.isArray(weekSchedule)) return true;
 
@@ -118,102 +118,106 @@ export const workingPlanSchema = yup.object().shape({
 });
 
 // ✅ Holiday Validation Schema
-export const holidayValidationSchema = yup.object().shape({
-  date: yup
-    .mixed()
-    .required("Holiday date is required")
-    .test("is-valid-date", "Please select a valid date", function (value) {
-      return value && dayjs(value).isValid();
-    }),
 
-  startTime: yup
-    .mixed()
-    .nullable()
-    .test("valid-if-provided", "Invalid start time", function (value) {
-      if (value && !dayjs(value).isValid()) return false;
-      return true;
-    }),
+export const holidayValidationSchema = (isPublishingOrUpdating = false) =>
+  yup.object().shape({
+    date: yup
+      .mixed()
+      .required("Holiday date is required")
+      .test("is-valid-date", "Please select a valid date", function (value) {
+        return value && dayjs(value).isValid();
+      }),
 
-  endTime: yup
-    .mixed()
-    .nullable()
-    .test(
-      "is-after-start",
-      "End time must be after start time",
-      function (value) {
-        const { startTime } = this.parent;
-        if (startTime && value) {
-          return dayjs(value).isAfter(dayjs(startTime));
-        }
+    startTime: yup
+      .mixed()
+      .nullable()
+      .test("valid-if-provided", "Invalid start time", function (value) {
+        if (value && !dayjs(value).isValid()) return false;
         return true;
-      }
-    )
-    .test(
-      "both-or-neither",
-      "Both start and end time must be provided or left empty",
-      function (value) {
-        const { startTime } = this.parent;
-        if ((startTime && !value) || (!startTime && value)) {
-          return false;
-        }
+      })
+      .when([], {
+        is: () => isPublishingOrUpdating,
+        then: (schema) =>
+          schema.required("Start time is required when publishing or updating"),
+      }),
+
+    endTime: yup
+      .mixed()
+      .nullable()
+      .test("valid-if-provided", "Invalid end time", function (value) {
+        if (value && !dayjs(value).isValid()) return false;
         return true;
-      }
-    )
-    .test(
-      "no-overlap-with-existing-holidays",
-      "This time slot is already booked.",
-      function (endTime) {
-        const { startTime, date } = this.parent;
-        const { existingHolidays, holidayEditIndex } =
-          this.options.context || {};
-
-        if (!date || !startTime || !endTime) return true;
-        if (!existingHolidays || existingHolidays.length === 0) return true;
-
-        const newDate = dayjs(date).format("YYYY-MM-DD");
-        const newStartTime = dayjs(startTime).format("HH:mm");
-        const newEndTime = dayjs(endTime).format("HH:mm");
-
-        const newStart = dayjs(
-          `${newDate} ${newStartTime}`,
-          "YYYY-MM-DD HH:mm"
-        );
-        const newEnd = dayjs(`${newDate} ${newEndTime}`, "YYYY-MM-DD HH:mm");
-
-        const hasOverlap = existingHolidays.some((holiday, index) => {
-          if (
-            holidayEditIndex !== null &&
-            holidayEditIndex !== undefined &&
-            index === holidayEditIndex
-          ) {
-            return false;
+      })
+      .test(
+        "is-after-start",
+        "End time must be after start time",
+        function (value) {
+          const { startTime } = this.parent;
+          if (startTime && value) {
+            return dayjs(value).isAfter(dayjs(startTime));
           }
+          return true;
+        }
+      )
+      .when([], {
+        is: () => isPublishingOrUpdating,
+        then: (schema) =>
+          schema.required("End time is required when publishing or updating"),
+      })
+      .test(
+        "no-overlap-with-existing-holidays",
+        "This time slot is already booked.",
+        function (endTime) {
+          const { startTime, date } = this.parent;
+          const { existingHolidays, holidayEditIndex } =
+            this.options.context || {};
 
-          if (!holiday.date || !holiday.startTime || !holiday.endTime)
-            return false;
+          if (!date || !startTime || !endTime) return true;
+          if (!existingHolidays || existingHolidays.length === 0) return true;
 
-          const existingDate = dayjs(holiday.date).format("YYYY-MM-DD");
-          if (existingDate !== newDate) return false;
+          const newDate = dayjs(date).format("YYYY-MM-DD");
+          const newStartTime = dayjs(startTime).format("HH:mm");
+          const newEndTime = dayjs(endTime).format("HH:mm");
 
-          const existingStart = dayjs(
-            `${existingDate} ${holiday.startTime}`,
+          const newStart = dayjs(
+            `${newDate} ${newStartTime}`,
             "YYYY-MM-DD HH:mm"
           );
-          const existingEnd = dayjs(
-            `${existingDate} ${holiday.endTime}`,
-            "YYYY-MM-DD HH:mm"
-          );
+          const newEnd = dayjs(`${newDate} ${newEndTime}`, "YYYY-MM-DD HH:mm");
 
-          return (
-            newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)
-          );
-        });
+          const hasOverlap = existingHolidays.some((holiday, index) => {
+            if (
+              holidayEditIndex !== null &&
+              holidayEditIndex !== undefined &&
+              index === holidayEditIndex
+            ) {
+              return false;
+            }
 
-        return !hasOverlap;
-      }
-    ),
-});
+            if (!holiday.date || !holiday.startTime || !holiday.endTime)
+              return false;
 
+            const existingDate = dayjs(holiday.date).format("YYYY-MM-DD");
+            if (existingDate !== newDate) return false;
+
+            const existingStart = dayjs(
+              `${existingDate} ${holiday.startTime}`,
+              "YYYY-MM-DD HH:mm"
+            );
+            const existingEnd = dayjs(
+              `${existingDate} ${holiday.endTime}`,
+              "YYYY-MM-DD HH:mm"
+            );
+
+            return (
+              newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)
+            );
+          });
+
+          return !hasOverlap;
+        }
+      ),
+  });
 // ✅ Break Validation Schema
 export const breakValidationSchema = yup.object().shape({
   breakSelectedDays: yup
@@ -405,109 +409,101 @@ export const step2ValidationSchema = yup.object().shape({
         return !hasOverlap;
       }
     ),
+// ✅ Holiday fields (auto-require times when date is selected)
+holidayDate: yup
+  .mixed()
+  .nullable()
+  .test("is-valid-date", "Please select a valid date", function (value) {
+    if (!value) return true; // allow empty
+    return dayjs(value).isValid();
+  }),
 
-  // Holiday fields (optional)
-  holidayDate: yup
-    .mixed()
-    .nullable()
-    .test(
-      "required-with-holiday-times",
-      "Holiday date is required",
-      function (value) {
-        const { holidayStartTime, holidayEndTime } = this.parent;
-        if (holidayStartTime || holidayEndTime) {
-          return !!value;
-        }
-        return true;
-      }
-    )
-    .test("is-valid-date", "Please select a valid date", function (value) {
-      if (!value) return true;
-      return dayjs(value).isValid();
-    }),
+holidayStartTime: yup
+  .mixed()
+  .nullable()
+  .when("holidayDate", {
+    is: (holidayDate) => holidayDate && dayjs(holidayDate).isValid(),
+    then: (schema) =>
+      schema
+        .required("Start time is required")
+        .test("valid-if-provided", "Invalid start time", (value) =>
+          value ? dayjs(value).isValid() : true
+        ),
+    otherwise: (schema) => schema.nullable(),
+  }),
 
-  holidayStartTime: yup
-    .mixed()
-    .nullable()
-    .test("valid-if-provided", "Invalid start time", function (value) {
-      if (!value) return true;
-      return dayjs(value).isValid();
-    }),
+holidayEndTime: yup
+  .mixed()
+  .nullable()
+  .when("holidayDate", {
+    is: (holidayDate) => holidayDate && dayjs(holidayDate).isValid(),
+    then: (schema) =>
+      schema
+        .required("End time is required ")
+        .test("is-after-start", "End time must be after start time", function (value) {
+          const { holidayStartTime } = this.parent;
+          if (!holidayStartTime || !value) return true;
+          return dayjs(value).isAfter(dayjs(holidayStartTime));
+        }),
+    otherwise: (schema) => schema.nullable(),
+  })
+  .test(
+    "both-or-neither",
+    "Both start and end time must be provided or left empty",
+    function (value) {
+      const { holidayStartTime, holidayDate } = this.parent;
+      // When date selected but one time missing → invalid
+      if (holidayDate && (!holidayStartTime || !value)) return false;
+      return true;
+    }
+  )
+  .test(
+    "no-overlap-with-existing-holidays",
+    "This time slot is already booked.",
+    function (endTime) {
+      const { holidayStartTime, holidayDate } = this.parent;
+      const { existingHolidays, holidayEditIndex } =
+        this.options.context || {};
 
-  holidayEndTime: yup
-    .mixed()
-    .nullable()
-    .test(
-      "is-after-start",
-      "End time must be after start time",
-      function (value) {
-        const { holidayStartTime } = this.parent;
-        if (!value || !holidayStartTime) return true;
-        return dayjs(value).isAfter(dayjs(holidayStartTime));
-      }
-    )
-    .test(
-      "both-or-neither",
-      "Both start and end time must be provided or left empty",
-      function (value) {
-        const { holidayStartTime } = this.parent;
-        if ((holidayStartTime && !value) || (!holidayStartTime && value)) {
+      if (!holidayDate || !holidayStartTime || !endTime) return true;
+      if (!existingHolidays || existingHolidays.length === 0) return true;
+
+      const newDate = dayjs(holidayDate).format("YYYY-MM-DD");
+      const newStartTime = dayjs(holidayStartTime).format("HH:mm");
+      const newEndTime = dayjs(endTime).format("HH:mm");
+
+      const newStart = dayjs(`${newDate} ${newStartTime}`, "YYYY-MM-DD HH:mm");
+      const newEnd = dayjs(`${newDate} ${newEndTime}`, "YYYY-MM-DD HH:mm");
+
+      const hasOverlap = existingHolidays.some((holiday, index) => {
+        if (
+          holidayEditIndex !== null &&
+          holidayEditIndex !== undefined &&
+          index === holidayEditIndex
+        )
           return false;
-        }
-        return true;
-      }
-    )
-    .test(
-      "no-overlap-with-existing-holidays",
-      "This time slot is already booked.",
-      function (endTime) {
-        const { holidayStartTime, holidayDate } = this.parent;
-        const { existingHolidays, holidayEditIndex } =
-          this.options.context || {};
 
-        if (!holidayDate || !holidayStartTime || !endTime) return true;
-        if (!existingHolidays || existingHolidays.length === 0) return true;
+        if (!holiday.date || !holiday.startTime || !holiday.endTime)
+          return false;
 
-        const newDate = dayjs(holidayDate).format("YYYY-MM-DD");
-        const newStartTime = dayjs(holidayStartTime).format("HH:mm");
-        const newEndTime = dayjs(endTime).format("HH:mm");
+        const existingDate = dayjs(holiday.date).format("YYYY-MM-DD");
+        if (existingDate !== newDate) return false;
 
-        const newStart = dayjs(
-          `${newDate} ${newStartTime}`,
+        const existingStart = dayjs(
+          `${existingDate} ${holiday.startTime}`,
           "YYYY-MM-DD HH:mm"
         );
-        const newEnd = dayjs(`${newDate} ${newEndTime}`, "YYYY-MM-DD HH:mm");
+        const existingEnd = dayjs(
+          `${existingDate} ${holiday.endTime}`,
+          "YYYY-MM-DD HH:mm"
+        );
 
-        const hasOverlap = existingHolidays.some((holiday, index) => {
-          if (
-            holidayEditIndex !== null &&
-            holidayEditIndex !== undefined &&
-            index === holidayEditIndex
-          ) {
-            return false;
-          }
+        return (
+          newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)
+        );
+      });
 
-          if (!holiday.date || !holiday.startTime || !holiday.endTime)
-            return false;
-
-          const existingDate = dayjs(holiday.date).format("YYYY-MM-DD");
-          if (existingDate !== newDate) return false;
-
-          const existingStart = dayjs(
-            `${existingDate} ${holiday.startTime}`,
-            "YYYY-MM-DD HH:mm"
-          );
-          const existingEnd = dayjs(
-            `${existingDate} ${holiday.endTime}`,
-            "YYYY-MM-DD HH:mm"
-          );
-
-          return (
-            newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart)
-          );
-        });
-
-        return !hasOverlap;
-      }
-    ),
-});
+      return !hasOverlap;
+    }
+  )
+})

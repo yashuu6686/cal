@@ -13,7 +13,7 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
       <Box
         sx={{
           background: "rgb(198, 228, 251)",
-          p: 1,
+          p: 0.6,
           borderRadius: 3,
           border: "1px solid #90caf9",
           mb: 1,
@@ -46,28 +46,28 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
               error: touched.holidayDate && Boolean(errors.holidayDate),
               helperText: touched.holidayDate && errors.holidayDate,
               margin: "normal",
-              sx: {
-                mt: 1,
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2.5,
-                  boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-                  "&:hover fieldset": {
-                    borderColor: "#1976d2",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#1976d2",
-                    borderWidth: 2,
-                  },
-                },
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#1976d2",
-                },
-                ".MuiPickersInputBase-root": {
-                  boxShadow:
-                    "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
-                  borderRadius: 3,
-                },
-              },
+              // sx: {
+              //   mt: 1,
+              //   "& .MuiOutlinedInput-root": {
+              //     borderRadius: 2.5,
+              //     boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+              //     "&:hover fieldset": {
+              //       borderColor: "#1976d2",
+              //     },
+              //     "&.Mui-focused fieldset": {
+              //       borderColor: "#1976d2",
+              //       borderWidth: 2,
+              //     },
+              //   },
+              //   "& .MuiInputLabel-root.Mui-focused": {
+              //     color: "#1976d2",
+              //   },
+              //   ".MuiPickersInputBase-root": {
+              //     boxShadow:
+              //       "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+              //     borderRadius: 3,
+              //   },
+              // },
             },
           }}
         />
@@ -83,27 +83,27 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
                 fullWidth: true,
                 error: touched.holidayStartTime && Boolean(errors.holidayStartTime),
                 helperText: touched.holidayStartTime && errors.holidayStartTime,
-                sx: {
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2.5,
-                    boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#1976d2",
-                      borderWidth: 2,
-                    },
-                  },
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1976d2",
-                  },
-                  ".MuiPickersInputBase-root": {
-                    boxShadow:
-                      "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
-                    borderRadius: 3,
-                  },
-                },
+                // sx: {
+                //   "& .MuiOutlinedInput-root": {
+                //     borderRadius: 2.5,
+                //     boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+                //     "&:hover fieldset": {
+                //       borderColor: "#1976d2",
+                //     },
+                //     "&.Mui-focused fieldset": {
+                //       borderColor: "#1976d2",
+                //       borderWidth: 2,
+                //     },
+                //   },
+                //   "& .MuiInputLabel-root.Mui-focused": {
+                //     color: "#1976d2",
+                //   },
+                //   ".MuiPickersInputBase-root": {
+                //     boxShadow:
+                //       "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+                //     borderRadius: 3,
+                //   },
+                // },
               },
             }}
           />
@@ -116,27 +116,27 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
                 fullWidth: true,
                 error: touched.holidayEndTime && Boolean(errors.holidayEndTime),
                 helperText: touched.holidayEndTime && errors.holidayEndTime,
-                sx: {
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2.5,
-                    boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#1976d2",
-                      borderWidth: 2,
-                    },
-                  },
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "#1976d2",
-                  },
-                  ".MuiPickersInputBase-root": {
-                    boxShadow:
-                      "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
-                    borderRadius: 3,
-                  },
-                },
+                // sx: {
+                //   "& .MuiOutlinedInput-root": {
+                //     borderRadius: 2.5,
+                //     boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+                //     "&:hover fieldset": {
+                //       borderColor: "#1976d2",
+                //     },
+                //     "&.Mui-focused fieldset": {
+                //       borderColor: "#1976d2",
+                //       borderWidth: 2,
+                //     },
+                //   },
+                //   "& .MuiInputLabel-root.Mui-focused": {
+                //     color: "#1976d2",
+                //   },
+                //   ".MuiPickersInputBase-root": {
+                //     boxShadow:
+                //       "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+                //     borderRadius: 3,
+                //   },
+                // },
               },
             }}
           />

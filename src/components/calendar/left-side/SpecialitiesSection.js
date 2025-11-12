@@ -16,7 +16,7 @@ const SpecialitiesSection = ({ disabled }) => {
         //   sx={sectionHeaderStyles}
         sx={{
           background: "rgb(198, 228, 251)",
-          p: 1,
+          p: 0.6,
           borderRadius: 3,
           border: "1px solid #90caf9",
           mb: 1,

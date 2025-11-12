@@ -56,7 +56,6 @@ export const useCalendarAPI = (setStep) => {
     }
   }, [apiError, dispatch]);
 
-
   const handleStep1Submit = async (values, { setSubmitting }) => {
     try {
       setStep(2);
@@ -66,7 +65,6 @@ export const useCalendarAPI = (setStep) => {
       setSubmitting(false);
     }
   };
-
 
   const handleStep2Submit = async (values, { setSubmitting }) => {
     try {
@@ -78,8 +76,8 @@ export const useCalendarAPI = (setStep) => {
       ) {
         const newBreak = {
           days: values.breakSelectedDays,
-          startTime: dayjs(values.startTime).format("HH:mm"),
-          endTime: dayjs(values.endTime).format("HH:mm"),
+          startTime: values.startTime, // Pass the dayjs object
+          endTime: values.endTime,
         };
         dispatch(addBreak(newBreak));
       }
@@ -91,9 +89,9 @@ export const useCalendarAPI = (setStep) => {
         values.holidayEndTime
       ) {
         const newHoliday = {
-          date: dayjs(values.holidayDate).format("YYYY-MM-DD"),
-          startTime: dayjs(values.holidayStartTime).format("HH:mm"),
-          endTime: dayjs(values.holidayEndTime).format("HH:mm"),
+          date: values.holidayDate,
+          startTime: values.holidayStartTime,
+          endTime: values.holidayEndTime,
         };
         dispatch(addHoliday(newHoliday));
       }
@@ -128,7 +126,7 @@ export const useCalendarAPI = (setStep) => {
         dispatch(setIsCalendarPublished(true));
         dispatch(setIsEditMode(false));
         dispatch(createDoctorCalendar());
-        setStep(1); 
+        setStep(1);
       }
     } catch (error) {
       console.error("Step 2 submission error:", error);
@@ -136,7 +134,6 @@ export const useCalendarAPI = (setStep) => {
       setSubmitting(false);
     }
   };
-
 
   const handleAddServiceSubmit = async (
     values,

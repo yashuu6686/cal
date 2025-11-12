@@ -30,7 +30,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
       <Box
         sx={{
           background: "rgb(198, 228, 251)",
-          p: 1,
+          p: 0.6,
           borderRadius: 3,
           border: "1px solid #90caf9",
           mb: 2,
@@ -97,12 +97,8 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               {...params}
               label="Select Days"
               fullWidth
-              placeholder={
-                values.breakSelectedDays?.length === 0 ? "Select days" : ""
-              }
-              error={
-                touched.breakSelectedDays && Boolean(errors.breakSelectedDays)
-              }
+              placeholder={values.breakSelectedDays?.length === 0 ? "Select days" : ""}
+              error={touched.breakSelectedDays && Boolean(errors.breakSelectedDays)}
               helperText={touched.breakSelectedDays && errors.breakSelectedDays}
               // sx={{
               //   cursor: "pointer",
@@ -137,8 +133,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                 {...getTagProps({ index })}
                 key={option}
                 sx={{
-                  background:
-                    "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                  background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
                   color: "white",
                   fontWeight: 600,
                   fontSize: "0.85rem",
@@ -157,9 +152,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
 
         {/* Time Pickers */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box
-            sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}>
             <TimePicker
               label="Start Time"
               value={values.startTime}

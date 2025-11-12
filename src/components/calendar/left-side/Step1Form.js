@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import { Box, Button, Divider, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -7,7 +7,7 @@ import { workingPlanSchema } from "@/components/calendar/validation/validation";
 import { useCalendarState } from "@/hook/useCalendarState";
 import ServiceTypeSection from "./ServiceTypeSection";
 import SpecialitiesSection from "./SpecialitiesSection";
-import WorkingPlanView from "@/components/calendar/right-side/WorkingPlanView";
+import WorkingPlanView from "@/components/calendar/left-side/WorkingPlanView";
 import CommonDialogBox from "@/components/CommonDialogBox";
 
 const Step1Form = ({ onSubmit, onOpenAddService }) => {
@@ -27,33 +27,8 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
 
   const initialValues = { weekSchedule };
 
-  useEffect(() => {
-    if (
-      showSlotError &&
-      selectedServices.length > 0 &&
-      selectedSpecialities.length > 0
-    ) {
-      setShowSlotError(false);
-    }
-  }, [selectedServices, selectedSpecialities, showSlotError]);
-
   const handleFormSubmit = (values, formikBag) => {
-  
-    weekSchedule.forEach((day, index) => {
-      console.log(`Day ${index} (${day.day}):`, {
-        hasSlots: day.slots ? 'YES' : 'NO',
-        slotsLength: day.slots?.length || 0,
-        slots: day.slots
-      });
-    });
-    
-
-    const hasSlot = weekSchedule.some(
-      (day) => day.slots && day.slots.length > 0
-    );
-    
-
-
+    // ✅ Check 1: Services required
     if (selectedServices.length === 0) {
       setErrorMessage("At least one service is required.");
       setShowSlotError(true);
@@ -61,12 +36,18 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
       return;
     }
 
+    // ✅ Check 2: Specialities required
     if (selectedSpecialities.length === 0) {
       setErrorMessage("At least one specialty is required.");
       setShowSlotError(true);
       formikBag.setSubmitting(false);
       return;
     }
+
+    // ✅ Check 3: At least one slot required
+    const hasSlot = values.weekSchedule.some(
+      (day) => day.slots && day.slots.length > 0
+    );
 
     if (!hasSlot) {
       setErrorMessage(
@@ -77,8 +58,8 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
       return;
     }
 
-    // Pass Redux weekSchedule to onSubmit instead of Formik values
-    onSubmit({ weekSchedule }, formikBag);
+    // ✅ All checks passed, proceed
+    onSubmit(values, formikBag);
   };
 
   return (
@@ -105,14 +86,13 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
         onSubmit={handleFormSubmit}
         enableReinitialize
       >
-        {({ isSubmitting, errors, touched, values, submitForm }) => (
+        {({ isSubmitting, errors, touched, values }) => (
           <Form>
             <Box>
-              {/* Header */}
               <Box
                 sx={{
                   background: "#1172BA",
-                  p: 1,
+                  p: 0.6,
                   borderRadius: 3,
                   mb: 2,
                   display: "flex",
@@ -148,7 +128,6 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
 
               <Divider sx={{ my: 2, borderColor: "#bbdefb" }} />
 
-              {/* Service Type Section */}
               <ServiceTypeSection
                 disabled={isFieldsDisabled}
                 onAddService={onOpenAddService}
@@ -156,12 +135,10 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
 
               <Divider sx={{ my: 2, borderColor: "#bbdefb" }} />
 
-              {/* Specialities Section */}
               <SpecialitiesSection disabled={isFieldsDisabled} />
 
               <Divider sx={{ my: 2, borderColor: "#bbdefb" }} />
 
-              {/* Working Plan View */}
               <WorkingPlanView
                 disabled={isFieldsDisabled}
                 errors={errors}
@@ -169,21 +146,13 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
               />
             </Box>
 
-            {/* Next Button */}
             <Box sx={{ mt: 3, display: "flex", justifyContent: "end" }}>
               {(!isCalendarPublished || isEditMode) && (
                 <Button
-                  type="button"
+                  type="submit"
                   variant="contained"
                   disabled={isSubmitting}
                   sx={{ textTransform: "none" }}
-                  onClick={() => {
-                    // ✅ FIXED: Call handleFormSubmit with proper formikBag
-                    handleFormSubmit(
-                      { weekSchedule }, // Use Redux state
-                      { setSubmitting: () => {} }
-                    );
-                  }}
                 >
                   Next
                 </Button>

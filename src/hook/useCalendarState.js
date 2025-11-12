@@ -12,15 +12,7 @@ import {
   selectIsLoading,
 } from "@/redux/store/slices/calendarSlice";
 
-/**
- * useCalendarState Hook
- * Centralizes all Redux state selection for calendar components
- * 
- * This hook provides a single source of truth for calendar-related state,
- * making it easier to manage and preventing duplicate selector calls.
- * 
- * @returns {Object} Complete calendar state object
- */
+
 export const useCalendarState = () => {
   // Service-related state
   const dataOfService = useSelector(selectAllServices);

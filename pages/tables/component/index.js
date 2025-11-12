@@ -65,9 +65,4 @@ export { default as nuro } from "../../../public/Neurologist.png";
 export { default as ortho } from "../../../public/Orthopaedic.png";
 export { default as cardio } from "../../../public/cardiology.png";
 
-export { default as WorkingPlan } from "./WorkingPlan";
-export { default as Specialitie } from "./Specialitie";
-export { default as AdvanceBooking } from "./AdvanceBooking";
-export { default as AppointmentBooking } from "./AppointmentBooking";
-export { default as Break } from "./Break";
-export { default as Holidays } from "./Holidays";
+
