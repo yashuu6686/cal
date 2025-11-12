@@ -114,9 +114,10 @@ export default function CalendarMerge() {
               views={["day", "week", "month", "agenda"]}
               onSelectEvent={handleEventClick}
               style={{ 
-                height: 'calc(100vh - 100px)',
-                minHeight: '500px',
-                width: '100%'
+                // height: 'calc(100vh - 100px)',
+                // minHeight: '500px',
+                // width: '100vh',
+                heightL:"100vh"
               }}
               eventPropGetter={eventStyleGetter}
               components={{
