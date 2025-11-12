@@ -1,16 +1,25 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import moment from "moment";
-import {
-  video,
-  home,
-  clinic,
-  nuro,
-  gen,
-  ortho,
-  tooth,
-  cardio,
-} from "../../../../pages/tables/component/";
+// import {
+//   video,
+//   home,
+//   clinic,
+//   nuro,
+//   gen,
+//   ortho,
+//   tooth,
+//   cardio,
+// } from "../../../../pages/tables";
+import video from "../../../../public/Video_Call_Service.png"
+import clinic from "../../../../public/Clinic_Visit_Service.png"
+import home from "../../../../public/Home_Visit_Service.webp"
+import tooth from "../../../../public/tooth 1.png"
+import gen from "../../../../public/General.png"
+import nuro from "../../../../public/Neurologist.png"
+import ortho from "../../../../public/Orthopaedic.png"
+import cardio from "../../../../public/cardiology.png"
+
 
 import axios from "axios";
 
