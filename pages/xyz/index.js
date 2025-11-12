@@ -117,7 +117,7 @@ export default function CalendarMerge() {
                 // height: 'calc(100vh - 100px)',
                 // minHeight: '500px',
                 // width: '100vh',
-                heightL:"100vh"
+                height:"109vh"
               }}
               eventPropGetter={eventStyleGetter}
               components={{
