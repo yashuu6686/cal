@@ -13,7 +13,10 @@ import BreakDialog from "@/components/calendar/dialogs/DialogBreak";
 import HolidayDialog from "@/components/calendar/dialogs/HolidayDialog";
 import CustomToolbar from "@/components/calendar/right-side/CustomToolbar";
 
-import { setOpenDialog, setOpenHolidayDialog } from "@/redux/store/slices/calendarSlice";
+import {
+  setOpenDialog,
+  setOpenHolidayDialog,
+} from "@/redux/store/slices/calendarSlice";
 import { calendarStyles } from "@/components/calendar/styles/calendarStyles";
 
 const localizer = momentLocalizer(moment);
@@ -32,7 +35,6 @@ export default function CalendarMerge() {
   // ===== LOCAL STATE =====
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  // const [holidayOpen, setHolidayOpen] = useState(false);
 
   // ===== EVENT HANDLERS =====
   const handleEventClick = (event) => {
@@ -54,7 +56,7 @@ export default function CalendarMerge() {
   };
 
   const handleCloseHolidayDialog = () => {
-   dispatch( setOpenHolidayDialog(false));
+    dispatch(setOpenHolidayDialog(false));
   };
 
   // ===== COMPUTED VALUES =====
@@ -78,23 +80,44 @@ export default function CalendarMerge() {
 
   // ===== RENDER =====
   return (
-    <Box bgcolor="#f9fafb" p={1}>
-      <Grid container spacing={1}>
+    <Box 
+      bgcolor="#f9fafb" 
+      sx={{ 
+        p: { xs: 0.5, sm: 1 },
+        width: '100%',
+        overflowX: 'hidden'
+      }}
+    >
+      <Grid container spacing={{ xs: 0.5, sm: 1 }}>
         {/* Left Sidebar */}
-        <Grid item xs={12} md={3} lg={3} size={{ md: 3,lg:3,sm:12,xs:12 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 4.5, lg: 3 }}>
           <LeftSide />
         </Grid>
 
         {/* Main Calendar */}
-        <Grid item xs={12} md={8.5} lg={9} size={{ md: 9,sm:12,xs:12 }}>
-          <Paper elevation={2} sx={calendarStyles}>
+        <Grid size={{ xs: 12, sm: 12, md: 7.5, lg: 9 }}>
+          <Paper 
+            elevation={2} 
+            sx={{
+              ...calendarStyles,
+              width: '100%',
+              overflow: 'hidden',
+              '& .rbc-calendar': {
+                width: '100% !important'
+              }
+            }}
+          >
             <Calendar
               localizer={localizer}
               events={events}
               defaultView="week"
               views={["day", "week", "month", "agenda"]}
               onSelectEvent={handleEventClick}
-              style={{ height: "109vh" }}
+              style={{ 
+                height: 'calc(100vh - 100px)',
+                minHeight: '500px',
+                width: '100%'
+              }}
               eventPropGetter={eventStyleGetter}
               components={{
                 toolbar: (toolbarProps) => (
@@ -119,8 +142,7 @@ export default function CalendarMerge() {
         router={router}
       />
       <BreakDialog />
-      <HolidayDialog 
-      />
+      <HolidayDialog />
     </Box>
   );
 }
