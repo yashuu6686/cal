@@ -1,0 +1,8 @@
+- [x] Modify handleFormSubmit in Step1Form.js to check if selectedServices is empty instead of checking for slots
+- [x] Update the CommonDialogBox title to "Missing Service"
+- [x] Update the CommonDialogBox message to "Please add at least one service before continuing."
+- [ ] Test the change by running the app and trying to proceed without selecting a service
+- [x] Add CommonDialogBox in WorkingPlanView.js when clicking Add New Slot (+) if no Specialities and Service Type are selected
+- [x] Show dialog with message "Please select Specialities and Service Type before adding a slot."
+- [x] Update the Next button validation to check for Specialities, Service Type and Slots
+- [x] Update the dialog message to include all three requirements

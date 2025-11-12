@@ -80,9 +80,10 @@ const Step2Form = ({ onSubmit, onBack }) => {
               variant="outlined"
               sx={{
                 mr: 0.5,
-                borderRadius: 2.5,
-                fontWeight: 600,
+                // borderRadius: 2.5,
+                // fontWeight: 600,
                 fontSize: "0.9rem",
+                textTransform:'none'
               }}
               onClick={onBack}
             >
@@ -92,6 +93,7 @@ const Step2Form = ({ onSubmit, onBack }) => {
               type="submit"
               variant="contained"
               disabled={isSubmitting}
+              sx={{textTransform:'none'}}
             //   sx={buttonGradientStyles}
             >
               {isCalendarPublished ? "Update Calendar" : "Publish Calendar"}

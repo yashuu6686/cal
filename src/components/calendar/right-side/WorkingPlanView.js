@@ -20,7 +20,10 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import CommonErrorDialogBox from "@/components/CommonDialogBox";
+// import CommonErrorDialogBox from "@/components/CommonDialogBox";
+import { toast } from "react-toastify";
+import CommonDialogBox from "@/components/CommonDialogBox";
+
 
 const days = [
   { short: "Sun", full: "Sunday" },
@@ -35,6 +38,7 @@ const days = [
 const WorkingPlanView = ({ disabled = false }) => {
   const [openDelete, setOpenDelete] = React.useState(false);
   const [slotToDelete, setSlotToDelete] = React.useState(null);
+  const [openValidationDialog, setOpenValidationDialog] = React.useState(false);
 
   const dispatch = useDispatch();
   const { values, errors, touched, setFieldValue, setFieldTouched } =
@@ -45,9 +49,17 @@ const WorkingPlanView = ({ disabled = false }) => {
   const selectedServices = useSelector(
     (state) => state.calendar.selectedServices
   );
+  const selectedSpecialities = useSelector(
+    (state) => state.calendar.selectedSpecialities
+  );
 
   // Handlers
   const handleAddSlot = (day) => {
+    if (selectedServices.length === 0 || selectedSpecialities.length === 0) {
+      setOpenValidationDialog(true);
+      return;
+    }
+
     const newSlot = {
       id: Date.now(),
       start: null,
@@ -59,6 +71,7 @@ const WorkingPlanView = ({ disabled = false }) => {
       type: "calendar/addSlotToDay",
       payload: { day, slot: newSlot },
     });
+    
   };
 
   const handleDeleteSlot = (day, slotId) => {
@@ -98,6 +111,29 @@ const WorkingPlanView = ({ disabled = false }) => {
     // Return error if it exists (touched state is handled by validation trigger)
     return error || "";
   };
+
+  // Recursively flatten nested Formik errors
+const flattenErrors = (obj, result = []) => {
+  Object.values(obj).forEach((val) => {
+    if (typeof val === "string") {
+      result.push(val);
+    } else if (typeof val === "object" && val !== null) {
+      flattenErrors(val, result);
+    }
+  });
+  return result;
+};
+
+
+  React.useEffect(() => {
+  if (errors && Object.keys(errors).length > 0) {
+    const flatErrors = flattenErrors(errors);
+    flatErrors.forEach((msg) => {
+      if (msg && typeof msg === "string") toast.error(msg);
+    });
+  }
+}, [errors]);
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -495,7 +531,7 @@ const WorkingPlanView = ({ disabled = false }) => {
               </Paper>
             );
           })}
-          <CommonErrorDialogBox
+          <CommonDialogBox
             open={openDelete}
             onClose={() => setOpenDelete(false)}
             onConfirm={() => {
@@ -505,7 +541,17 @@ const WorkingPlanView = ({ disabled = false }) => {
             title="Delete Slot"
             message={`Are you sure you want to delete ${slotToDelete?.slotName}?`}
             confirmText="Delete"
-            confirmColor="error"
+            confirmColor="primary"
+          />
+          <CommonDialogBox
+            open={openValidationDialog}
+            onClose={() => setOpenValidationDialog(false)}
+            onConfirm={() => setOpenValidationDialog(false)}
+            title="Error"
+            message="Please select Specialities and Service Type before adding a slot."
+            confirmText="Got it"
+            confirmColor="primary"
+            hideCancel={true}
           />
         </Box>
       </Box>

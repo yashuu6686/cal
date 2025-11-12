@@ -60,10 +60,10 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
               isSelected={isSelected}
               onClick={() => dispatch(toggleService(item))}
             >
-              <Typography sx={{ fontSize: "0.75rem", fontWeight: 600 }}>
+              <Typography sx={{ fontSize: "0.85rem", fontWeight: 600,textTransform:'none' }}>
                 {item.type}
               </Typography>
-              <Typography sx={{ fontSize: "0.65rem" }}>
+              <Typography sx={{ fontSize: "0.70rem",textTransform:'none' }}>
                 {item.time} Minutes
               </Typography>
             </CommonButton>

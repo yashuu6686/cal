@@ -104,7 +104,7 @@ export const workingPlanSchema = yup.object().shape({
                 if (overlap) {
                   return this.createError({
                     path: `weekSchedule[${dayIndex}].slots[${i}].start`,
-                    message: "Time slots overlap",
+                    message: "Time slots are already booked.",
                   });
                 }
               }

@@ -35,27 +35,32 @@ export default function CommonDialogBox({
         sx={{
           fontSize: "18px",
           fontWeight: 600,
-          color: "#1f2937",
-          pb: 0,
+          color: "white",
+          alignItems: "center",
+          bgcolor: "rgb(17, 114, 186)",
+          borderRadius: "10px",
+          p: 1,
         }}
       >
         {title}
       </DialogTitle>
 
       <DialogContent sx={{ mt: 1 }}>
-        <Typography sx={{ fontSize: "15px", color: "#4b5563", lineHeight: 1.6 }}>
+        <Typography
+          sx={{ fontSize: "15px", color: "#4b5563", lineHeight: 1.6 }}
+        >
           {message}
         </Typography>
       </DialogContent>
 
-      <DialogActions sx={{ pr: 2, pb: 2 }}>
+      <DialogActions >
         {!hideCancel && (
           <Button
             onClick={onClose}
             sx={{
               textTransform: "none",
               fontWeight: 500,
-              px: 2,
+              // px: 2,
             }}
           >
             {cancelText}
@@ -70,7 +75,7 @@ export default function CommonDialogBox({
             textTransform: "none",
             borderRadius: "8px",
             fontWeight: 600,
-            px: 3,
+            // px: 3,
           }}
         >
           {confirmText}

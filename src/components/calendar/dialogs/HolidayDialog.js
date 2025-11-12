@@ -86,7 +86,7 @@ export default function HolidayDialog() {
                 🏖️ No holidays scheduled
               </Typography>
               <Typography variant="body2" sx={{ color: "#9e9e9e" }}>
-                Add holidays from the left panel
+                Select date and times to add holiday schedules
               </Typography>
             </Box>
           )}

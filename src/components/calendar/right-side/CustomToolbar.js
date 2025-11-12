@@ -40,7 +40,7 @@ export default function CustomToolbar({
             onClick={() => onNavigate("TODAY")}
             sx={{
               color: "#1976d2",
-              fontWeight: 600,
+              // fontWeight: 600,
               fontSize: "0.9rem",
               padding: "8px 20px",
               borderRadius: "10px",
@@ -63,7 +63,7 @@ export default function CustomToolbar({
             onClick={() => onNavigate("PREV")}
             sx={{
               color: "#1976d2",
-              fontWeight: 600,
+              // fontWeight: 600,
               fontSize: "0.9rem",
               padding: "8px 20px",
               borderRadius: "10px",
@@ -86,7 +86,7 @@ export default function CustomToolbar({
             onClick={() => onNavigate("NEXT")}
             sx={{
               color: "#1976d2",
-              fontWeight: 600,
+              // fontWeight: 600,
               fontSize: "0.9rem",
               padding: "8px 20px",
               borderRadius: "10px",
@@ -127,7 +127,7 @@ export default function CustomToolbar({
               onClick={() => onView(viewType)}
               sx={{
                 color: "#1976d2",
-                fontWeight: 600,
+                // fontWeight: 600,
                 fontSize: "0.9rem",
                 padding: "8px 16px",
                 borderRadius: "10px",
@@ -167,7 +167,7 @@ export default function CustomToolbar({
           onClick={onShowBreak}
           sx={{
             color: "white",
-            fontWeight: 600,
+            // fontWeight: 600,
             fontSize: "0.9rem",
             padding: "8px 24px",
             borderRadius: "10px",
@@ -186,9 +186,10 @@ export default function CustomToolbar({
           onClick={handleShowHolidayDialog}
           sx={{
             color: "white",
-            fontWeight: 600,
+            // fontWeight: 600,
             fontSize: "0.9rem",
             padding: "8px 24px",
+
             borderRadius: "10px",
             textTransform: "none",
             "&:hover": {

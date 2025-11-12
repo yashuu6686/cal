@@ -181,19 +181,21 @@ const calendarSlice = createSlice({
   initialState,
   reducers: {
     // ===== SERVICE & SPECIALITY ACTIONS =====
-    toggleService: (state, action) => {
-      const service = action.payload;
-      const exists = state.selectedServices.some(
-        (s) => s.type === service.type
-      );
-      if (exists) {
-        state.selectedServices = state.selectedServices.filter(
-          (s) => s.type !== service.type
-        );
-      } else {
-        state.selectedServices.push(service);
-      }
-    },
+   toggleService: (state, action) => {
+  const service = action.payload;
+  const exists = state.selectedServices.some(
+    (s) => s.type === service.type && s.time === service.time
+  );
+
+  if (exists) {
+    state.selectedServices = state.selectedServices.filter(
+      (s) => !(s.type === service.type && s.time === service.time)
+    );
+  } else {
+    state.selectedServices.push(service);
+  }
+},
+
 
     toggleSpeciality: (state, action) => {
       const speciality = action.payload;

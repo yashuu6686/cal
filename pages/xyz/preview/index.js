@@ -45,17 +45,17 @@ function Preview() {
         const intervalMinutes = slot.duration || 15; // Use slot's duration based on service type
         const intervals = generateTimeSlots(start, end, intervalMinutes);
 
-         const specialitiesArray = Array.isArray(slot.speciality)
-        ? slot.speciality
-        : [slot.speciality || "General"];
+        //  const specialitiesArray = Array.isArray(slot.speciality)
+        // ? slot.speciality
+        // : [slot.speciality || "General"];
 
         intervals.forEach((i) => {
           divided.push({
-          title: `${slot.serviceType} - ${specialitiesText}`,
+          // title: `${slot.serviceType} `,    //- ${specialitiesArray}
             start: i.start,
             end: i.end,
             color: "#1c95f1ff",
-            specialities: specialitiesArray,
+            // specialities: specialitiesArray,
           });
         });
       });

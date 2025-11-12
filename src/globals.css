@@ -7,6 +7,7 @@
   /* transition: background-color 0.2s ease, transform 0.1s ease; */
 }
 
+
 .rbc-toolbar .rbc-btn-group button:hover,
 .rbc-toolbar .rbc-btn-group button:focus {
   background-color: #1172BA !important;
