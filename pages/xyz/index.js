@@ -81,12 +81,12 @@ export default function CalendarMerge() {
     <Box bgcolor="#f9fafb" p={1}>
       <Grid container spacing={1}>
         {/* Left Sidebar */}
-        <Grid item xs={12} md={3} lg={3} size={{ md: 3 }}>
+        <Grid item xs={12} md={3} lg={3} size={{ md: 3,lg:3,sm:12,xs:12 }}>
           <LeftSide />
         </Grid>
 
         {/* Main Calendar */}
-        <Grid item xs={12} md={8.5} lg={9} size={{ md: 9 }}>
+        <Grid item xs={12} md={8.5} lg={9} size={{ md: 9,sm:12,xs:12 }}>
           <Paper elevation={2} sx={calendarStyles}>
             <Calendar
               localizer={localizer}
