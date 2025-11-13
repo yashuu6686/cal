@@ -24,8 +24,8 @@ const baseTheme = createTheme({
       color: "#fffff",
       backgroundColor: "#4414d4ff",
       // borderRadius: "8px 8px 0 0",
-      boxShadow:
-        "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+      // boxShadow:
+      //   "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
     },
   },
 });
@@ -75,7 +75,7 @@ const theam = createTheme(baseTheme, {
           width: "100%",
           height: "100%px",
           aligItems:"center",
-          borderRadius: "20px",
+          // borderRadius: "20px",
           backgroundColor: baseTheme.palette.main,
           boxShadow: baseTheme.palette.action.boxShadow,
         },
