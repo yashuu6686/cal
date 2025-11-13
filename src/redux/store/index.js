@@ -12,6 +12,8 @@ export const store = configureStore({
       serializableCheck: {
         // Ignore these paths in the state for serialization checks
         // (dayjs objects are not serializable)
+         ignoredActions: ['calendar/addSlotToDay'],
+        ignoredPaths: ['calendar.events'],
         ignoredActions: [
           'calendar/setStartTime',
           'calendar/setEndTime',
