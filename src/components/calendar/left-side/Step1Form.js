@@ -28,7 +28,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
   const initialValues = { weekSchedule };
 
   const handleFormSubmit = (values, formikBag) => {
-    // ✅ Check 1: Services required
+    // Check 1: Services required
     if (selectedServices.length === 0) {
       setErrorMessage("At least one service is required.");
       setShowSlotError(true);
@@ -36,7 +36,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
       return;
     }
 
-    // ✅ Check 2: Specialities required
+    // Check 2: Specialities required
     if (selectedSpecialities.length === 0) {
       setErrorMessage("At least one specialty is required.");
       setShowSlotError(true);
@@ -44,7 +44,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
       return;
     }
 
-    // ✅ Check 3: At least one slot required
+    // Check 3: At least one slot required
     const hasSlot = values.weekSchedule.some(
       (day) => day.slots && day.slots.length > 0
     );
@@ -58,7 +58,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
       return;
     }
 
-    // ✅ All checks passed, proceed
+    // All checks passed, proceed
     onSubmit(values, formikBag);
   };
 
@@ -98,6 +98,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  
                 }}
               >
                 <Typography

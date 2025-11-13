@@ -11,15 +11,14 @@ import moment from "moment";
 //   tooth,
 //   cardio,
 // } from "../../../../pages/tables";
-import video from "../../../../public/Video_Call_Service.png"
-import clinic from "../../../../public/Clinic_Visit_Service.png"
-import home from "../../../../public/Home_Visit_Service.webp"
-import tooth from "../../../../public/tooth 1.png"
-import gen from "../../../../public/General.png"
-import nuro from "../../../../public/Neurologist.png"
-import ortho from "../../../../public/Orthopaedic.png"
-import cardio from "../../../../public/cardiology.png"
-
+import video from "../../../../public/Video_Call_Service.png";
+import clinic from "../../../../public/Clinic_Visit_Service.png";
+import home from "../../../../public/Home_Visit_Service.webp";
+import tooth from "../../../../public/tooth 1.png";
+import gen from "../../../../public/General.png";
+import nuro from "../../../../public/Neurologist.png";
+import ortho from "../../../../public/Orthopaedic.png";
+import cardio from "../../../../public/cardiology.png";
 
 import axios from "axios";
 
@@ -91,7 +90,7 @@ export const createDoctorCalendar = createAsyncThunk(
 
       // ---- Make API Call ----
       const response = await axios.post(
-        ` https://devapi.dequity.technology/createDoctorCalendar`,
+        ` https://devapi.dequity.technology/createDoctorCalendar/`,
         payload
       );
 
@@ -101,7 +100,6 @@ export const createDoctorCalendar = createAsyncThunk(
     }
   }
 );
-
 
 const dayToNumber = {
   Sunday: 0,
@@ -120,7 +118,6 @@ const getNextDayOfWeek = (dayNum) => {
   if (daysToAdd < 0) daysToAdd += 7;
   return now.clone().add(daysToAdd, "days");
 };
-
 
 const initialState = {
   dataOfService: [
@@ -358,7 +355,6 @@ const calendarSlice = createSlice({
 
     setHolidayValues: (state, action) => {
       state.holidayValues = action.payload;
-      // console.log("+++++++++++++++++++",state.holidayValues);
     },
 
     setHolidayEditIndex: (state, action) => {

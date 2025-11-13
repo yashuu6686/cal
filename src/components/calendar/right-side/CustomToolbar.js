@@ -1,7 +1,12 @@
-
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Typography } from "@mui/material";
+import {
+  toolbarContainerStyle,
+  navButtonStyle,
+  viewButtonStyle,
+  actionButtonStyle,
+} from "@/components/calendar/styles/calendarStyles";
 
 export default function CustomToolbar({
   onNavigate,
@@ -10,104 +15,20 @@ export default function CustomToolbar({
   view,
   isFieldsDisabled,
   onShowBreak,
-  handleShowBreakDialog,handleShowHolidayDialog
+  handleShowHolidayDialog,
 }) {
-  // const [holidayOpen, setHolidayOpen] = useState(false);
-
   return (
-    <Box
-      sx={{
-        backgroundColor: "#e3f2fd",
-        padding: "16px 20px",
-        borderRadius: "12px",
-        marginBottom: "24px",
-        border: "2px solid #90caf9",
-        boxShadow: "0 4px 12px rgba(25, 118, 210, 0.1)",
-      }}
-    >
-      {/* Top Row: Navigation + View Buttons */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 2,
-        }}
-      >
-        {/* Left: Today, Back, Next */}
+    <Box sx={toolbarContainerStyle}>
+      {/* Top Row */}
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+        {/* Left Nav Buttons */}
         <Box sx={{ display: "flex", gap: 1 }}>
-          <Button
-            onClick={() => onNavigate("TODAY")}
-            sx={{
-              color: "#1976d2",
-              // fontWeight: 600,
-              fontSize: "0.9rem",
-              padding: "8px 20px",
-              borderRadius: "10px",
-              border: "2px solid transparent",
-              transition: "all 0.3s ease",
-              backgroundColor: "white",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#1976d2",
-                color: "white",
-                border: "2px solid #1565c0",
-                transform: "translateY(-2px)",
-                boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
-              },
-            }}
-          >
-            Today
-          </Button>
-          <Button
-            onClick={() => onNavigate("PREV")}
-            sx={{
-              color: "#1976d2",
-              // fontWeight: 600,
-              fontSize: "0.9rem",
-              padding: "8px 20px",
-              borderRadius: "10px",
-              border: "2px solid transparent",
-              transition: "all 0.3s ease",
-              backgroundColor: "white",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#1976d2",
-                color: "white",
-                border: "2px solid #1565c0",
-                transform: "translateY(-2px)",
-                boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
-              },
-            }}
-          >
-            Back
-          </Button>
-          <Button
-            onClick={() => onNavigate("NEXT")}
-            sx={{
-              color: "#1976d2",
-              // fontWeight: 600,
-              fontSize: "0.9rem",
-              padding: "8px 20px",
-              borderRadius: "10px",
-              border: "2px solid transparent",
-              transition: "all 0.3s ease",
-              backgroundColor: "white",
-              textTransform: "none",
-              "&:hover": {
-                backgroundColor: "#1976d2",
-                color: "white",
-                border: "2px solid #1565c0",
-                transform: "translateY(-2px)",
-                boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
-              },
-            }}
-          >
-            Next
-          </Button>
+          <Button sx={navButtonStyle} onClick={() => onNavigate("TODAY")}>Today</Button>
+          <Button sx={navButtonStyle} onClick={() => onNavigate("PREV")}>Back</Button>
+          <Button sx={navButtonStyle} onClick={() => onNavigate("NEXT")}>Next</Button>
         </Box>
 
-        {/* Center: Label */}
+        {/* Center Label */}
         <Typography
           sx={{
             color: "#1565c0",
@@ -119,31 +40,13 @@ export default function CustomToolbar({
           {label}
         </Typography>
 
-        {/* Right: View Buttons */}
+        {/* Right View Buttons */}
         <Box sx={{ display: "flex", gap: 1 }}>
           {["day", "week", "month"].map((viewType) => (
             <Button
               key={viewType}
+              sx={viewButtonStyle(view === viewType)}
               onClick={() => onView(viewType)}
-              sx={{
-                color: "#1976d2",
-                // fontWeight: 600,
-                fontSize: "0.9rem",
-                padding: "8px 16px",
-                borderRadius: "10px",
-                border: "2px solid transparent",
-                transition: "all 0.3s ease",
-                backgroundColor: view === viewType ? "#1172BA" : "white",
-                color: view === viewType ? "white" : "#1976d2",
-                textTransform: "capitalize",
-                "&:hover": {
-                  backgroundColor: "#1976d2",
-                  color: "white",
-                  border: "2px solid #1565c0",
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
-                },
-              }}
             >
               {viewType}
             </Button>
@@ -151,7 +54,7 @@ export default function CustomToolbar({
         </Box>
       </Box>
 
-      {/* Bottom Row: Break & Holiday Buttons */}
+      {/* Bottom Row */}
       <Box
         sx={{
           display: "flex",
@@ -161,42 +64,15 @@ export default function CustomToolbar({
           borderTop: "1px solid #90caf9",
         }}
       >
-        <Button
-          disabled={isFieldsDisabled}
-          variant="contained"
-          onClick={onShowBreak}
-          sx={{
-            color: "white",
-            // fontWeight: 600,
-            fontSize: "0.9rem",
-            padding: "8px 24px",
-            borderRadius: "10px",
-            textTransform: "none",
-            "&:hover": {
-              transform: "translateY(-2px)",
-            },
-            transition: "all 0.3s ease",
-          }}
-        >
+        <Button disabled={isFieldsDisabled} variant="contained" sx={actionButtonStyle} onClick={onShowBreak}>
           Break
         </Button>
+
         <Button
           disabled={isFieldsDisabled}
           variant="contained"
+          sx={actionButtonStyle}
           onClick={handleShowHolidayDialog}
-          sx={{
-            color: "white",
-            // fontWeight: 600,
-            fontSize: "0.9rem",
-            padding: "8px 24px",
-
-            borderRadius: "10px",
-            textTransform: "none",
-            "&:hover": {
-              transform: "translateY(-2px)",
-            },
-            transition: "all 0.3s ease",
-          }}
         >
           Holiday
         </Button>

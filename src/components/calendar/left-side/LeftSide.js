@@ -10,11 +10,10 @@ import AddServiceDialog from "./AddServiceDialog";
 import { useCalendarState } from "@/hook/useCalendarState";
 import { useCalendarAPI } from "@/hook/useCalendarAPI ";
 
-
 function LeftSide() {
   const [step, setStep] = useState(1);
   const [openAddService, setOpenAddService] = useState(false);
-   const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const { isLoading, apiError, isCalendarPublished } = useCalendarState();
 

@@ -83,3 +83,65 @@ export const calendarStyles = {
     },
   },
 };
+
+export const toolbarContainerStyle = {
+  backgroundColor: "#e3f2fd",
+  backdropFilter: "blur(10px)",
+  WebkitBackdropFilter: "blur(10px)",
+  padding: "16px 20px",
+  borderRadius: "12px",
+  marginBottom: "24px",
+  border: "2px solid #90caf9",
+  boxShadow: "0 4px 12px rgba(25, 118, 210, 0.1)",
+  position: "sticky",
+  top: 0,
+  zIndex: 999,
+};
+
+export const navButtonStyle = {
+  color: "#1976d2",
+  fontSize: "0.9rem",
+  padding: "8px 20px",
+  borderRadius: "10px",
+  border: "2px solid transparent",
+  backgroundColor: "white",
+  textTransform: "none",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    backgroundColor: "#1976d2",
+    color: "white",
+    border: "2px solid #1565c0",
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
+  },
+};
+
+export const viewButtonStyle = (active) => ({
+  fontSize: "0.9rem",
+  padding: "8px 16px",
+  borderRadius: "10px",
+  border: "2px solid transparent",
+  transition: "all 0.3s ease",
+  backgroundColor: active ? "#1172BA" : "white",
+  color: active ? "white" : "#1976d2",
+  textTransform: "capitalize",
+  "&:hover": {
+    backgroundColor: "#1976d2",
+    color: "white",
+    border: "2px solid #1565c0",
+    transform: "translateY(-2px)",
+    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.3)",
+  },
+});
+
+export const actionButtonStyle = {
+  color: "white",
+  fontSize: "0.9rem",
+  padding: "8px 24px",
+  borderRadius: "10px",
+  textTransform: "none",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-2px)",
+  },
+};

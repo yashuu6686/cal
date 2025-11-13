@@ -5,10 +5,13 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useRouter } from "next/navigation";
 
 function Preview() {
   const localizer = momentLocalizer(moment);
-  const weekSchedule = useSelector(state => state.calendar.weekSchedule);
+  const weekSchedule = useSelector((state) => state.calendar.weekSchedule);
+  const router = useRouter();
 
   const generateTimeSlots = (start, end, intervalMinutes) => {
     const slots = [];
@@ -51,7 +54,7 @@ function Preview() {
 
         intervals.forEach((i) => {
           divided.push({
-          // title: `${slot.serviceType} `,    //- ${specialitiesArray}
+            // title: `${slot.serviceType} `,    //- ${specialitiesArray}
             start: i.start,
             end: i.end,
             color: "#1c95f1ff",
@@ -92,7 +95,34 @@ function Preview() {
         p: 3,
       }}
     >
-      <Grid container spacing={3}>
+      <Box
+  onClick={() => router.back()}
+  sx={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    cursor: "pointer",
+    color: "#1976d2",
+    backgroundColor: "white",
+    borderRadius: "8px",
+    padding: "10px 16px",
+    boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
+    transition: "all 0.3s ease",
+    fontWeight: 500,
+    fontSize: "14px",
+    ml:1,
+    "&:hover": {
+      color: "white",
+      backgroundColor: "#1976d2",
+      boxShadow: "0 4px 12px rgba(25, 118, 210, 0.4)",
+      transform: "translateX(-1px)",
+    },
+  }}
+>
+  <ArrowBackIcon sx={{ fontSize: "20px" }} />
+  <span>Back</span>
+</Box>
+      <Grid container spacing={3} sx={{mt:1}}>
         {/* Header Section */}
         {/* <Grid item xs={12}>
           <Box
@@ -180,13 +210,14 @@ function Preview() {
         </Grid> */}
 
         {/* Calendar Section */}
-        <Grid item size={{md:12}} md={12}>
+        <Grid item size={{ md: 12 }} md={12}>
           <Paper
             elevation={0}
             sx={{
               p: 3,
               borderRadius: 4,
-              background: "linear-gradient(to bottom, #ffffff 0%, #f8fbff 100%)",
+              background:
+                "linear-gradient(to bottom, #ffffff 0%, #f8fbff 100%)",
               border: "2px solid #e3f2fd",
               boxShadow: "0 8px 32px rgba(25, 118, 210, 0.08)",
               "& .rbc-calendar": {
