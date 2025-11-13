@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { toggleSpeciality } from "@/redux/store/slices/calendarSlice";
 import { useCalendarState } from "@/hook/useCalendarState";
 import CommonButton from "@/components/CommonButton";
+import SectionHeader from "@/components/SectionHeader";
 // import { sectionHeaderStyles } from "./styles";
 
 const SpecialitiesSection = ({ disabled }) => {
@@ -12,23 +13,10 @@ const SpecialitiesSection = ({ disabled }) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      <Box
-        //   sx={sectionHeaderStyles}
-        sx={{
-          background: "rgb(198, 228, 251)",
-          p: 0.6,
-          borderRadius: 3,
-          border: "1px solid #90caf9",
-          mb: 1,
-          display: "flex",
-          alignItems: "center",
-          gap: 1.5,
-        }}
-      >
-        <Typography variant="h6" sx={{ color: "#1565c0", fontWeight: 400 }}>
-          Specialities
-        </Typography>
-      </Box>
+      <SectionHeader
+             title="Specialities"
+            
+           />
 
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {specialities.map((item, i) => {

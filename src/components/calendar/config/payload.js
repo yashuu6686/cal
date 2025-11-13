@@ -15,7 +15,7 @@ export const generateCalendarPayload = ({
   endTime,
   holidayValues = {},
 }) => {
-  // ✅ Merge pending slots into existing week schedule
+  //  Merge pending slots into existing week schedule
   const updatedWeekSchedule = weekSchedule.map((dayItem) => {
     const additionalSlots = pendingSlots
       .filter((slot) => slot.days.includes(dayItem.day))
@@ -39,7 +39,7 @@ export const generateCalendarPayload = ({
     };
   });
 
-  // ✅ Merge any unsaved breaks
+  //  Merge any unsaved breaks
   const updatedBreaks = [
     ...breaks,
     ...(breakSelectedDays.length && startTime && endTime
@@ -53,7 +53,7 @@ export const generateCalendarPayload = ({
       : []),
   ];
 
-  // ✅ Merge any unsaved holidays
+  //  Merge any unsaved holidays
   const updatedHolidays = [
     ...holidays,
     ...(holidayValues?.date

@@ -313,11 +313,16 @@ const calendarSlice = createSlice({
     // ===== BREAK ACTIONS =====
     addBreak: (state, action) => {
       const newBreak = action.payload;
+      const breakToAdd = {
+        ...newBreak,
+        startTime: newBreak.startTime ? dayjs(newBreak.startTime).format("HH:mm") : null,
+        endTime: newBreak.endTime ? dayjs(newBreak.endTime).format("HH:mm") : null,
+      };
       if (state.editIndex !== null) {
-        state.breaks[state.editIndex] = newBreak;
+        state.breaks[state.editIndex] = breakToAdd;
         state.editIndex = null;
       } else {
-        state.breaks.push(newBreak);
+        state.breaks.push(breakToAdd);
       }
       state.breakSelectedDays = [];
       state.startTime = null;
@@ -335,11 +340,16 @@ const calendarSlice = createSlice({
     // ===== HOLIDAY ACTIONS =====
     addHoliday: (state, action) => {
       const newHoliday = action.payload;
+      const holidayToAdd = {
+        ...newHoliday,
+        startTime: newHoliday.startTime ? dayjs(newHoliday.startTime).format("HH:mm") : null,
+        endTime: newHoliday.endTime ? dayjs(newHoliday.endTime).format("HH:mm") : null,
+      };
       if (state.holidayEditIndex !== null) {
-        state.holidays[state.holidayEditIndex] = newHoliday;
+        state.holidays[state.holidayEditIndex] = holidayToAdd;
         state.holidayEditIndex = null;
       } else {
-        state.holidays.push(newHoliday);
+        state.holidays.push(holidayToAdd);
       }
       state.holidayValues = { date: null, startTime: null, endTime: null };
     },

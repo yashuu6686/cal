@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -22,13 +21,23 @@ export const useHolidayEditing = () => {
     setEditHolidayData({
       date: holiday.date ? dayjs(holiday.date) : null,
       startTime: holiday.startTime
-        ? dayjs(`2000-01-01 ${holiday.startTime}`)
+        ? dayjs.isDayjs(holiday.startTime)
+          ? holiday.startTime
+          : dayjs(`2000-01-01 ${holiday.startTime}`)
         : null,
-      endTime: holiday.endTime ? dayjs(`2000-01-01 ${holiday.endTime}`) : null,
+      endTime: holiday.endTime
+        ? dayjs.isDayjs(holiday.endTime)
+          ? holiday.endTime
+          : dayjs(`2000-01-01 ${holiday.endTime}`)
+        : null,
     });
+    setFieldErrors({}); // ✅ Clear errors when starting edit
   };
 
   const handleSaveHolidayInlineEdit = async () => {
+    console.log("✅ Save clicked");
+    console.log("📝 Current editHolidayData:", editHolidayData);
+    
     if (editingHolidayIndex !== null && editHolidayData) {
       try {
         setFieldErrors({});
@@ -39,15 +48,20 @@ export const useHolidayEditing = () => {
           endTime: editHolidayData.endTime,
         };
 
-        await holidayValidationSchema.validate(dataToValidate, {
+        console.log("🔍 Validating data:", dataToValidate);
+
+        await holidayValidationSchema().validate(dataToValidate, {
           context: {
             existingHolidays: holidays.filter(
               (_, index) => index !== editingHolidayIndex
             ),
             weekSchedule,
+            holidayEditIndex: editingHolidayIndex,
           },
           abortEarly: false,
         });
+
+        console.log("✅ Validation passed");
 
         const updated = [...holidays];
         updated[editingHolidayIndex] = {
@@ -62,10 +76,14 @@ export const useHolidayEditing = () => {
             : null,
         };
 
+        console.log("💾 Updating holiday:", updated[editingHolidayIndex]);
+
         dispatch(setHolidays(updated));
         setEditingHolidayIndex(null);
         setEditHolidayData(null);
         setFieldErrors({});
+        
+        console.log("✅ Holiday updated successfully");
       } catch (error) {
         if (error.name === "ValidationError" && error.inner) {
           const newErrors = {};
@@ -73,17 +91,30 @@ export const useHolidayEditing = () => {
             newErrors[err.path] = err.message;
           });
           setFieldErrors(newErrors);
+        } else {
+          // Handle unexpected errors
+          setFieldErrors({
+            general: error.message || "An unexpected error occurred"
+          });
         }
       }
+    } else {
+      console.warn("⚠️ Cannot save: Missing index or data", {
+        editingHolidayIndex,
+        editHolidayData
+      });
     }
   };
 
   const handleCancelHolidayInlineEdit = () => {
+    console.log("❌ Cancel clicked");
     setEditingHolidayIndex(null);
     setEditHolidayData(null);
+    setFieldErrors({}); // ✅ Clear errors on cancel
   };
 
   const handleDeleteHoliday = (index) => {
+    console.log("🗑️ Deleting holiday at index:", index);
     dispatch(deleteHoliday(index));
   };
 

@@ -9,6 +9,7 @@ import {
 import { useCalendarState } from "@/hook/useCalendarState";
 import CommonButton from "@/components/CommonButton";
 import CommonDialogBox from "@/components/CommonDialogBox";
+import SectionHeader from "@/components/SectionHeader";
 
 const ServiceTypeSection = ({ disabled, onAddService }) => {
   const dispatch = useDispatch();
@@ -17,7 +18,6 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
 
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [serviceToRemove, setServiceToRemove] = useState(null);
-
 
   const hasAssociatedSlots = (serviceType) => {
     return weekSchedule.some((day) =>
@@ -58,37 +58,19 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      <Box
-        sx={{
-          background: "rgb(198, 228, 251)",
-          p: 0.6,
-          borderRadius: 3,
-          border: "1px solid #90caf9",
-          mb: 1,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 1.5,
-        }}
-      >
-        <Typography variant="h6" sx={{ color: "#1565c0", fontWeight: 400 }}>
-          Service Type
-        </Typography>
-        <Button
-          disabled={disabled}
-          variant="contained"
-          onClick={onAddService}
-          sx={{
-            textTransform: "none",
-            background: "#1172BA",
-            color: "white",
-            fontSize: "0.9rem",
-            px: 1,
-          }}
-        >
-          Add Service
-        </Button>
-      </Box>
+      <SectionHeader
+        title="Service Type"
+        actionButton={
+          <Button
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            disabled={disabled}
+            onClick={onAddService}
+          >
+            Add Service
+          </Button>
+        }
+      />
 
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
         {dataOfService.map((item, i) => {

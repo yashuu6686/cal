@@ -7,10 +7,6 @@ import {
   Checkbox,
   Autocomplete,
   Chip,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
 } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -34,7 +30,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
       <Box
         sx={{
           background: "rgb(198, 228, 251)",
-          p: 0.6,
+          p: 1,
           borderRadius: 3,
           border: "1px solid #90caf9",
           mb: 2,
@@ -74,27 +70,26 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
             const isSelectAll = option === "Select All";
 
             return (
-              <ListItem key={option} disablePadding>
-                <ListItemButton dense {...props}>
-                  <ListItemIcon>
-                    <Checkbox
-                      checked={isSelectAll ? allSelected : selected}
-                      indeterminate={
-                        isSelectAll &&
-                        values.breakSelectedDays?.length > 0 &&
-                        values.breakSelectedDays?.length < days.length
-                      }
-                      sx={{
-                        color: "#1976d2",
-                        "&.Mui-checked": { color: "#1976d2" },
-                        "&.MuiCheckbox-indeterminate": { color: "#1976d2" },
-                      }}
-                    />
-                  </ListItemIcon>
-
-                  <ListItemText primary={option} />
-                </ListItemButton>
-              </ListItem>
+              <li {...props} key={option}>
+                <Checkbox
+                  checked={isSelectAll ? allSelected : selected}
+                  indeterminate={
+                    isSelectAll &&
+                    values.breakSelectedDays?.length > 0 &&
+                    values.breakSelectedDays?.length < days.length
+                  }
+                  sx={{
+                    color: "#1976d2",
+                    "&.Mui-checked": {
+                      color: "#1976d2",
+                    },
+                    "&.MuiCheckbox-indeterminate": {
+                      color: "#1976d2",
+                    },
+                  }}
+                />
+                {option}
+              </li>
             );
           }}
           renderInput={(params) => (
@@ -102,33 +97,29 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               {...params}
               label="Select Days"
               fullWidth
-              placeholder={
-                values.breakSelectedDays?.length === 0 ? "Select days" : ""
-              }
-              error={
-                touched.breakSelectedDays && Boolean(errors.breakSelectedDays)
-              }
+              placeholder={values.breakSelectedDays?.length === 0 ? "Select days" : ""}
+              error={touched.breakSelectedDays && Boolean(errors.breakSelectedDays)}
               helperText={touched.breakSelectedDays && errors.breakSelectedDays}
-              // sx={{
-              //   cursor: "pointer",
-              //   "& .MuiOutlinedInput-root": {
-              //     borderRadius: 2.5,
-              //     "&:hover fieldset": {
-              //       borderColor: "#1976d2",
-              //     },
-              //     "&.Mui-focused fieldset": {
-              //       borderColor: "#1976d2",
-              //       borderWidth: 2,
-              //     },
-              //   },
-              //   "& .MuiInputLabel-root.Mui-focused": {
-              //     color: "#1976d2",
-              //   },
-              //   "& .MuiAutocomplete-input": {
-              //     minWidth: "0 !important",
-              //     width: "0 !important",
-              //   },
-              // }}
+              sx={{
+                cursor: "pointer",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2.5,
+                  "&:hover fieldset": {
+                    borderColor: "#1976d2",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1976d2",
+                    borderWidth: 2,
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1976d2",
+                },
+                "& .MuiAutocomplete-input": {
+                  minWidth: "0 !important",
+                  width: "0 !important",
+                },
+              }}
               inputProps={{
                 ...params.inputProps,
                 readOnly: true,
@@ -142,8 +133,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                 {...getTagProps({ index })}
                 key={option}
                 sx={{
-                  background:
-                    "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                  background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
                   color: "white",
                   fontWeight: 600,
                   fontSize: "0.85rem",
@@ -162,9 +152,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
 
         {/* Time Pickers */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box
-            sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}>
             <TimePicker
               label="Start Time"
               value={values.startTime}
@@ -174,28 +162,28 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                   fullWidth: true,
                   error: touched.startTime && Boolean(errors.startTime),
                   helperText: touched.startTime && errors.startTime,
-                  // sx: {
-                  //   flex: 1,
-                  //   "& .MuiOutlinedInput-root": {
-                  //     borderRadius: 2.5,
-                  //     boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-                  //     "&:hover fieldset": {
-                  //       borderColor: "#1976d2",
-                  //     },
-                  //     "&.Mui-focused fieldset": {
-                  //       borderColor: "#1976d2",
-                  //       borderWidth: 2,
-                  //     },
-                  //   },
-                  //   "& .MuiInputLabel-root.Mui-focused": {
-                  //     color: "#1976d2",
-                  //   },
-                  //   ".MuiPickersInputBase-root": {
-                  //     boxShadow:
-                  //       "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
-                  //     borderRadius: 3,
-                  //   },
-                  // },
+                  sx: {
+                    flex: 1,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2.5,
+                      boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#1976d2",
+                        borderWidth: 2,
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "#1976d2",
+                    },
+                    ".MuiPickersInputBase-root": {
+                      boxShadow:
+                        "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+                      borderRadius: 3,
+                    },
+                  },
                 },
               }}
             />
@@ -208,28 +196,28 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                   fullWidth: true,
                   error: touched.endTime && Boolean(errors.endTime),
                   helperText: touched.endTime && errors.endTime,
-                  // sx: {
-                  //   flex: 1,
-                  //   "& .MuiOutlinedInput-root": {
-                  //     borderRadius: 2.5,
-                  //     boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-                  //     "&:hover fieldset": {
-                  //       borderColor: "#1976d2",
-                  //     },
-                  //     "&.Mui-focused fieldset": {
-                  //       borderColor: "#1976d2",
-                  //       borderWidth: 2,
-                  //     },
-                  //   },
-                  //   "& .MuiInputLabel-root.Mui-focused": {
-                  //     color: "#1976d2",
-                  //   },
-                  //   ".MuiPickersInputBase-root": {
-                  //     boxShadow:
-                  //       "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
-                  //     borderRadius: 3,
-                  //   },
-                  // },
+                  sx: {
+                    flex: 1,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: 2.5,
+                      boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+                      "&:hover fieldset": {
+                        borderColor: "#1976d2",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#1976d2",
+                        borderWidth: 2,
+                      },
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "#1976d2",
+                    },
+                    ".MuiPickersInputBase-root": {
+                      boxShadow:
+                        "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+                      borderRadius: 3,
+                    },
+                  },
                 },
               }}
             />

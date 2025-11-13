@@ -12,13 +12,13 @@ import {
   Box,
   Chip,
 } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker, DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { Edit, Delete, Check, Close } from "@mui/icons-material";
 import dayjs from "dayjs";
 
 import { useHolidayEditing } from "@/hook/useHolidayEditing";
 import { sortHolidaysByDateTime } from "@/components/calendar/utils/eventHelpers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export default function HolidayTable() {
   const {
@@ -37,14 +37,15 @@ export default function HolidayTable() {
   const sortedHolidays = sortHolidaysByDateTime(holidays);
 
   return (
-    <TableContainer
-      sx={{
-        borderRadius: 3,
-        overflow: "hidden",
-        border: "1px solid #e0e0e0",
-      }}
-    >
-      <Table>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <TableContainer
+        sx={{
+          borderRadius: 3,
+          overflow: "hidden",
+          border: "1px solid #e0e0e0",
+        }}
+      >
+        <Table>
         <TableHead>
           <TableRow sx={{ background: "#1172BA" }}>
             <TableCell
@@ -294,5 +295,6 @@ export default function HolidayTable() {
         </TableBody>
       </Table>
     </TableContainer>
+    </LocalizationProvider>
   );
 }

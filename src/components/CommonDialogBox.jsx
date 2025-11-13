@@ -27,7 +27,6 @@ export default function CommonDialogBox({
         sx: {
           borderRadius: "14px",
           padding: "6px",
-          
         },
       }}
     >
@@ -40,19 +39,19 @@ export default function CommonDialogBox({
           bgcolor: "rgb(17, 114, 186)",
           borderRadius: "10px",
           padding: "10px !important",
-         
         }}
       >
         {title}
       </DialogTitle>
 
-      <DialogContent   sx={{
-    "&&": {
-      padding: "10px !important", // ✅ valid use of !important
-      marginTop: "8px",
-    },
-  }}
->
+      <DialogContent
+        sx={{
+          "&&": {
+            padding: "10px !important", //  valid use of !important
+            marginTop: "8px",
+          },
+        }}
+      >
         <Typography
           sx={{ fontSize: "15px", color: "#4b5563", lineHeight: 1.6 }}
         >
@@ -60,7 +59,7 @@ export default function CommonDialogBox({
         </Typography>
       </DialogContent>
 
-      <DialogActions >
+      <DialogActions>
         {!hideCancel && (
           <Button
             onClick={onClose}

@@ -29,6 +29,7 @@ import {
   updateSlotInDay,
   updateEvents,
 } from "@/redux/store/slices/calendarSlice";
+import SectionHeader from "@/components/SectionHeader";
 
 const days = [
   { short: "Sun", full: "Sunday" },
@@ -91,7 +92,7 @@ const WorkingPlanView = ({ disabled = false }) => {
     return dayData ? dayData.slots : [];
   };
 
-  // ✅ FIXED: Get error for specific slot field
+  //  FIXED: Get error for specific slot field
   const getSlotError = (dayIndex, slotIndex, field) => {
     const errorPath = `weekSchedule[${dayIndex}].slots[${slotIndex}].${field}`;
     const touchPath = `weekSchedule[${dayIndex}].slots[${slotIndex}].${field}`;
@@ -128,28 +129,9 @@ const WorkingPlanView = ({ disabled = false }) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         {/* Header */}
-        <Box
-          sx={{
-            background: "rgb(198, 228, 251)",
-            p: 0.6,
-            borderRadius: 3,
-            border: "1px solid #90caf9",
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#1565c0",
-              fontWeight: 400,
-            }}
-          >
-            Working Plan
-          </Typography>
-        </Box>
+       <SectionHeader 
+       title="Working Plan"
+       />
 
         {/* Days Container */}
         <Box>

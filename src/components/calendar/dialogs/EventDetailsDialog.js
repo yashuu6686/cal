@@ -75,7 +75,7 @@ export default function EventDetailsDialog({
 
     const serviceType = selectedEvent.serviceType || "";
 
-    // ✅ Extract specialities array
+    // Extract specialities array
     let specialities = [];
     if (selectedEvent.specialities) {
       if (Array.isArray(selectedEvent.specialities)) {
