@@ -101,6 +101,7 @@ const Step2Form = ({ onSubmit, onBack }) => {
           </Box>
         </Form>
       )}
+      
     </Formik>
   );
 };

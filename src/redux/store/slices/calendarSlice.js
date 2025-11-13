@@ -503,6 +503,22 @@ const calendarSlice = createSlice({
           : item
       );
     },
+
+    // Add this to your reducers in calendarSlice
+removeSlotsByServiceType: (state, action) => {
+  const serviceType = action.payload;
+  
+  // Remove slots from weekSchedule
+  state.weekSchedule = state.weekSchedule.map((dayItem) => ({
+    ...dayItem,
+    slots: dayItem.slots.filter((slot) => slot.serviceType !== serviceType),
+  }));
+  
+  // Remove events from calendar
+  state.events = state.events.filter(
+    (event) => event.serviceType !== serviceType
+  );
+},
   },
   extraReducers: (builder) => {
     builder
@@ -562,6 +578,7 @@ export const {
   updateSlotInDay,
   removeSlotFromDay,
   addSlotToDay,
+  removeSlotsByServiceType
 } = calendarSlice.actions;
 
 // ✅ Selectors
