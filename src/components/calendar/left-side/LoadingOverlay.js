@@ -22,9 +22,9 @@ const LoadingOverlay = ({ isLoading, isPublished }) => {
       }}
     >
       <CircularProgress size={60} sx={{ color: "#fff", mb: 2 }} />
-      <Typography sx={{ color: "#fff", fontSize: "1.2rem", fontWeight: 600 }}>
+      {/* <Typography sx={{ color: "#fff", fontSize: "1.2rem", fontWeight: 600 }}>
         {isPublished ? "🔄 Updating Calendar..." : "📅 Publishing Calendar..."}
-      </Typography>
+      </Typography> */}
     </Box>
   );
 };
