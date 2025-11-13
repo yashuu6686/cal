@@ -18,7 +18,7 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [serviceToRemove, setServiceToRemove] = useState(null);
 
-  // Check if service has associated slots
+
   const hasAssociatedSlots = (serviceType) => {
     return weekSchedule.some((day) =>
       day.slots.some((slot) => slot.serviceType === serviceType)
@@ -30,26 +30,21 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
       (s) => s.type === service.type
     );
 
-    // If deselecting and has slots, show confirmation dialog
     if (isCurrentlySelected && hasAssociatedSlots(service.type)) {
       setServiceToRemove(service);
       setOpenConfirmDialog(true);
     } else {
-      // No slots, just toggle
       dispatch(toggleService(service));
     }
   };
 
   const handleConfirmRemoveSlots = () => {
     if (serviceToRemove) {
-      // Remove slots first
       dispatch(removeSlotsByServiceType(serviceToRemove.type));
       dispatch(updateEvents());
 
-      // Then toggle the service off
       dispatch(toggleService(serviceToRemove));
 
-      // Reset state
       setOpenConfirmDialog(false);
       setServiceToRemove(null);
     }

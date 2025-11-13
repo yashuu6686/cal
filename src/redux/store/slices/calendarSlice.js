@@ -181,7 +181,7 @@ const initialState = {
   selectedDay: null,
 };
 
-// ✅ Calendar Slice
+//  Calendar Slice
 const calendarSlice = createSlice({
   name: "calendar",
   initialState,
@@ -539,7 +539,7 @@ removeSlotsByServiceType: (state, action) => {
   },
 });
 
-// ✅ Export Actions
+//  Export Actions
 export const {
   toggleService,
   toggleSpeciality,
@@ -581,13 +581,11 @@ export const {
   removeSlotsByServiceType
 } = calendarSlice.actions;
 
-// ✅ Selectors
+// Selectors
 export const selectAllServices = (state) => state.calendar.dataOfService;
-export const selectSelectedServices = (state) =>
-  state.calendar.selectedServices;
+export const selectSelectedServices = (state) => state.calendar.selectedServices;
 export const selectSpecialities = (state) => state.calendar.specialities;
-export const selectSelectedSpecialities = (state) =>
-  state.calendar.selectedSpecialities;
+export const selectSelectedSpecialities = (state) => state.calendar.selectedSpecialities;
 export const selectEvents = (state) => state.calendar.events;
 export const selectWeekSchedule = (state) => state.calendar.weekSchedule;
 export const selectForm = (state) => state.calendar.form;

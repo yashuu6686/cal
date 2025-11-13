@@ -29,7 +29,7 @@ export const publishCalendar = async (payload, dispatch) => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
     // Mock successful response
-    console.log("📅 Publishing Calendar Payload:", payload);
+    // console.log("📅 Publishing Calendar Payload:", payload);
     
     dispatch(setApiSuccess("Calendar published successfully!"));
     dispatch(setLoading(false));
@@ -70,7 +70,7 @@ export const updateCalendar = async (payload, dispatch) => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
     // Mock successful response
-    console.log("🔄 Updating Calendar Payload:", payload);
+    // console.log("🔄 Updating Calendar Payload:", payload);
     
     dispatch(setApiSuccess("Calendar updated successfully!"));
     dispatch(setLoading(false));
@@ -104,7 +104,7 @@ export const deleteCalendar = async (calendarId, dispatch) => {
     
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
-    console.log("🗑️ Deleting Calendar ID:", calendarId);
+    // console.log("🗑️ Deleting Calendar ID:", calendarId);
     
     dispatch(setApiSuccess("Calendar deleted successfully!"));
     dispatch(setLoading(false));
@@ -140,7 +140,7 @@ export const fetchCalendar = async (calendarId, dispatch) => {
     
     await new Promise((resolve) => setTimeout(resolve, 1000));
     
-    console.log("📥 Fetching Calendar ID:", calendarId);
+    // console.log("📥 Fetching Calendar ID:", calendarId);
     
     // Mock calendar data
     const mockData = {

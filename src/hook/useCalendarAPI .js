@@ -60,7 +60,7 @@ export const useCalendarAPI = (setStep) => {
     try {
       setStep(2);
     } catch (error) {
-      console.error("Step 1 validation error:", error);
+      // console.error("Step 1 validation error:", error);
     } finally {
       setSubmitting(false);
     }
@@ -129,7 +129,7 @@ export const useCalendarAPI = (setStep) => {
         setStep(1);
       }
     } catch (error) {
-      console.error("Step 2 submission error:", error);
+      // console.error("Step 2 submission error:", error);
     } finally {
       setSubmitting(false);
     }
@@ -151,7 +151,7 @@ export const useCalendarAPI = (setStep) => {
       resetForm();
       return { success: true };
     } catch (error) {
-      console.error("Add service error:", error);
+      // console.error("Add service error:", error);
       return { success: false };
     } finally {
       setSubmitting(false);

@@ -30,8 +30,6 @@ import {
   updateEvents,
 } from "@/redux/store/slices/calendarSlice";
 
-
-
 const days = [
   { short: "Sun", full: "Sunday" },
   { short: "Mon", full: "Monday" },
@@ -74,20 +72,18 @@ const WorkingPlanView = ({ disabled = false }) => {
       serviceType: "",
     };
 
-   dispatch(addSlotToDay({ day, slot: newSlot }));
-    
+    dispatch(addSlotToDay({ day, slot: newSlot }));
   };
 
   const handleDeleteSlot = (day, slotId) => {
-   dispatch(removeSlotFromDay({ day, slotId }));
-dispatch(updateEvents());
+    dispatch(removeSlotFromDay({ day, slotId }));
+    dispatch(updateEvents());
     setOpenDelete(false);
     setSlotToDelete(null);
   };
 
   const handleSlotChange = (day, slotId, field, value) => {
-   dispatch(updateSlotInDay({ day, slotId, field, value }));
-    
+    dispatch(updateSlotInDay({ day, slotId, field, value }));
   };
 
   const getDaySlots = (dayName) => {
@@ -108,27 +104,25 @@ dispatch(updateEvents());
   };
 
   // Recursively flatten nested Formik errors
-const flattenErrors = (obj, result = []) => {
-  Object.values(obj).forEach((val) => {
-    if (typeof val === "string") {
-      result.push(val);
-    } else if (typeof val === "object" && val !== null) {
-      flattenErrors(val, result);
-    }
-  });
-  return result;
-};
-
+  const flattenErrors = (obj, result = []) => {
+    Object.values(obj).forEach((val) => {
+      if (typeof val === "string") {
+        result.push(val);
+      } else if (typeof val === "object" && val !== null) {
+        flattenErrors(val, result);
+      }
+    });
+    return result;
+  };
 
   React.useEffect(() => {
-  if (errors && Object.keys(errors).length > 0) {
-    const flatErrors = flattenErrors(errors);
-    flatErrors.forEach((msg) => {
-      if (msg && typeof msg === "string") toast.error(msg);
-    });
-  }
-}, [errors]);
-
+    if (errors && Object.keys(errors).length > 0) {
+      const flatErrors = flattenErrors(errors);
+      flatErrors.forEach((msg) => {
+        if (msg && typeof msg === "string") toast.error(msg);
+      });
+    }
+  }, [errors]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -219,8 +213,8 @@ const flattenErrors = (obj, result = []) => {
                       sx={{
                         bgcolor: "#1172BA",
                         color: "white",
-                        width: 36,
-                        height: 36,
+                        width: 33,
+                        height: 33,
                         "&:hover": {
                           bgcolor: "#1172BA",
                           transform: "rotate(90deg)",
@@ -289,7 +283,6 @@ const flattenErrors = (obj, result = []) => {
                                   gap: 1,
                                 }}
                               >
-                                
                                 <TextField
                                   select
                                   disabled={disabled}

@@ -43,7 +43,13 @@ const SpecialitiesSection = ({ disabled }) => {
               isSelected={isSelected}
               onClick={() => dispatch(toggleSpeciality(item))}
             >
-              <Typography sx={{ fontSize: "0.85rem", fontWeight: 600,textTransform:'none' }}>
+              <Typography
+                sx={{
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                  textTransform: "none",
+                }}
+              >
                 {item.type}
               </Typography>
             </CommonButton>

@@ -7,6 +7,10 @@ import {
   Checkbox,
   Autocomplete,
   Chip,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -70,26 +74,27 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
             const isSelectAll = option === "Select All";
 
             return (
-              <li {...props} key={option}>
-                <Checkbox
-                  checked={isSelectAll ? allSelected : selected}
-                  indeterminate={
-                    isSelectAll &&
-                    values.breakSelectedDays?.length > 0 &&
-                    values.breakSelectedDays?.length < days.length
-                  }
-                  sx={{
-                    color: "#1976d2",
-                    "&.Mui-checked": {
-                      color: "#1976d2",
-                    },
-                    "&.MuiCheckbox-indeterminate": {
-                      color: "#1976d2",
-                    },
-                  }}
-                />
-                {option}
-              </li>
+              <ListItem key={option} disablePadding>
+                <ListItemButton dense {...props}>
+                  <ListItemIcon>
+                    <Checkbox
+                      checked={isSelectAll ? allSelected : selected}
+                      indeterminate={
+                        isSelectAll &&
+                        values.breakSelectedDays?.length > 0 &&
+                        values.breakSelectedDays?.length < days.length
+                      }
+                      sx={{
+                        color: "#1976d2",
+                        "&.Mui-checked": { color: "#1976d2" },
+                        "&.MuiCheckbox-indeterminate": { color: "#1976d2" },
+                      }}
+                    />
+                  </ListItemIcon>
+
+                  <ListItemText primary={option} />
+                </ListItemButton>
+              </ListItem>
             );
           }}
           renderInput={(params) => (
@@ -97,8 +102,12 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               {...params}
               label="Select Days"
               fullWidth
-              placeholder={values.breakSelectedDays?.length === 0 ? "Select days" : ""}
-              error={touched.breakSelectedDays && Boolean(errors.breakSelectedDays)}
+              placeholder={
+                values.breakSelectedDays?.length === 0 ? "Select days" : ""
+              }
+              error={
+                touched.breakSelectedDays && Boolean(errors.breakSelectedDays)
+              }
               helperText={touched.breakSelectedDays && errors.breakSelectedDays}
               // sx={{
               //   cursor: "pointer",
@@ -133,7 +142,8 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                 {...getTagProps({ index })}
                 key={option}
                 sx={{
-                  background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                  background:
+                    "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
                   color: "white",
                   fontWeight: 600,
                   fontSize: "0.85rem",
@@ -152,7 +162,9 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
 
         {/* Time Pickers */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}
+          >
             <TimePicker
               label="Start Time"
               value={values.startTime}

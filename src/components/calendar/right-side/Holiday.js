@@ -81,7 +81,8 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
             slotProps={{
               textField: {
                 fullWidth: true,
-                error: touched.holidayStartTime && Boolean(errors.holidayStartTime),
+                error:
+                  touched.holidayStartTime && Boolean(errors.holidayStartTime),
                 helperText: touched.holidayStartTime && errors.holidayStartTime,
                 // sx: {
                 //   "& .MuiOutlinedInput-root": {
