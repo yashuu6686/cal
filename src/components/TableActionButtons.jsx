@@ -2,9 +2,7 @@ import React from "react";
 import { Box, IconButton } from "@mui/material";
 import { Edit, Delete, Check, Close } from "@mui/icons-material";
 
-/**
- * Edit and Delete action buttons
- */
+
 export const EditDeleteButtons = ({ onEdit, onDelete }) => (
   <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center" }}>
     <IconButton color="primary" size="small" onClick={onEdit}>
@@ -16,9 +14,7 @@ export const EditDeleteButtons = ({ onEdit, onDelete }) => (
   </Box>
 );
 
-/**
- * Save and Cancel action buttons (for edit mode)
- */
+
 export const SaveCancelButtons = ({ onSave, onCancel }) => (
   <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center" }}>
     <IconButton
@@ -46,9 +42,6 @@ export const SaveCancelButtons = ({ onSave, onCancel }) => (
   </Box>
 );
 
-/**
- * Combined component that switches between edit/view modes
- */
 export const TableActionButtons = ({
   isEditing,
   onEdit,

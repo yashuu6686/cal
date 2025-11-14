@@ -1,11 +1,7 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 
-/**
- * Reusable section header component
- * @param {string} title - Section title
- * @param {React.ReactNode} actionButton - Optional action button
- */
+
 export default function SectionHeader({ title, actionButton }) {
   return (
     <Box

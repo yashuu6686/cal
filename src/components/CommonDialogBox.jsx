@@ -47,7 +47,7 @@ export default function CommonDialogBox({
       <DialogContent
         sx={{
           "&&": {
-            padding: "10px !important", //  valid use of !important
+            padding: "10px !important", 
             marginTop: "8px",
           },
         }}

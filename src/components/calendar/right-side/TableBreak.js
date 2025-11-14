@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Edit, Delete, Check, Close } from "@mui/icons-material";
 import dayjs from "dayjs";
 
 import { useBreakEditing } from "@/hook/useBreakEditing";
 import { sortBreaksByDayAndTime } from "@/components/calendar/utils/eventHelpers";
+import { TableActionButtons } from "@/components/TableActionButtons";
 
 export default function BreakTable() {
   const {
@@ -37,7 +37,7 @@ export default function BreakTable() {
   const sortedBreaks = sortBreaksByDayAndTime(breaks);
 
   return (
-     <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <TableContainer
         sx={{
           borderRadius: 3,
@@ -104,7 +104,8 @@ export default function BreakTable() {
 
                 {/* Start Time Column */}
                 <TableCell sx={{ py: 1.5, textAlign: "center" }}>
-                  {editingBreakIndex === `${item.breakIndex}-${item.dayIndex}` ? (
+                  {editingBreakIndex ===
+                  `${item.breakIndex}-${item.dayIndex}` ? (
                     <TimePicker
                       value={editBreakData?.startTime}
                       onChange={(newValue) => {
@@ -143,7 +144,8 @@ export default function BreakTable() {
 
                 {/* End Time Column */}
                 <TableCell sx={{ py: 1.5, textAlign: "center" }}>
-                  {editingBreakIndex === `${item.breakIndex}-${item.dayIndex}` ? (
+                  {editingBreakIndex ===
+                  `${item.breakIndex}-${item.dayIndex}` ? (
                     <TimePicker
                       value={editBreakData?.endTime}
                       onChange={(newValue) => {
@@ -182,7 +184,7 @@ export default function BreakTable() {
 
                 {/* Actions Column */}
                 <TableCell align="center" sx={{ py: 1.5, textAlign: "center" }}>
-                  {editingBreakIndex === `${item.breakIndex}-${item.dayIndex}` ? (
+                  {/* {editingBreakIndex === `${item.breakIndex}-${item.dayIndex}` ? (
                     <Box
                       sx={{
                         display: "flex",
@@ -245,7 +247,26 @@ export default function BreakTable() {
                         <Delete fontSize="small" />
                       </IconButton>
                     </Box>
-                  )}
+                  )} */}
+                  <TableActionButtons
+                    isEditing={
+                      editingBreakIndex ===
+                      `${item.breakIndex}-${item.dayIndex}`
+                    }
+                    onEdit={() =>
+                      handleStartInlineEdit(
+                        `${item.breakIndex}-${item.dayIndex}`,
+                        item
+                      )
+                    }
+                    onDelete={() =>
+                      handleDeleteDay(item.breakIndex, item.dayIndex)
+                    }
+                    onSave={() =>
+                      handleSaveInlineEdit(item.breakIndex, item.dayIndex)
+                    }
+                    onCancel={handleCancelInlineEdit}
+                  />
                 </TableCell>
               </TableRow>
             ))}

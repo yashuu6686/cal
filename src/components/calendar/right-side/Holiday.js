@@ -1,3 +1,5 @@
+import SectionHeader from "@/components/SectionHeader";
+import { TimePickerPair } from "@/components/timePickerUtils";
 import { Box, Typography } from "@mui/material";
 import {
   DesktopDatePicker,
@@ -10,28 +12,7 @@ import dayjs from "dayjs";
 function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
   return (
     <Box>
-      <Box
-        sx={{
-          background: "rgb(198, 228, 251)",
-          p: 0.6,
-          borderRadius: 3,
-          border: "1px solid #90caf9",
-          mb: 1,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            color: "#1565c0",
-            fontWeight: 600,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          Holiday
-        </Typography>
-      </Box>
+      <SectionHeader title="Holiday" />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         {/* Date Picker */}
@@ -74,7 +55,7 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
 
         {/* Time Pickers */}
         <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
-          <TimePicker
+          {/* <TimePicker
             label="Start Time"
             value={values.holidayStartTime}
             onChange={(val) => setFieldValue("holidayStartTime", val)}
@@ -140,6 +121,16 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
                 // },
               },
             }}
+          /> */}
+
+          <TimePickerPair
+            //  fullWidth={fullWidth}
+            startValue={values.holidayStartTime}
+            endValue={values.holidayEndTime}
+            onStartChange={(val) => setFieldValue("holidayStartTime", val)}
+            onEndChange={(val) => setFieldValue("holidayEndTime", val)}
+            startError={touched.holidayStartTime && errors.holidayStartTime}
+            endError={touched.holidayEndTime && errors.holidayEndTime}
           />
         </Box>
 

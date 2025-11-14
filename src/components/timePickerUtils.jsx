@@ -16,6 +16,7 @@ export const CommonTimePicker = ({
 }) => {
   return (
     <TimePicker
+    fullWidth
       disabled={disabled}
       label={label}
       value={value}
@@ -23,7 +24,7 @@ export const CommonTimePicker = ({
       slotProps={{
         textField: {
           fullWidth,
-          size,
+          // size,
           error: Boolean(error),
           helperText: error || helperText,
         },
@@ -32,9 +33,7 @@ export const CommonTimePicker = ({
   );
 };
 
-/**
- * Reusable time picker pair (Start & End)
- */
+
 export const TimePickerPair = ({
   startValue,
   endValue,

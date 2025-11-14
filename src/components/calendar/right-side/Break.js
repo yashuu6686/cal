@@ -1,4 +1,6 @@
 "use client";
+import SectionHeader from "@/components/SectionHeader";
+import { TimePickerPair } from "@/components/timePickerUtils";
 import {
   Box,
   TextField,
@@ -27,19 +29,10 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
 
   return (
     <Box>
-      <Box
-        sx={{
-          background: "rgb(198, 228, 251)",
-          p: 1,
-          borderRadius: 3,
-          border: "1px solid #90caf9",
-          mb: 2,
-        }}
-      >
-        <Typography variant="h6" sx={{ color: "#1565c0", fontWeight: 600 }}>
-          Break
-        </Typography>
-      </Box>
+      <SectionHeader
+                   title="Break"
+                  
+                 />
 
       <Box sx={{ mt: 2 }}>
         <Autocomplete
@@ -103,7 +96,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               sx={{
                 cursor: "pointer",
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: 2.5,
+                  // borderRadius: 2.5,
                   "&:hover fieldset": {
                     borderColor: "#1976d2",
                   },
@@ -153,7 +146,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
         {/* Time Pickers */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}>
-            <TimePicker
+            {/* <TimePicker
               label="Start Time"
               value={values.startTime}
               onChange={(val) => setFieldValue("startTime", val)}
@@ -220,7 +213,15 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                   },
                 },
               }}
-            />
+            /> */}
+            <TimePickerPair
+  startValue={values.startTime}
+  endValue={values.endTime}
+  onStartChange={(val) => setFieldValue("startTime", val)}
+  onEndChange={(val) => setFieldValue("endTime", val)}
+  startError={touched.startTime && errors.startTime}
+  endError={touched.endTime && errors.endTime}
+/>
           </Box>
         </LocalizationProvider>
       </Box>

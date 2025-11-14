@@ -19,7 +19,7 @@ import axios from "axios";
 // export default api
 
 const userApi = axios.create({
-  baseURL: "http://localhost:3000/singup",
+  baseURL: "https://devapi.dequity.technology",
    headers: {
     "Content-Type": "application/json", 
   },

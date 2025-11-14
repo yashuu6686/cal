@@ -12,13 +12,17 @@ import {
   Box,
   Chip,
 } from "@mui/material";
-import { TimePicker, DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { Edit, Delete, Check, Close } from "@mui/icons-material";
+import {
+  TimePicker,
+  DatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
 import { useHolidayEditing } from "@/hook/useHolidayEditing";
 import { sortHolidaysByDateTime } from "@/components/calendar/utils/eventHelpers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TableActionButtons } from "@/components/TableActionButtons";
 
 export default function HolidayTable() {
   const {
@@ -46,193 +50,193 @@ export default function HolidayTable() {
         }}
       >
         <Table>
-        <TableHead>
-          <TableRow sx={{ background: "#1172BA" }}>
-            <TableCell
-              sx={{
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: "1rem",
-              }}
-              align="center"
-            >
-              📅 Date
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: "1rem",
-              }}
-              align="center"
-            >
-              🕐 Start Time
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: "1rem",
-              }}
-              align="center"
-            >
-              🕐 End Time
-            </TableCell>
-            <TableCell
-              sx={{
-                color: "#fff",
-                fontWeight: 700,
-                fontSize: "1rem",
-              }}
-              align="center"
-            >
-              ⚙️ Actions
-            </TableCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {sortedHolidays.map((holiday, index) => (
-            <TableRow
-              key={index}
-              sx={{
-                borderTop: "1px solid #e0e0e0",
-                textAlign: "center",
-              }}
-            >
-              {/* Date Column */}
+          <TableHead>
+            <TableRow sx={{ background: "#1172BA" }}>
               <TableCell
                 sx={{
-                  py: 1.5,
-                  padding: "5px",
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                }}
+                align="center"
+              >
+                📅 Date
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                }}
+                align="center"
+              >
+                🕐 Start Time
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                }}
+                align="center"
+              >
+                🕐 End Time
+              </TableCell>
+              <TableCell
+                sx={{
+                  color: "#fff",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                }}
+                align="center"
+              >
+                ⚙️ Actions
+              </TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {sortedHolidays.map((holiday, index) => (
+              <TableRow
+                key={index}
+                sx={{
+                  borderTop: "1px solid #e0e0e0",
                   textAlign: "center",
                 }}
               >
-                {editingHolidayIndex === index ? (
-                  <DatePicker
-                    value={editHolidayData?.date}
-                    onChange={(newValue) => {
-                      setEditHolidayData({
-                        ...editHolidayData,
-                        date: newValue,
-                      });
-                      if (fieldErrors.date) {
-                        const { date, ...rest } = fieldErrors;
-                        setFieldErrors(rest);
+                {/* Date Column */}
+                <TableCell
+                  sx={{
+                    py: 1.5,
+                    padding: "5px",
+                    textAlign: "center",
+                  }}
+                >
+                  {editingHolidayIndex === index ? (
+                    <DatePicker
+                      value={editHolidayData?.date}
+                      onChange={(newValue) => {
+                        setEditHolidayData({
+                          ...editHolidayData,
+                          date: newValue,
+                        });
+                        if (fieldErrors.date) {
+                          const { date, ...rest } = fieldErrors;
+                          setFieldErrors(rest);
+                        }
+                      }}
+                      slotProps={{
+                        textField: {
+                          error: !!fieldErrors.date,
+                          helperText: fieldErrors.date,
+                          size: "small",
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Chip
+                      label={
+                        holiday.date
+                          ? dayjs(holiday.date).format("MMM DD, YYYY")
+                          : "No Date"
                       }
-                    }}
-                    slotProps={{
-                      textField: {
-                        error: !!fieldErrors.date,
-                        helperText: fieldErrors.date,
-                        size: "small",
-                      },
-                    }}
-                  />
-                ) : (
-                  <Chip
-                    label={
-                      holiday.date
-                        ? dayjs(holiday.date).format("MMM DD, YYYY")
-                        : "No Date"
-                    }
-                    size="small"
-                    color="primary"
-                  />
-                )}
-              </TableCell>
+                      size="small"
+                      color="primary"
+                    />
+                  )}
+                </TableCell>
 
-              {/* Start Time Column */}
-              <TableCell
-                sx={{
-                  py: 1.5,
-                  padding: "5px",
-                  textAlign: "center",
-                }}
-              >
-                {editingHolidayIndex === index ? (
-                  <TimePicker
-                    value={editHolidayData?.startTime}
-                    onChange={(newValue) => {
-                      setEditHolidayData({
-                        ...editHolidayData,
-                        startTime: newValue,
-                      });
-                      if (fieldErrors.startTime) {
-                        const { startTime, ...rest } = fieldErrors;
-                        setFieldErrors(rest);
-                      }
-                    }}
-                    slotProps={{
-                      textField: {
-                        size: "small",
-                        error: !!fieldErrors.startTime,
-                        helperText: fieldErrors.startTime,
-                      },
-                    }}
-                  />
-                ) : (
-                  <Typography
-                    sx={{
-                      color: "#424242",
-                      fontWeight: 500,
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {holiday.startTime
-                      ? dayjs(holiday.startTime, "HH:mm").format("hh:mm A")
-                      : "Full Day"}
-                  </Typography>
-                )}
-              </TableCell>
+                {/* Start Time Column */}
+                <TableCell
+                  sx={{
+                    py: 1.5,
+                    padding: "5px",
+                    textAlign: "center",
+                  }}
+                >
+                  {editingHolidayIndex === index ? (
+                    <TimePicker
+                      value={editHolidayData?.startTime}
+                      onChange={(newValue) => {
+                        setEditHolidayData({
+                          ...editHolidayData,
+                          startTime: newValue,
+                        });
+                        if (fieldErrors.startTime) {
+                          const { startTime, ...rest } = fieldErrors;
+                          setFieldErrors(rest);
+                        }
+                      }}
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                          error: !!fieldErrors.startTime,
+                          helperText: fieldErrors.startTime,
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Typography
+                      sx={{
+                        color: "#424242",
+                        fontWeight: 500,
+                        fontSize: "0.95rem",
+                      }}
+                    >
+                      {holiday.startTime
+                        ? dayjs(holiday.startTime, "HH:mm").format("hh:mm A")
+                        : "Full Day"}
+                    </Typography>
+                  )}
+                </TableCell>
 
-              {/* End Time Column */}
-              <TableCell
-                sx={{
-                  py: 1.5,
-                  padding: "5px",
-                  textAlign: "center",
-                }}
-              >
-                {editingHolidayIndex === index ? (
-                  <TimePicker
-                    value={editHolidayData?.endTime}
-                    onChange={(newValue) => {
-                      setEditHolidayData({
-                        ...editHolidayData,
-                        endTime: newValue,
-                      });
-                      if (fieldErrors.endTime) {
-                        const { endTime, ...rest } = fieldErrors;
-                        setFieldErrors(rest);
-                      }
-                    }}
-                    slotProps={{
-                      textField: {
-                        size: "small",
-                        error: !!fieldErrors.endTime,
-                        helperText: fieldErrors.endTime,
-                      },
-                    }}
-                  />
-                ) : (
-                  <Typography
-                    sx={{
-                      color: "#424242",
-                      fontWeight: 500,
-                      fontSize: "0.95rem",
-                    }}
-                  >
-                    {holiday.endTime
-                      ? dayjs(holiday.endTime, "HH:mm").format("hh:mm A")
-                      : "Full Day"}
-                  </Typography>
-                )}
-              </TableCell>
+                {/* End Time Column */}
+                <TableCell
+                  sx={{
+                    py: 1.5,
+                    padding: "5px",
+                    textAlign: "center",
+                  }}
+                >
+                  {editingHolidayIndex === index ? (
+                    <TimePicker
+                      value={editHolidayData?.endTime}
+                      onChange={(newValue) => {
+                        setEditHolidayData({
+                          ...editHolidayData,
+                          endTime: newValue,
+                        });
+                        if (fieldErrors.endTime) {
+                          const { endTime, ...rest } = fieldErrors;
+                          setFieldErrors(rest);
+                        }
+                      }}
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                          error: !!fieldErrors.endTime,
+                          helperText: fieldErrors.endTime,
+                        },
+                      }}
+                    />
+                  ) : (
+                    <Typography
+                      sx={{
+                        color: "#424242",
+                        fontWeight: 500,
+                        fontSize: "0.95rem",
+                      }}
+                    >
+                      {holiday.endTime
+                        ? dayjs(holiday.endTime, "HH:mm").format("hh:mm A")
+                        : "Full Day"}
+                    </Typography>
+                  )}
+                </TableCell>
 
-              {/* Actions Column */}
-              <TableCell align="center" sx={{ py: 1.5, textAlign: "center" }}>
-                {editingHolidayIndex === index ? (
+                {/* Actions Column */}
+                <TableCell align="center" sx={{ py: 1.5, textAlign: "center" }}>
+                  {/* {editingHolidayIndex === index ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -288,13 +292,20 @@ export default function HolidayTable() {
                       <Delete fontSize="small" />
                     </IconButton>
                   </Box>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                )} */}
+                  <TableActionButtons
+                    isEditing={editingHolidayIndex === index}
+                    onEdit={() => handleStartHolidayInlineEdit(index, holiday)}
+                    onDelete={() => handleDeleteHoliday(index)}
+                    onSave={handleSaveHolidayInlineEdit}
+                    onCancel={handleCancelHolidayInlineEdit}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </LocalizationProvider>
   );
 }

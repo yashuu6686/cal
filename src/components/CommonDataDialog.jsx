@@ -12,17 +12,7 @@ import {
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-/**
- * Reusable dialog component for Break and Holiday tables
- * @param {boolean} open - Dialog open state
- * @param {function} onClose - Close handler
- * @param {string} title - Dialog title
- * @param {array} data - Data array to check if empty
- * @param {React.Component} TableComponent - Table component to render
- * @param {string} emptyIcon - Emoji for empty state
- * @param {string} emptyMessage - Message when no data
- * @param {string} emptySubtext - Subtext for empty state
- */
+
 export default function CommonDataDialog({
   open,
   onClose,

@@ -21,12 +21,35 @@ import ortho from "../../../../public/Orthopaedic.png";
 import cardio from "../../../../public/cardiology.png";
 
 import axios from "axios";
+import userApi from "@/components/calendar/utils/axios";
+
+// calendarSlice.js mein update karo
 
 export const createDoctorCalendar = createAsyncThunk(
   "calendar/createDoctorCalendar",
   async (_, { getState, rejectWithValue }) => {
     try {
       const state = getState().calendar;
+
+      // Helper function to safely format time
+      const safeFormatTime = (time) => {
+        if (!time) return null;
+        if (typeof time === 'string' && /^\d{2}:\d{2}$/.test(time)) {
+          return time; // Already formatted
+        }
+        const dayjsTime = dayjs(time);
+        return dayjsTime.isValid() ? dayjsTime.format("HH:mm") : null;
+      };
+
+      // Helper function to safely format date
+      const safeFormatDate = (date) => {
+        if (!date) return null;
+        if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          return date; 
+        }
+        const dayjsDate = dayjs(date);
+        return dayjsDate.isValid() ? dayjsDate.format("YYYY-MM-DD") : null;
+      };
 
       const payload = {
         routeName: "createDoctorCalendar",
@@ -59,16 +82,10 @@ export const createDoctorCalendar = createAsyncThunk(
           day: dayObj.day,
           breaks: state.breaks
             .filter((b) => b.days?.includes(dayObj.day))
-            .map((b) => {
-              const start = dayjs(b.startTime);
-              const end = dayjs(b.endTime);
-              return {
-                breakStartTime:
-                  b.startTime && start.isValid() ? start.format("HH:mm") : null,
-                breakEndTime:
-                  b.endTime && end.isValid() ? end.format("HH:mm") : null,
-              };
-            }),
+            .map((b) => ({
+              breakStartTime: safeFormatTime(b.startTime), 
+              breakEndTime: safeFormatTime(b.endTime), 
+            })),
           services: dayObj.slots.map((slot) => ({
             keyIdentifier:
               slot.serviceType === "Video Call"
@@ -82,20 +99,22 @@ export const createDoctorCalendar = createAsyncThunk(
           })),
         })),
         holidays: state.holidays.map((h) => ({
-          date: h.date ? dayjs(h.date).format("YYYY-MM-DD") : null,
-          startTime: h.startTime ? dayjs(h.startTime).format("HH:mm") : null,
-          endTime: h.endTime ? dayjs(h.endTime).format("HH:mm") : null,
+          date: safeFormatDate(h.date), 
+          startTime: safeFormatTime(h.startTime), 
+          endTime: safeFormatTime(h.endTime), 
         })),
       };
 
-      // ---- Make API Call ----
+      console.log("📤 API Payload:", JSON.stringify(payload, null, 2)); 
+
       const response = await axios.post(
-        ` https://devapi.dequity.technology/createDoctorCalendar/`,
+        `https://devapi.dequity.technology/createDoctorCalendar`||`${userApi}/createDoctorCalendar`,
         payload
       );
 
       return response.data;
     } catch (error) {
+      console.error("❌ API Error:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data || error.message);
     }
   }
