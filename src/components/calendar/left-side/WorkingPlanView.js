@@ -53,11 +53,9 @@ const WorkingPlanView = ({ disabled = false }) => {
 
   // Redux selectors
   const weekSchedule = useSelector((state) => state.calendar.weekSchedule);
-  const selectedServices = useSelector(
-    (state) => state.calendar.selectedServices
-  );
+  const selectedServices = useSelector((state) => state.ui.selectedServices);
   const selectedSpecialities = useSelector(
-    (state) => state.calendar.selectedSpecialities
+    (state) => state.ui.selectedSpecialities
   );
 
   // Handlers function
@@ -86,6 +84,15 @@ const WorkingPlanView = ({ disabled = false }) => {
 
   const handleSlotChange = (day, slotId, field, value) => {
     dispatch(updateSlotInDay({ day, slotId, field, value }));
+
+    // If service type is changed, update the duration accordingly
+    if (field === "serviceType") {
+      const service = selectedServices.find((s) => s.type === value);
+      const duration = service ? parseInt(service.time) : 15;
+      dispatch(
+        updateSlotInDay({ day, slotId, field: "duration", value: duration })
+      );
+    }
   };
 
   const getDaySlots = (dayName) => {
@@ -130,9 +137,7 @@ const WorkingPlanView = ({ disabled = false }) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box>
         {/* Header */}
-       <SectionHeader 
-       title="Working Plan"
-       />
+        <SectionHeader title="Working Plan" />
 
         {/* Days Container */}
         <Box>
@@ -490,19 +495,30 @@ const WorkingPlanView = ({ disabled = false }) => {
                                   }}
                                 /> */}
                                 <TimePickerPair
-  disabled={disabled}
-  startValue={slot.start ? dayjs(slot.start) : null}
-  endValue={slot.end ? dayjs(slot.end) : null}
-  onStartChange={(newVal) =>
-    handleSlotChange(day.full, slot.id, "start", newVal)
-  }
-  onEndChange={(newVal) =>
-    handleSlotChange(day.full, slot.id, "end", newVal)
-  }
-  startError={startError}
-  endError={endError}
-/>
-
+                                  disabled={disabled}
+                                  startValue={
+                                    slot.start ? dayjs(slot.start) : null
+                                  }
+                                  endValue={slot.end ? dayjs(slot.end) : null}
+                                  onStartChange={(newVal) =>
+                                    handleSlotChange(
+                                      day.full,
+                                      slot.id,
+                                      "start",
+                                      newVal
+                                    )
+                                  }
+                                  onEndChange={(newVal) =>
+                                    handleSlotChange(
+                                      day.full,
+                                      slot.id,
+                                      "end",
+                                      newVal
+                                    )
+                                  }
+                                  startError={startError}
+                                  endError={endError}
+                                />
                               </Box>
                             </Box>
                             {slotIndex < daySlots.length - 1 && (

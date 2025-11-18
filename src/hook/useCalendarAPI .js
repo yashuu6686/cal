@@ -4,15 +4,18 @@ import dayjs from "dayjs";
 
 // Redux Actions
 import {
-  addNewService,
+  // addNewService,
   addBreak,
   addHoliday,
   setIsCalendarPublished,
   setIsEditMode,
-  clearApiMessages,
+  // clearApiMessages,
   updateEvents,
   createDoctorCalendar,
 } from "@/redux/store/slices/calendarSlice";
+
+
+import { addNewService,} from "@/redux/store/slices/uiSlice"
 
 import {
   publishCalendar,
@@ -39,7 +42,7 @@ export const useCalendarAPI = (setStep) => {
   useEffect(() => {
     if (apiSuccess) {
       const timer = setTimeout(() => {
-        dispatch(clearApiMessages());
+        // dispatch(clearApiMessages());
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -49,7 +52,7 @@ export const useCalendarAPI = (setStep) => {
   useEffect(() => {
     if (apiError) {
       const timer = setTimeout(() => {
-        dispatch(clearApiMessages());
+        // dispatch(clearApiMessages());
       }, 5000);
 
       return () => clearTimeout(timer);

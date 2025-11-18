@@ -1,41 +1,22 @@
 import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import moment from "moment";
-// import {
-//   video,
-//   home,
-//   clinic,
-//   nuro,
-//   gen,
-//   ortho,
-//   tooth,
-//   cardio,
-// } from "../../../../pages/tables";
-import video from "../../../../public/Video_Call_Service.png";
-import clinic from "../../../../public/Clinic_Visit_Service.png";
-import home from "../../../../public/Home_Visit_Service.webp";
-import tooth from "../../../../public/tooth 1.png";
-import gen from "../../../../public/General.png";
-import nuro from "../../../../public/Neurologist.png";
-import ortho from "../../../../public/Orthopaedic.png";
-import cardio from "../../../../public/cardiology.png";
-
 import axios from "axios";
 import userApi from "@/components/calendar/utils/axios";
 
-// calendarSlice.js mein update karo
 
 export const createDoctorCalendar = createAsyncThunk(
   "calendar/createDoctorCalendar",
   async (_, { getState, rejectWithValue }) => {
     try {
-      const state = getState().calendar;
+      const scheduleState = getState().calendar;
+      const servicesState = getState().ui; 
 
       // Helper function to safely format time
       const safeFormatTime = (time) => {
         if (!time) return null;
         if (typeof time === 'string' && /^\d{2}:\d{2}$/.test(time)) {
-          return time; // Already formatted
+          return time;
         }
         const dayjsTime = dayjs(time);
         return dayjsTime.isValid() ? dayjsTime.format("HH:mm") : null;
@@ -45,7 +26,7 @@ export const createDoctorCalendar = createAsyncThunk(
       const safeFormatDate = (date) => {
         if (!date) return null;
         if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-          return date; 
+          return date;
         }
         const dayjsDate = dayjs(date);
         return dayjsDate.isValid() ? dayjsDate.format("YYYY-MM-DD") : null;
@@ -60,13 +41,13 @@ export const createDoctorCalendar = createAsyncThunk(
         timezone: "America/New_York",
         advanceBookingDays: 15,
         checkInTime: 60,
-        specialties: state.selectedSpecialities.map((s) => ({
+        specialties: servicesState.selectedSpecialities.map((s) => ({
           _id: s._id,
           name: s.type,
           keyIdentifier: s.keyIdentifier || "GN",
           imageUrl: s.imageUrl || "",
         })),
-        services: state.selectedServices.map((s) => ({
+        services: servicesState.selectedServices.map((s) => ({
           keyIdentifier:
             s.type === "Video Call"
               ? "VC"
@@ -78,13 +59,13 @@ export const createDoctorCalendar = createAsyncThunk(
           addressId:
             s.type === "Clinic Visit" ? "65f42bc48bbf7b96f8837f23" : null,
         })),
-        availability: state.weekSchedule.map((dayObj) => ({
+        availability: scheduleState.weekSchedule.map((dayObj) => ({
           day: dayObj.day,
-          breaks: state.breaks
+          breaks: scheduleState.breaks
             .filter((b) => b.days?.includes(dayObj.day))
             .map((b) => ({
-              breakStartTime: safeFormatTime(b.startTime), 
-              breakEndTime: safeFormatTime(b.endTime), 
+              breakStartTime: safeFormatTime(b.startTime),
+              breakEndTime: safeFormatTime(b.endTime),
             })),
           services: dayObj.slots.map((slot) => ({
             keyIdentifier:
@@ -98,17 +79,17 @@ export const createDoctorCalendar = createAsyncThunk(
             endTime: slot.end ? dayjs(slot.end).format("HH:mm") : "00:00",
           })),
         })),
-        holidays: state.holidays.map((h) => ({
-          date: safeFormatDate(h.date), 
-          startTime: safeFormatTime(h.startTime), 
-          endTime: safeFormatTime(h.endTime), 
+        holidays: scheduleState.holidays.map((h) => ({
+          date: safeFormatDate(h.date),
+          startTime: safeFormatTime(h.startTime),
+          endTime: safeFormatTime(h.endTime),
         })),
       };
 
-      console.log("📤 API Payload:", JSON.stringify(payload, null, 2)); 
+      console.log("📤 API Payload:", JSON.stringify(payload, null, 2));
 
       const response = await axios.post(
-        `https://devapi.dequity.technology/createDoctorCalendar`||`${userApi}/createDoctorCalendar`,
+        `https://devapi.dequity.technology/createDoctorCalendar` || `${userApi}/createDoctorCalendar`,
         payload
       );
 
@@ -119,6 +100,7 @@ export const createDoctorCalendar = createAsyncThunk(
     }
   }
 );
+
 
 const dayToNumber = {
   Sunday: 0,
@@ -138,40 +120,27 @@ const getNextDayOfWeek = (dayNum) => {
   return now.clone().add(daysToAdd, "days");
 };
 
-const initialState = {
-  dataOfService: [
-    { img: video, type: "Video Call", time: "15" },
-    { img: home, type: "Home Visit", time: "90" },
-    { img: clinic, type: "Clinic Visit", time: "15" },
-  ],
-  specialities: [
-    { img: nuro, type: "Neurologist" },
-    { img: gen, type: "General" },
-    { img: ortho, type: "Orthopaedic" },
-    { img: tooth, type: "Dental" },
-    { img: cardio, type: "Cardiology" },
-  ],
-  selectedServices: [],
-  selectedSpecialities: [],
 
-  // Calendar Events
+const initialState = {
+
   events: [],
   weekSchedule: Object.keys(dayToNumber).map((day) => ({
     day,
     slots: [],
   })),
 
-  // Form & Selection
+
   selectedDays: [],
   breakSelectedDays: [],
   selectedEvent: null,
-  form: {},
+  selectedDay: null,
+  // form: {},
   editingSlot: null,
 
   // Time
   startTime: null,
   endTime: null,
-  step: 15,
+  // step: 15,
 
   // Breaks & Holidays
   breaks: [],
@@ -191,65 +160,17 @@ const initialState = {
   isEditMode: false,
 
   // API State
-  calendarId: null,
+  // calendarId: null,
   isLoading: false,
-  apiError: null,
-  apiSuccess: null,
-
-  openDialog: false,
-  selectedDay: null,
+  // apiError: null,
+  // apiSuccess: null,
 };
 
-//  Calendar Slice
-const calendarSlice = createSlice({
+// ===== SLICE =====
+const calendarScheduleSlice = createSlice({
   name: "calendar",
   initialState,
   reducers: {
-    // ===== SERVICE & SPECIALITY ACTIONS =====
-    toggleService: (state, action) => {
-      const service = action.payload;
-      const exists = state.selectedServices.some(
-        (s) => s.type === service.type && s.time === service.time
-      );
-
-      if (exists) {
-        state.selectedServices = state.selectedServices.filter(
-          (s) => !(s.type === service.type && s.time === service.time)
-        );
-      } else {
-        state.selectedServices.push(service);
-      }
-    },
-
-    toggleSpeciality: (state, action) => {
-      const speciality = action.payload;
-      const exists = state.selectedSpecialities.some(
-        (s) => s.type === speciality.type
-      );
-      if (exists) {
-        state.selectedSpecialities = state.selectedSpecialities.filter(
-          (s) => s.type !== speciality.type
-        );
-      } else {
-        state.selectedSpecialities.push(speciality);
-      }
-    },
-
-    addNewService: (state, action) => {
-      const { serviceName, duration, serviceType } = action.payload;
-      const newService = {
-        img:
-          serviceType === "Video Call"
-            ? video
-            : serviceType === "Home Visit"
-            ? home
-            : clinic,
-        type: serviceName,
-        time: duration.toString(),
-      };
-      state.dataOfService.push(newService);
-    },
-
     // ===== DAYS SELECTION =====
     setSelectedDays: (state, action) => {
       state.selectedDays = action.payload;
@@ -288,17 +209,16 @@ const calendarSlice = createSlice({
 
     // ===== SLOT ACTIONS =====
     addSlot: (state, action) => {
-      const { days, startTime, endTime, serviceType, speciality } =
+      const { days, startTime, endTime, serviceType, speciality, duration } =
         action.payload;
 
-      const service = state.selectedServices.find(
-        (s) => s.type === serviceType
-      );
-      const duration = service ? parseInt(service.time) : 15;
       const newSlotId = nanoid();
+      const slotSpeciality = speciality || ["General"];
 
-      const slotSpeciality = speciality ||
-        state.selectedSpecialities.map((s) => s.type) || ["General"];
+      // FIX: Make sure duration is properly set
+      const slotDuration = duration ? Number(duration) : 15;
+
+      console.log(`Adding slot: ${serviceType}, Duration: ${slotDuration} minutes`);
 
       state.weekSchedule = state.weekSchedule.map((item) =>
         days.includes(item.day)
@@ -313,11 +233,65 @@ const calendarSlice = createSlice({
                   serviceType,
                   speciality: slotSpeciality,
                   isDummy: false,
-                  duration,
+                  duration: slotDuration, // IMPORTANT: Store as number
                 },
               ],
             }
           : item
+      );
+    },
+
+    addSlotToDay: (state, action) => {
+      const { day, slot } = action.payload;
+      state.weekSchedule = state.weekSchedule.map((item) =>
+        item.day === day
+          ? {
+              ...item,
+              slots: [...item.slots, slot],
+            }
+          : item
+      );
+    },
+
+    removeSlotFromDay: (state, action) => {
+      const { day, slotId } = action.payload;
+      state.weekSchedule = state.weekSchedule.map((item) =>
+        item.day === day
+          ? {
+              ...item,
+              slots: item.slots.filter((slot) => slot.id !== slotId),
+            }
+          : item
+      );
+    },
+
+    updateSlotInDay: (state, action) => {
+      const { day, slotId, field, value } = action.payload;
+      state.weekSchedule = state.weekSchedule.map((item) =>
+        item.day === day
+          ? {
+              ...item,
+              slots: item.slots.map((slot) => {
+                if (slot.id === slotId) {
+                  return { ...slot, [field]: value };
+                }
+                return slot;
+              }),
+            }
+          : item
+      );
+    },
+
+    removeSlotsByServiceType: (state, action) => {
+      const serviceType = action.payload;
+
+      state.weekSchedule = state.weekSchedule.map((dayItem) => ({
+        ...dayItem,
+        slots: dayItem.slots.filter((slot) => slot.serviceType !== serviceType),
+      }));
+
+      state.events = state.events.filter(
+        (event) => event.serviceType !== serviceType
       );
     },
 
@@ -350,6 +324,11 @@ const calendarSlice = createSlice({
 
     setBreaks: (state, action) => {
       state.breaks = action.payload;
+    },
+
+    deleteBreak: (state, action) => {
+      const index = action.payload;
+      state.breaks = state.breaks.filter((_, i) => i !== index);
     },
 
     setEditIndex: (state, action) => {
@@ -391,13 +370,17 @@ const calendarSlice = createSlice({
     },
 
     // ===== UI STATE =====
+    setOpenDialog: (state, action) => {
+      state.openDialog = action.payload;
+    },
 
     setOpenHolidayDialog: (state, action) => {
       state.openHolidayDialog = action.payload;
     },
 
-    setOpenDialog: (state, action) => {
-      state.openDialog = action.payload;
+    openAddSlotDialog: (state, action) => {
+      state.openDialog = true;
+      state.selectedDay = action.payload;
     },
 
     setIsCalendarPublished: (state, action) => {
@@ -409,28 +392,28 @@ const calendarSlice = createSlice({
     },
 
     // ===== API STATE =====
-    setCalendarId: (state, action) => {
-      state.calendarId = action.payload;
-    },
+    // setCalendarId: (state, action) => {
+    //   state.calendarId = action.payload;
+    // },
 
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
 
-    setApiError: (state, action) => {
-      state.apiError = action.payload;
-    },
+    // setApiError: (state, action) => {
+    //   state.apiError = action.payload;
+    // },
 
-    setApiSuccess: (state, action) => {
-      state.apiSuccess = action.payload;
-    },
+    // setApiSuccess: (state, action) => {
+    //   state.apiSuccess = action.payload;
+    // },
 
-    clearApiMessages: (state) => {
-      state.apiError = null;
-      state.apiSuccess = null;
-    },
+    // clearApiMessages: (state) => {
+    //   state.apiError = null;
+    //   state.apiSuccess = null;
+    // },
 
-    // ===== EVENTS (Computed from weekSchedule) =====
+   
     updateEvents: (state) => {
       const newEvents = [];
       state.weekSchedule.forEach((item) => {
@@ -451,7 +434,6 @@ const calendarSlice = createSlice({
                   })
                   .toDate()
               : null,
-
             end: slot.end
               ? base
                   .clone()
@@ -462,6 +444,7 @@ const calendarSlice = createSlice({
                   .toDate()
               : null,
             serviceType: slot.serviceType,
+            duration: slot.duration, 
             specialities: Array.isArray(slot.speciality)
               ? slot.speciality
               : typeof slot.speciality === "string"
@@ -472,83 +455,19 @@ const calendarSlice = createSlice({
       });
       state.events = newEvents;
     },
-    openAddSlotDialog: (state, action) => {
-      state.openDialog = true;
-      state.selectedDay = action.payload;
-    },
-    removeSlot: (state, action) => {
-      const { day, slotId } = action.payload;
-      state.weekSchedule[day] = state.weekSchedule[day].filter(
-        (slot) => slot.id !== slotId
-      );
-    },
-    addSlotToDay: (state, action) => {
-      const { day, slot } = action.payload;
-      state.weekSchedule = state.weekSchedule.map((item) =>
-        item.day === day
-          ? {
-              ...item,
-              slots: [...item.slots, slot],
-            }
-          : item
-      );
-    },
 
-    removeSlotFromDay: (state, action) => {
-      const { day, slotId } = action.payload;
-      state.weekSchedule = state.weekSchedule.map((item) =>
-        item.day === day
-          ? {
-              ...item,
-              slots: item.slots.filter((slot) => slot.id !== slotId),
-            }
-          : item
-      );
-    },
-
-    updateSlotInDay: (state, action) => {
-      const { day, slotId, field, value } = action.payload;
-      state.weekSchedule = state.weekSchedule.map((item) =>
-        item.day === day
-          ? {
-              ...item,
-              slots: item.slots.map((slot) => {
-                if (slot.id === slotId) {
-                  const updatedSlot = { ...slot, [field]: value };
-                  // If updating serviceType, also set the duration
-                  if (field === "serviceType") {
-                    const service = state.selectedServices.find(
-                      (s) => s.type === value
-                    );
-                    updatedSlot.duration = service
-                      ? parseInt(service.time)
-                      : 15;
-                  }
-                  return updatedSlot;
-                }
-                return slot;
-              }),
-            }
-          : item
-      );
-    },
-
-    // Add this to your reducers in calendarSlice
-removeSlotsByServiceType: (state, action) => {
-  const serviceType = action.payload;
   
-  // Remove slots from weekSchedule
-  state.weekSchedule = state.weekSchedule.map((dayItem) => ({
-    ...dayItem,
-    slots: dayItem.slots.filter((slot) => slot.serviceType !== serviceType),
-  }));
-  
-  // Remove events from calendar
-  state.events = state.events.filter(
-    (event) => event.serviceType !== serviceType
-  );
-},
+    resetSchedule: (state) => {
+      state.weekSchedule = Object.keys(dayToNumber).map((day) => ({
+        day,
+        slots: [],
+      }));
+      state.events = [];
+      state.breaks = [];
+      state.holidays = [];
+    },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(createDoctorCalendar.pending, (state) => {
@@ -568,11 +487,8 @@ removeSlotsByServiceType: (state, action) => {
   },
 });
 
-//  Export Actions
+// Export Actions
 export const {
-  toggleService,
-  toggleSpeciality,
-  addNewService,
   setSelectedDays,
   setBreakSelectedDays,
   setForm,
@@ -582,10 +498,15 @@ export const {
   setEndTime,
   setStep,
   addSlot,
+  addSlotToDay,
+  removeSlotFromDay,
+  updateSlotInDay,
+  removeSlotsByServiceType,
   setEditingSlot,
   setSelectedEvent,
   addBreak,
   setBreaks,
+  deleteBreak,
   setEditIndex,
   addHoliday,
   setHolidays,
@@ -594,27 +515,19 @@ export const {
   setHolidayEditIndex,
   setOpenDialog,
   setOpenHolidayDialog,
+  openAddSlotDialog,
   setIsCalendarPublished,
   setIsEditMode,
-  setCalendarId,
+  // setCalendarId,
   setLoading,
-  setApiError,
-  setApiSuccess,
-  clearApiMessages,
+  // setApiError,
+  // setApiSuccess,
+  // clearApiMessages,
   updateEvents,
-  openAddSlotDialog,
-  removeSlot,
-  updateSlotInDay,
-  removeSlotFromDay,
-  addSlotToDay,
-  removeSlotsByServiceType
-} = calendarSlice.actions;
+  resetSchedule,
+} = calendarScheduleSlice.actions;
 
 // Selectors
-export const selectAllServices = (state) => state.calendar.dataOfService;
-export const selectSelectedServices = (state) => state.calendar.selectedServices;
-export const selectSpecialities = (state) => state.calendar.specialities;
-export const selectSelectedSpecialities = (state) => state.calendar.selectedSpecialities;
 export const selectEvents = (state) => state.calendar.events;
 export const selectWeekSchedule = (state) => state.calendar.weekSchedule;
 export const selectForm = (state) => state.calendar.form;
@@ -622,5 +535,7 @@ export const selectSelectedDays = (state) => state.calendar.selectedDays;
 export const selectBreaks = (state) => state.calendar.breaks;
 export const selectHolidays = (state) => state.calendar.holidays;
 export const selectIsLoading = (state) => state.calendar.isLoading;
+export const selectApiError = (state) => state.calendar.apiError;
+export const selectApiSuccess = (state) => state.calendar.apiSuccess;
 
-export default calendarSlice.reducer;
+export default calendarScheduleSlice.reducer;

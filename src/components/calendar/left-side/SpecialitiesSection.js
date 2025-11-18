@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { toggleSpeciality } from "@/redux/store/slices/calendarSlice";
+import { toggleSpeciality } from "@/redux/store/slices/uiSlice";
 import { useCalendarState } from "@/hook/useCalendarState";
 import CommonButton from "@/components/CommonButton";
 import SectionHeader from "@/components/SectionHeader";

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  toggleService,
+  
   removeSlotsByServiceType,
   updateEvents,
 } from "@/redux/store/slices/calendarSlice";
+import {toggleService,} from "@/redux/store/slices/uiSlice"
+
 import { useCalendarState } from "@/hook/useCalendarState";
 import CommonButton from "@/components/CommonButton";
 import CommonDialogBox from "@/components/CommonDialogBox";

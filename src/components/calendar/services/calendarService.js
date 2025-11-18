@@ -31,13 +31,13 @@ export const publishCalendar = async (payload, dispatch) => {
     // Mock successful response
     // console.log("📅 Publishing Calendar Payload:", payload);
     
-    dispatch(setApiSuccess("Calendar published successfully!"));
+    // dispatch(setApiSuccess("Calendar published successfully!"));
     dispatch(setLoading(false));
     
     return { success: true };
   } catch (error) {
     console.error("Publish Calendar Error:", error);
-    dispatch(setApiError(error.message || "Failed to publish calendar"));
+    // dispatch(setApiError(error.message || "Failed to publish calendar"));
     dispatch(setLoading(false));
     
     return { success: false, error: error.message };
@@ -72,13 +72,13 @@ export const updateCalendar = async (payload, dispatch) => {
     // Mock successful response
     // console.log("🔄 Updating Calendar Payload:", payload);
     
-    dispatch(setApiSuccess("Calendar updated successfully!"));
+    // dispatch(setApiSuccess("Calendar updated successfully!"));
     dispatch(setLoading(false));
     
     return { success: true };
   } catch (error) {
     console.error("Update Calendar Error:", error);
-    dispatch(setApiError(error.message || "Failed to update calendar"));
+  //  dispatch(setApiError(error.message || "Failed to update calendar"));
     dispatch(setLoading(false));
     
     return { success: false, error: error.message };
@@ -104,15 +104,15 @@ export const deleteCalendar = async (calendarId, dispatch) => {
     
     await new Promise((resolve) => setTimeout(resolve, 1500));
     
-    // console.log("🗑️ Deleting Calendar ID:", calendarId);
+    // console.log(" Deleting Calendar ID:", calendarId);
     
-    dispatch(setApiSuccess("Calendar deleted successfully!"));
+    // dispatch(setApiSuccess("Calendar deleted successfully!"));
     dispatch(setLoading(false));
     
     return { success: true };
   } catch (error) {
     console.error("Delete Calendar Error:", error);
-    dispatch(setApiError(error.message || "Failed to delete calendar"));
+    // dispatch(setApiError(error.message || "Failed to delete calendar"));
     dispatch(setLoading(false));
     
     return { success: false, error: error.message };
@@ -143,21 +143,21 @@ export const fetchCalendar = async (calendarId, dispatch) => {
     // console.log("📥 Fetching Calendar ID:", calendarId);
     
     // Mock calendar data
-    const mockData = {
-      id: calendarId,
-      services: [],
-      specialities: [],
-      weekSchedule: {},
-      breaks: [],
-      holidays: [],
-    };
+    // const mockData = {
+    //   id: calendarId,
+    //   services: [],
+    //   specialities: [],
+    //   weekSchedule: {},
+    //   breaks: [],
+    //   holidays: [],
+    // };
     
     dispatch(setLoading(false));
     
     return { success: true, data: mockData };
   } catch (error) {
     console.error("Fetch Calendar Error:", error);
-    dispatch(setApiError(error.message || "Failed to fetch calendar"));
+    // dispatch(setApiError(error.message || "Failed to fetch calendar"));
     dispatch(setLoading(false));
     
     return { success: false, error: error.message };

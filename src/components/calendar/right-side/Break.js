@@ -29,10 +29,7 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
 
   return (
     <Box>
-      <SectionHeader
-                   title="Break"
-                  
-                 />
+      <SectionHeader title="Break" />
 
       <Box sx={{ mt: 2 }}>
         <Autocomplete
@@ -90,8 +87,12 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               {...params}
               label="Select Days"
               fullWidth
-              placeholder={values.breakSelectedDays?.length === 0 ? "Select days" : ""}
-              error={touched.breakSelectedDays && Boolean(errors.breakSelectedDays)}
+              placeholder={
+                values.breakSelectedDays?.length === 0 ? "Select days" : ""
+              }
+              error={
+                touched.breakSelectedDays && Boolean(errors.breakSelectedDays)
+              }
               helperText={touched.breakSelectedDays && errors.breakSelectedDays}
               sx={{
                 cursor: "pointer",
@@ -126,7 +127,8 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                 {...getTagProps({ index })}
                 key={option}
                 sx={{
-                  background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
+                  background:
+                    "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
                   color: "white",
                   fontWeight: 600,
                   fontSize: "0.85rem",
@@ -145,7 +147,9 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
 
         {/* Time Pickers */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 1 }}
+          >
             {/* <TimePicker
               label="Start Time"
               value={values.startTime}
@@ -215,13 +219,13 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               }}
             /> */}
             <TimePickerPair
-  startValue={values.startTime}
-  endValue={values.endTime}
-  onStartChange={(val) => setFieldValue("startTime", val)}
-  onEndChange={(val) => setFieldValue("endTime", val)}
-  startError={touched.startTime && errors.startTime}
-  endError={touched.endTime && errors.endTime}
-/>
+              startValue={values.startTime}
+              endValue={values.endTime}
+              onStartChange={(val) => setFieldValue("startTime", val)}
+              onEndChange={(val) => setFieldValue("endTime", val)}
+              startError={touched.startTime && errors.startTime}
+              endError={touched.endTime && errors.endTime}
+            />
           </Box>
         </LocalizationProvider>
       </Box>

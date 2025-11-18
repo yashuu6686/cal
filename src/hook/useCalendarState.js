@@ -2,15 +2,18 @@ import { useSelector } from "react-redux";
 
 // Redux Selectors
 import {
-  selectAllServices,
-  selectSelectedServices,
-  selectSpecialities,
-  selectSelectedSpecialities,
+  
+  
+ 
   selectWeekSchedule,
   selectBreaks,
   selectHolidays,
   selectIsLoading,
 } from "@/redux/store/slices/calendarSlice";
+
+
+import {selectAllServices,selectSelectedServices, selectSpecialities,
+  selectSelectedSpecialities,} from '@/redux/store/slices/uiSlice'
 
 
 export const useCalendarState = () => {

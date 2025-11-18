@@ -78,7 +78,7 @@ export default function CalendarMerge() {
     },
   });
 
-  // ===== RENDER =====
+ 
   return (
     <Box 
       bgcolor="#f9fafb" 

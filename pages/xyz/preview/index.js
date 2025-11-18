@@ -45,20 +45,20 @@ function Preview() {
           .clone()
           .set({ hour: slot.end.hour(), minute: slot.end.minute() });
 
-        const intervalMinutes = slot.duration || 15; // Use slot's duration based on service type
+        // FIX: Get duration from slot, or calculate from selected service
+        const intervalMinutes = slot.duration || 15;
+        
+        console.log(`Service: ${slot.serviceType}, Duration: ${intervalMinutes} minutes`);
+        
         const intervals = generateTimeSlots(start, end, intervalMinutes);
-
-        //  const specialitiesArray = Array.isArray(slot.speciality)
-        // ? slot.speciality
-        // : [slot.speciality || "General"];
 
         intervals.forEach((i) => {
           divided.push({
-            // title: `${slot.serviceType} `,    //- ${specialitiesArray}
             start: i.start,
             end: i.end,
             color: "#1c95f1ff",
-            // specialities: specialitiesArray,
+            serviceType: slot.serviceType,
+            duration: intervalMinutes,
           });
         });
       });
@@ -96,119 +96,33 @@ function Preview() {
       }}
     >
       <Box
-  onClick={() => router.back()}
-  sx={{
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "8px",
-    cursor: "pointer",
-    color: "#1976d2",
-    backgroundColor: "white",
-    borderRadius: "8px",
-    padding: "10px 16px",
-    boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
-    transition: "all 0.3s ease",
-    fontWeight: 500,
-    fontSize: "14px",
-    ml:1,
-    "&:hover": {
-      color: "white",
-      backgroundColor: "#1976d2",
-      boxShadow: "0 4px 12px rgba(25, 118, 210, 0.4)",
-      transform: "translateX(-1px)",
-    },
-  }}
->
-  <ArrowBackIcon sx={{ fontSize: "20px" }} />
-  <span>Back</span>
-</Box>
-      <Grid container spacing={3} sx={{mt:1}}>
-        {/* Header Section */}
-        {/* <Grid item xs={12}>
-          <Box
-            sx={{
-              background: "linear-gradient(135deg, #1976d2 0%, #1565c0 100%)",
-              borderRadius: 4,
-              p: 3,
-              boxShadow: "0 8px 32px rgba(25, 118, 210, 0.25)",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: 2,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Box
-                sx={{
-                  backgroundColor: "rgba(255, 255, 255, 0.2)",
-                  borderRadius: 3,
-                  p: 1.5,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <CalendarMonthIcon
-                  sx={{ fontSize: 40, color: "white" }}
-                />
-              </Box>
-              <Box>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    color: "white",
-                    fontWeight: 600,
-                    letterSpacing: 0.5,
-                  }}
-                >
-                  Calendar Preview
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "rgba(255, 255, 255, 0.9)",
-                    mt: 0.5,
-                  }}
-                >
-                  View your scheduled availability for the upcoming week
-                </Typography>
-              </Box>
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-              <Chip
-                icon={<EventAvailableIcon sx={{ color: "white !important" }} />}
-                label={`${totalSlots} Available Slots`}
-                sx={{
-                  backgroundColor: "rgba(255, 255, 255, 0.25)",
-                  color: "white",
-                  fontWeight: 600,
-                  fontSize: "0.95rem",
-                  px: 1,
-                  py: 2.5,
-                  backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.3)",
-                }}
-              />
-              <Chip
-                icon={<CalendarMonthIcon sx={{ color: "white !important" }} />}
-                label={`${uniqueDays} Active Days`}
-                sx={{
-                  backgroundColor: "rgba(255, 255, 255, 0.25)",
-                  color: "white",
-                  fontWeight: 600,
-                  fontSize: "0.95rem",
-                  px: 1,
-                  py: 2.5,
-                  backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.3)",
-                }}
-              />
-            </Box>
-          </Box>
-        </Grid> */}
-
+        onClick={() => router.back()}
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          cursor: "pointer",
+          color: "#1976d2",
+          backgroundColor: "white",
+          borderRadius: "8px",
+          padding: "10px 16px",
+          boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
+          transition: "all 0.3s ease",
+          fontWeight: 500,
+          fontSize: "14px",
+          ml: 1,
+          "&:hover": {
+            color: "white",
+            backgroundColor: "#1976d2",
+            boxShadow: "0 4px 12px rgba(25, 118, 210, 0.4)",
+            transform: "translateX(-1px)",
+          },
+        }}
+      >
+        <ArrowBackIcon sx={{ fontSize: "20px" }} />
+        <span>Back</span>
+      </Box>
+      <Grid container spacing={3} sx={{ mt: 1 }}>
         {/* Calendar Section */}
         <Grid item size={{ md: 12 }} md={12}>
           <Paper
@@ -295,7 +209,8 @@ function Preview() {
               defaultView="week"
               views={["week"]}
               eventPropGetter={eventStyleGetter}
-              // style={{ height: "100vh" }}
+               step={60}
+              timeslots={1}
             />
           </Paper>
         </Grid>

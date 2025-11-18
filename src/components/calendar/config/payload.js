@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 
-/**
- * Generate a payload for calendar publishing using both Redux + local UI state
- */
+
 export const generateCalendarPayload = ({
   selectedServices,
   selectedSpecialities,
