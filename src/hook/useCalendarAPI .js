@@ -39,25 +39,25 @@ export const useCalendarAPI = (setStep) => {
     apiError,
   } = useCalendarState();
 
-  useEffect(() => {
-    if (apiSuccess) {
-      const timer = setTimeout(() => {
-        // dispatch(clearApiMessages());
-      }, 3000);
+  // useEffect(() => {
+  //   if (apiSuccess) {
+  //     const timer = setTimeout(() => {
+  //       // dispatch(clearApiMessages());
+  //     }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [apiSuccess, dispatch]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [apiSuccess, dispatch]);
 
-  useEffect(() => {
-    if (apiError) {
-      const timer = setTimeout(() => {
-        // dispatch(clearApiMessages());
-      }, 5000);
+  // useEffect(() => {
+  //   if (apiError) {
+  //     const timer = setTimeout(() => {
+  //       // dispatch(clearApiMessages());
+  //     }, 5000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [apiError, dispatch]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [apiError, dispatch]);
 
   const handleStep1Submit = async (values, { setSubmitting }) => {
     try {

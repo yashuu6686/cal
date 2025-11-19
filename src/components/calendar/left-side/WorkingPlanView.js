@@ -58,22 +58,65 @@ const WorkingPlanView = ({ disabled = false }) => {
     (state) => state.ui.selectedSpecialities
   );
 
-  // Handlers function
-  const handleAddSlot = (day) => {
-    if (selectedServices.length === 0 || selectedSpecialities.length === 0) {
-      setOpenValidationDialog(true);
+
+  const TOTAL_DAY_MINUTES = 1440;
+const MAX_SLOTS_WITHOUT_SERVICE = 96;
+
+const handleAddSlot = (day) => {
+
+  // ===== If no service / speciality selected =====
+  if (selectedServices.length === 0 || selectedSpecialities.length === 0) {
+    toast.error("Please select Specialities and Service Type before adding a slot.");
+    return;
+  }
+
+  // ===== Get the selected service duration =====
+  const selectedService = selectedServices[0]; 
+  const serviceDuration = Number(selectedService.time); // 15 or 90
+
+  // ===== Count total minutes used today =====
+  let totalUsedMinutes = weekSchedule.reduce((total, d) => {
+    return (
+      total +
+      d.slots.reduce((sub, slot) => sub + Number(slot.duration || 0), 0)
+    );
+  }, 0);
+
+  // ===== Count total slots =====
+  let totalSlots = weekSchedule.reduce((count, d) => {
+    return count + d.slots.length;
+  }, 0);
+
+  // ===== RULE 1: If no service selected → allow only 96 slots =====
+  if (selectedServices.length === 0) {
+    if (totalSlots >= MAX_SLOTS_WITHOUT_SERVICE) {
+      toast.error("You can add up to 96 slots without a service type.");
       return;
     }
+  }
 
-    const newSlot = {
-      id: Date.now(),
-      start: null,
-      end: null,
-      serviceType: "",
-    };
+  // ===== RULE 2: Check if adding new slot exceeds 1440 minutes =====
+  if (totalUsedMinutes + serviceDuration > TOTAL_DAY_MINUTES) {
+    toast.error(
+      `Cannot add slot. 24-hour limit exceeded.\nUsed: ${totalUsedMinutes} min\nTrying to add: ${serviceDuration} min`
+    );
+    return;
+  }
 
-    dispatch(addSlotToDay({ day, slot: newSlot }));
+  // ===== If valid → Add Slot =====
+  const newSlot = {
+    id: Date.now(),
+    start: null,
+    end: null,
+    selectedService,
+    duration: serviceDuration,
+    speciality: selectedSpecialities.map((s) => s.type),
   };
+
+  dispatch(addSlotToDay({ day, slot: newSlot }));
+  dispatch(updateEvents());
+};
+
 
   const handleDeleteSlot = (day, slotId) => {
     dispatch(removeSlotFromDay({ day, slotId }));

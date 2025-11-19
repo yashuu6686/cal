@@ -206,7 +206,7 @@ export const holidayValidationSchema = (isPublishingOrUpdating = false) =>
         }
       ),
   });
-// ✅ Break Validation Schema
+// Break Validation Schema
 export const breakValidationSchema = yup.object().shape({
   breakSelectedDays: yup
     .array()

@@ -20,7 +20,7 @@ export default function CustomToolbar({
   return (
     <Box sx={toolbarContainerStyle}>
       {/* Top Row */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
         {/* Left Nav Buttons */}
         <Box sx={{ display: "flex", gap: 1 }}>
           <Button sx={navButtonStyle} onClick={() => onNavigate("TODAY")}>Today</Button>
@@ -60,7 +60,7 @@ export default function CustomToolbar({
           display: "flex",
           justifyContent: "center",
           gap: 2,
-          pt: 2,
+          pt: 1,
           borderTop: "1px solid #90caf9",
         }}
       >

@@ -35,8 +35,8 @@ export const useHolidayEditing = () => {
   };
 
   const handleSaveHolidayInlineEdit = async () => {
-    console.log("✅ Save clicked");
-    console.log("📝 Current editHolidayData:", editHolidayData);
+    console.log(" Save clicked");
+    console.log(" Current editHolidayData:", editHolidayData);
     
     if (editingHolidayIndex !== null && editHolidayData) {
       try {
@@ -48,7 +48,7 @@ export const useHolidayEditing = () => {
           endTime: editHolidayData.endTime,
         };
 
-        console.log("🔍 Validating data:", dataToValidate);
+        console.log("Validating data:", dataToValidate);
 
         await holidayValidationSchema().validate(dataToValidate, {
           context: {
@@ -61,7 +61,7 @@ export const useHolidayEditing = () => {
           abortEarly: false,
         });
 
-        console.log("✅ Validation passed");
+        console.log(" Validation passed");
 
         const updated = [...holidays];
         updated[editingHolidayIndex] = {
@@ -76,14 +76,14 @@ export const useHolidayEditing = () => {
             : null,
         };
 
-        console.log("💾 Updating holiday:", updated[editingHolidayIndex]);
+        console.log(" Updating holiday:", updated[editingHolidayIndex]);
 
         dispatch(setHolidays(updated));
         setEditingHolidayIndex(null);
         setEditHolidayData(null);
         setFieldErrors({});
         
-        console.log("✅ Holiday updated successfully");
+        console.log(" Holiday updated successfully");
       } catch (error) {
         if (error.name === "ValidationError" && error.inner) {
           const newErrors = {};
@@ -99,7 +99,7 @@ export const useHolidayEditing = () => {
         }
       }
     } else {
-      console.warn("⚠️ Cannot save: Missing index or data", {
+      console.warn(" Cannot save: Missing index or data", {
         editingHolidayIndex,
         editHolidayData
       });
@@ -107,14 +107,14 @@ export const useHolidayEditing = () => {
   };
 
   const handleCancelHolidayInlineEdit = () => {
-    console.log("❌ Cancel clicked");
+    console.log(" Cancel clicked");
     setEditingHolidayIndex(null);
     setEditHolidayData(null);
-    setFieldErrors({}); // ✅ Clear errors on cancel
+    setFieldErrors({}); //  Clear errors on cancel
   };
 
   const handleDeleteHoliday = (index) => {
-    console.log("🗑️ Deleting holiday at index:", index);
+    console.log(" Deleting holiday at index:", index);
     dispatch(deleteHoliday(index));
   };
 

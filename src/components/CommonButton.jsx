@@ -18,9 +18,14 @@ function CommonButton(props) {
         // mt: "5px",
         display: "flex",
         flexDirection: "column",
+        borderRadius:"7px",
+        color:props.isSelected ? "white" : "",
+        backgroundColor:props.isSelected ? "#1172BA" : "",
         border: props.isSelected
-          ? "2px solid #1a82d2f6"
+          ? ""
           : "1px solid #1172ba80",
+           transition: "all 0.15s ease",
+
         boxShadow: props.isSelected
           ? "rgba(0, 0, 0, 0.1) 0px 6px 12px"
           : "none",
@@ -34,7 +39,10 @@ function CommonButton(props) {
           src={props.src}
           width={30}
           height={25}
-          style={{ objectFit: "contain" }}
+           style={{
+    objectFit: "contain",
+    filter: props.isSelected ? "brightness(-0) invert(1)" : "none",
+  }}
           alt={props.text || "button"}
         />
       )}

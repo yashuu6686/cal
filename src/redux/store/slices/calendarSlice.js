@@ -102,6 +102,23 @@ export const createDoctorCalendar = createAsyncThunk(
 );
 
 
+export const selectTotalUsedMinutes = (state) => {
+  return state.calendar.weekSchedule.reduce((sum, day) => {
+    return (
+      sum +
+      day.slots.reduce((subSum, slot) => subSum + Number(slot.duration || 0), 0)
+    );
+  }, 0);
+};
+
+export const selectTotalSlots = (state) => {
+  return state.calendar.weekSchedule.reduce(
+    (count, day) => count + day.slots.length,
+    0
+  );
+};
+
+
 const dayToNumber = {
   Sunday: 0,
   Monday: 1,

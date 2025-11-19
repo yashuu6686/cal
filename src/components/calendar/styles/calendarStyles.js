@@ -1,5 +1,5 @@
 export const calendarStyles = {
-  p: 3,
+  p: 2,
   borderRadius: 4,
   "& .rbc-calendar": {
     backgroundColor: "transparent",
@@ -88,9 +88,9 @@ export const toolbarContainerStyle = {
   backgroundColor: "#e3f2fd",
   backdropFilter: "blur(10px)",
   WebkitBackdropFilter: "blur(10px)",
-  padding: "16px 20px",
+  padding: "8px 10px",
   borderRadius: "12px",
-  marginBottom: "24px",
+  marginBottom: "12px",
   border: "2px solid #90caf9",
   boxShadow: "0 4px 12px rgba(25, 118, 210, 0.1)",
   position: "sticky",
