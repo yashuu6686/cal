@@ -18,11 +18,11 @@ import axios from "axios";
 
 // export default api
 
-const userApi = axios.create({
-  baseURL: "https://devapi.dequity.technology",
+const api  = axios.create({
+  baseURL: "http://localhost:5000",
    headers: {
     "Content-Type": "application/json", 
   },
 })
 
-export default userApi
+export default api

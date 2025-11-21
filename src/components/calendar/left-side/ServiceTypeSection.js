@@ -1,61 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  
-  removeSlotsByServiceType,
-  updateEvents,
+import { 
+  getServiceMaster,
+  selectServices,
+  selectSelectedServices,
+  toggleService // ⭐ Import action
 } from "@/redux/store/slices/calendarSlice";
-import {toggleService,} from "@/redux/store/slices/uiSlice"
 
-import { useCalendarState } from "@/hook/useCalendarState";
 import CommonButton from "@/components/CommonButton";
-import CommonDialogBox from "@/components/CommonDialogBox";
 import SectionHeader from "@/components/SectionHeader";
 
 const ServiceTypeSection = ({ disabled, onAddService }) => {
   const dispatch = useDispatch();
-  const { dataOfService, selectedServices } = useCalendarState();
-  const weekSchedule = useSelector((state) => state.calendar.weekSchedule);
 
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [serviceToRemove, setServiceToRemove] = useState(null);
+  // ⭐ Use selectors
+  const services = useSelector(selectServices);
+  const selectedServices = useSelector(selectSelectedServices);
 
-  const hasAssociatedSlots = (serviceType) => {
-    return weekSchedule.some((day) =>
-      day.slots.some((slot) => slot.serviceType === serviceType)
-    );
-  };
+  useEffect(() => {
+    dispatch(getServiceMaster());
+  }, [dispatch]);
 
-  const handleToggleService = (service) => {
-    const isCurrentlySelected = selectedServices.some(
-      (s) => s.type === service.type
-    );
-
-    if (isCurrentlySelected && hasAssociatedSlots(service.type)) {
-      setServiceToRemove(service);
-      setOpenConfirmDialog(true);
-    } else {
-      dispatch(toggleService(service));
-    }
-  };
-
-  const handleConfirmRemoveSlots = () => {
-    if (serviceToRemove) {
-      dispatch(removeSlotsByServiceType(serviceToRemove.type));
-      dispatch(updateEvents());
-
-      dispatch(toggleService(serviceToRemove));
-
-      setOpenConfirmDialog(false);
-      setServiceToRemove(null);
-    }
-  };
-
-  const handleCancelRemoveSlots = () => {
-    // User cancelled, don't deselect the service
-    setOpenConfirmDialog(false);
-    setServiceToRemove(null);
+  const handleToggle = (id) => {
+    dispatch(toggleService(id)); // ⭐ Dispatch action
   };
 
   return (
@@ -75,15 +43,20 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
       />
 
       <Box sx={{ display: "flex", flexWrap: "wrap" }}>
-        {dataOfService.map((item, i) => {
-          const isSelected = selectedServices.some((s) => s.type === item.type);
+        {services.map((item) => {
+          const isActive = selectedServices.includes(item._id);
+
           return (
             <CommonButton
+              key={item._id}
               disabled={disabled}
-              key={i}
               src={item.img}
-              isSelected={isSelected}
-              onClick={() => handleToggleService(item)}
+              onClick={() => handleToggle(item._id)}
+              isSelected={isActive}
+              sx={{
+                border: isActive ? "2px solid #2e7d32" : "1px solid #bdbdbd",
+                backgroundColor: isActive ? "#e8f5e9" : "#fff",
+              }}
             >
               <Typography
                 sx={{
@@ -92,28 +65,16 @@ const ServiceTypeSection = ({ disabled, onAddService }) => {
                   textTransform: "none",
                 }}
               >
-                {item.type}
+                {item.name}
               </Typography>
+
               <Typography sx={{ fontSize: "0.70rem", textTransform: "none" }}>
-                {item.time} Minutes
+                {item.duration} Minutes
               </Typography>
             </CommonButton>
           );
         })}
       </Box>
-
-      {/* Confirmation Dialog */}
-      <CommonDialogBox
-        open={openConfirmDialog}
-        onClose={handleCancelRemoveSlots}
-        onConfirm={handleConfirmRemoveSlots}
-        title="Remove Time Slots"
-        message={`The service you deselected has associated time slots. Do you want to remove the time slots for this service?`}
-        confirmText="Remove"
-        cancelText="Cancel"
-        // confirmColor="error"
-        hideCancel={false}
-      />
     </Box>
   );
 };

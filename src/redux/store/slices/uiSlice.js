@@ -30,20 +30,14 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     // ===== SERVICE ACTIONS =====
-    toggleService: (state, action) => {
-      const service = action.payload;
-      const exists = state.selectedServices.some(
-        (s) => s.type === service.type && s.time === service.time
-      );
-
-      if (exists) {
-        state.selectedServices = state.selectedServices.filter(
-          (s) => !(s.type === service.type && s.time === service.time)
-        );
-      } else {
-        state.selectedServices.push(service);
-      }
-    },
+   toggleService: (state, action) => {
+  const id = action.payload;
+  if (state.selectedServices.includes(id)) {
+    state.selectedServices = state.selectedServices.filter(s => s !== id);
+  } else {
+    state.selectedServices.push(id);
+  }
+},
 
     addNewService: (state, action) => {
       const { serviceName, duration, serviceType } = action.payload;
