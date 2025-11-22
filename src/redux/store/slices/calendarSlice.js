@@ -565,26 +565,25 @@ const calendarScheduleSlice = createSlice({
         target.breakEndTime = endTime;
       }
     },
-   updateHoliday: (state, action) => {
-  const { index, date, startTime, endTime } = action.payload;
-  
-  console.log("REDUCER - Before:", JSON.stringify(state.holidays));
-  
-  if (!state.holidays || !state.holidays[index]) {
-    console.log("REDUCER - holidays not found or invalid index");
-    return;
-  }
+    updateHoliday: (state, action) => {
+      const { index, date, startTime, endTime } = action.payload;
 
-  state.holidays[index] = {
-    ...state.holidays[index],
-    date,
-    startTime,
-    endTime,
-  };
-  
-  console.log("REDUCER - After:", JSON.stringify(state.holidays));
-},
+      console.log("REDUCER - Before:", JSON.stringify(state.holidays));
 
+      if (!state.holidays || !state.holidays[index]) {
+        console.log("REDUCER - holidays not found or invalid index");
+        return;
+      }
+
+      state.holidays[index] = {
+        ...state.holidays[index],
+        date,
+        startTime,
+        endTime,
+      };
+
+      console.log("REDUCER - After:", JSON.stringify(state.holidays));
+    },
   },
 
   extraReducers: (builder) => {
@@ -712,7 +711,7 @@ export const {
   toggleService,
   clearSelectedServices,
   updateBreak,
-  updateHoliday
+  updateHoliday,
 } = calendarScheduleSlice.actions;
 
 // Selectors

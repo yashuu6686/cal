@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, ToggleButton, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import CommonButton from "@/components/CommonButton";
@@ -61,33 +61,51 @@ const SpecialitiesSection = ({ disabled }) => {
     <Box sx={{ mb: 2 }}>
       <SectionHeader title="Specialities" />
 
-      <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1  }}>
         {specialties.map((item) => {
           const isActive = selected.includes(item._id);
 
           return (
-            <Box key={item._id}>
-              <CommonButton
+            // <Box >
+             <ToggleButton
+             key={item._id}
                 disabled={disabled}
                 src={item.img}
                 onClick={() => !disabled && handleToggle(item._id)}
-                isSelected={isActive}
+                selected={isActive}
                 sx={{
-                  border: isActive ? "2px solid #2e7d32" : "1px solid #bdbdbd",
-                  backgroundColor: isActive ? "#e8f5e9" : "#fff",
-                }}
+          width: "105px",
+        height: "65px",
+          flexDirection: "column",
+          borderRadius: "7px !important",
+          textTransform: "none",
+          alignItems: "center",
+          flexWrap:"wrap",
+          justifyContent: "center",
+          color:"#1172BA",
+          border: isActive ? "2px solid #1565c0" : "1px solid #90caf9",
+          backgroundColor: isActive ? "#e3f2fd" : "#fff",
+          "&.Mui-selected": {
+            backgroundColor: "#e3f2fd",
+            border: "2px solid #1565c0",
+          },
+          "&.Mui-selected:hover": {
+            backgroundColor: "#e3f2fd",
+          },
+        }}
               >
                 <Typography
                   sx={{
                     fontSize: "0.85rem",
                     fontWeight: 600,
                     textTransform: "none",
+                    color:isActive?"white":"#1172BA",
                   }}
                 >
                   {item.name}
                 </Typography>
-              </CommonButton>
-            </Box>
+               </ToggleButton>
+            // </Box>
           );
         })}
       </Box>

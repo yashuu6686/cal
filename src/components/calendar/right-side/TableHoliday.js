@@ -136,9 +136,9 @@ export default function HolidayTable() {
   };
 
   const handleSaveHolidayInlineEdit = async () => {
-  console.log("Save clicked");
-  console.log("editHolidayData:", editHolidayData);
-  console.log("editingHolidayIndex:", editingHolidayIndex);
+  // console.log("Save clicked");
+  // console.log("editHolidayData:", editHolidayData);
+  // console.log("editingHolidayIndex:", editingHolidayIndex);
   
   try {
     await holidayValidationSchema.validate(editHolidayData, {
@@ -162,7 +162,7 @@ export default function HolidayTable() {
         : null,
     };
     
-    console.log("Dispatching payload:", payload);
+    // console.log("Dispatching payload:", payload);
 
     dispatch(updateHoliday(payload));
 

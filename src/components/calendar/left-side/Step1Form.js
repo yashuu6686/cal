@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import { Box, Button, Divider, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsEditMode } from "@/redux/store/slices/calendarSlice";
 import { workingPlanSchema } from "@/components/calendar/validation/validation";
 import { useCalendarState } from "@/hook/useCalendarState";
@@ -22,6 +22,9 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
     isFieldsDisabled,
   } = useCalendarState();
 
+
+  const {calendar} = useSelector(state=>state.calendar);
+
   const [showSlotError, setShowSlotError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,7 +32,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
 
   const handleFormSubmit = (values, formikBag) => {
     // Check 1: Services required
-    if (selectedServices.length === 0) {
+     if (!calendar?.services || calendar.services.length === 0) {
       setErrorMessage("At least one service is required.");
       setShowSlotError(true);
       formikBag.setSubmitting(false);
@@ -37,7 +40,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
     }
 
     // Check 2: Specialities required
-    if (selectedSpecialities.length === 0) {
+    if (!calendar?.specialties || calendar.specialties.length === 0) {
       setErrorMessage("At least one specialty is required.");
       setShowSlotError(true);
       formikBag.setSubmitting(false);
@@ -45,11 +48,11 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
     }
 
     // Check 3: At least one slot required
-    const hasSlot = values.weekSchedule.some(
-      (day) => day.slots && day.slots.length > 0
-    );
+    // const hasSlot = values.weekSchedule.some(
+    //   (day) => day.slots && day.slots.length > 0
+    // );
 
-    if (!hasSlot) {
+    if (!calendar?.availability ||  calendar.availability.length === 0) {
       setErrorMessage(
         "Please add at least one time slot for the selected service type before publishing."
       );

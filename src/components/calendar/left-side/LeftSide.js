@@ -43,6 +43,7 @@ function LeftSide() {
         {step === 1 && (
           <Step1Form
             onSubmit={handleStep1Submit}
+             goNext={() => setStep(2)}  
             onOpenAddService={() => setOpenAddService(true)}
           />
         )}
