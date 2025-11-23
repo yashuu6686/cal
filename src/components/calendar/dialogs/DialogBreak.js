@@ -9,7 +9,6 @@ export default function BreakDialog() {
   const dispatch = useDispatch();
   const openDialog = useSelector((state) => state.calendar.openDialog);
   const breaks = useSelector((state) => state.calendar.breaks);
-
   return (
     <CommonDataDialog
       open={openDialog}

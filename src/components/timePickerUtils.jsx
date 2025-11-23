@@ -1,9 +1,7 @@
 import React from "react";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-/**
- * Common TimePicker component with consistent styling and error handling
- */
+
 export const CommonTimePicker = ({
   label,
   value,

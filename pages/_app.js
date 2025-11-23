@@ -2,6 +2,7 @@ import "@/globals.css";
 
 import { Provider } from "react-redux";
 import store from "@/redux/store/index";
+
 // import { CssBaseline, ThemeProvider } from "@mui/material";
 // import theme from "@/utils/theme"; // optional custom theme
 import ThemeRegistry from "@/components/calendar/utils/style";

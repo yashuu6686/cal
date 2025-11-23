@@ -26,7 +26,7 @@ import { TableActionButtons } from "@/components/TableActionButtons";
 import {
   selectCalendar,
   updateHoliday,
-  deleteHoliday,
+  // deleteHoliday,
 } from "@/redux/store/slices/calendarSlice";
 
 // ---------------------------------------------------------
@@ -180,7 +180,7 @@ export default function HolidayTable() {
 };
 
   const handleDeleteHoliday = (index) => {
-    dispatch(deleteHoliday(index));
+    // dispatch(deleteHoliday(index));
   };
 
   if (!calendar) {
@@ -324,7 +324,7 @@ export default function HolidayTable() {
                     onEdit={() =>
                       handleStartHolidayInlineEdit(index, holiday)
                     }
-                    onDelete={() => handleDeleteHoliday(index)}
+                    // onDelete={() => handleDeleteHoliday(index)}
                     onSave={handleSaveHolidayInlineEdit}
                     onCancel={handleCancelHolidayInlineEdit}
                   />

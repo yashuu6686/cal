@@ -14,9 +14,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
   const dispatch = useDispatch();
 
   const {
-    weekSchedule,
-    selectedServices,
-    selectedSpecialities,
+  
     isCalendarPublished,
     isEditMode,
     isFieldsDisabled,
@@ -28,7 +26,6 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
   const [showSlotError, setShowSlotError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const initialValues = { weekSchedule };
 
   const handleFormSubmit = (values, formikBag) => {
     // Check 1: Services required
@@ -47,11 +44,6 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
       return;
     }
 
-    // Check 3: At least one slot required
-    // const hasSlot = values.weekSchedule.some(
-    //   (day) => day.slots && day.slots.length > 0
-    // );
-
     if (!calendar?.availability ||  calendar.availability.length === 0) {
       setErrorMessage(
         "Please add at least one time slot for the selected service type before publishing."
@@ -68,7 +60,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
   return (
     <>
       <Formik
-        initialValues={initialValues}
+
         validate={(values) => {
           try {
             workingPlanSchema.validateSync(values, {
@@ -166,7 +158,7 @@ const Step1Form = ({ onSubmit, onOpenAddService }) => {
         )}
       </Formik>
 
-      {/* Error Dialog */}
+     
       <CommonDialogBox
         open={showSlotError}
         onClose={() => setShowSlotError(false)}

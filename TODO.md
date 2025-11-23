@@ -1,8 +1,17 @@
-- [x] Modify handleFormSubmit in Step1Form.js to check if selectedServices is empty instead of checking for slots
-- [x] Update the CommonDialogBox title to "Missing Service"
-- [x] Update the CommonDialogBox message to "Please add at least one service before continuing."
-- [ ] Test the change by running the app and trying to proceed without selecting a service
-- [x] Add CommonDialogBox in WorkingPlanView.js when clicking Add New Slot (+) if no Specialities and Service Type are selected
-- [x] Show dialog with message "Please select Specialities and Service Type before adding a slot."
-- [x] Update the Next button validation to check for Specialities, Service Type and Slots
-- [x] Update the dialog message to include all three requirements
+# TODO: Redux Persist Integration
+
+- [x] Read existing redux store and app setup.
+- [x] Modify cal/src/redux/store/index.js to integrate redux-persist:
+  - Wrapped reducers with persistReducer.
+  - Configured persistConfig with whitelist.
+  - Adjusted middleware to ignore redux-persist actions.
+  - Exported persistor alongside store.
+- [x] Modify cal/pages/_app.js to add PersistGate and wrap app rendering.
+- [ ] Manual testing recommended:
+  - Verify redux state persists after reload.
+  - Verify no redux errors or warnings related to serialization.
+- [ ] Optional:
+  - Adjust persistence whitelist/blacklist as needed.
+  - Optimize persistConfig settings for performance or storage limits.
+
+Next steps: User to test persistence behavior in the app. Further tuning or fixes can be applied if needed.

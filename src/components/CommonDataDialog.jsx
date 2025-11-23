@@ -58,7 +58,8 @@ export default function CommonDataDialog({
 
       <DialogContent sx={{ px: 2, py: 2 }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          {data.length > 0 ? (
+         {Array.isArray(data) && data.length > 0 ? (
+
             <TableComponent />
           ) : (
             <Box

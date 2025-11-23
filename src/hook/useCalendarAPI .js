@@ -5,17 +5,16 @@ import dayjs from "dayjs";
 // Redux Actions
 import {
   // addNewService,
-  addBreak,
-  addHoliday,
+  // addBreak,
+  // addHoliday,
   setIsCalendarPublished,
   setIsEditMode,
   // clearApiMessages,
-  updateEvents,
-  createDoctorCalendar,
+  // updateEvents,
+  // createDoctorCalendar,
 } from "@/redux/store/slices/calendarSlice";
 
-
-import { addNewService,} from "@/redux/store/slices/uiSlice"
+// import { addNewService,} from "@/redux/store/slices/uiSlice"
 
 import {
   publishCalendar,
@@ -28,16 +27,7 @@ import { useCalendarState } from "./useCalendarState";
 export const useCalendarAPI = (setStep) => {
   const dispatch = useDispatch();
 
-  const {
-    selectedServices,
-    selectedSpecialities,
-    weekSchedule,
-    breaks,
-    holidays,
-    isCalendarPublished,
-    apiSuccess,
-    apiError,
-  } = useCalendarState();
+  const { isCalendarPublished } = useCalendarState();
 
   // useEffect(() => {
   //   if (apiSuccess) {
@@ -71,36 +61,6 @@ export const useCalendarAPI = (setStep) => {
 
   const handleStep2Submit = async (values, { setSubmitting }) => {
     try {
-      // Save breaks if provided
-      if (
-        values.breakSelectedDays?.length > 0 &&
-        values.startTime &&
-        values.endTime
-      ) {
-        const newBreak = {
-          days: values.breakSelectedDays,
-          startTime: values.startTime, // Pass the dayjs object
-          endTime: values.endTime,
-        };
-        dispatch(addBreak(newBreak));
-      }
-
-      // Save holidays if provided
-      if (
-        values.holidayDate &&
-        values.holidayStartTime &&
-        values.holidayEndTime
-      ) {
-        const newHoliday = {
-          date: values.holidayDate,
-          startTime: values.holidayStartTime,
-          endTime: values.holidayEndTime,
-        };
-        dispatch(addHoliday(newHoliday));
-      }
-
-      dispatch(updateEvents());
-
       const payload = generateCalendarPayload({
         selectedServices,
         selectedSpecialities,
@@ -138,32 +98,11 @@ export const useCalendarAPI = (setStep) => {
     }
   };
 
-  const handleAddServiceSubmit = async (
-    values,
-    { setSubmitting, resetForm }
-  ) => {
-    try {
-      dispatch(
-        addNewService({
-          serviceName: values.name,
-          duration: values.duration,
-          serviceType: values.type,
-        })
-      );
-
-      resetForm();
-      return { success: true };
-    } catch (error) {
-      // console.error("Add service error:", error);
-      return { success: false };
-    } finally {
-      setSubmitting(false);
-    }
-  };
+ 
 
   return {
     handleStep1Submit,
     handleStep2Submit,
-    handleAddServiceSubmit,
+   
   };
 };

@@ -8,9 +8,7 @@ export const store = configureStore({
      ui: serviceReducer,
   },
   middleware: (getDefaultMiddleware) =>
-   
     getDefaultMiddleware({
-         serializableCheck: false,
       serializableCheck: {
         // Ignore these paths in the state for serialization checks
         // (dayjs objects are not serializable)
@@ -25,6 +23,7 @@ export const store = configureStore({
           'calendar/setHolidayValues',
         ],
         ignoredPaths: [
+          'calendar.events',
           'calendar.startTime',
           'calendar.endTime',
           'calendar.form',

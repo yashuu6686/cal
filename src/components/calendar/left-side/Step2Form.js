@@ -9,29 +9,22 @@ import Holiday from "@/components/calendar/right-side/Holiday";
 
 const Step2Form = ({ onSubmit, onBack }) => {
   const {
-    breakSelectedDays,
-    startTime,
-    endTime,
-    holidayValues,
-    breaks,
-    holidays,
-    editIndex,
-    holidayEditIndex,
+   
     isCalendarPublished,
   } = useCalendarState();
 
-  const initialValues = {
-    breakSelectedDays: breakSelectedDays || [],
-    startTime: startTime || null,
-    endTime: endTime || null,
-    holidayDate: holidayValues?.date || null,
-    holidayStartTime: holidayValues?.startTime || null,
-    holidayEndTime: holidayValues?.endTime || null,
-  };
+  // const initialValues = {
+  //   breakSelectedDays: breakSelectedDays || [],
+  //   startTime: startTime || null,
+  //   endTime: endTime || null,
+  //   holidayDate: holidayValues?.date || null,
+  //   holidayStartTime: holidayValues?.startTime || null,
+  //   holidayEndTime: holidayValues?.endTime || null,
+  // };
 
   return (
     <Formik
-      initialValues={initialValues}
+      // initialValues={initialValues}
       validationSchema={step2ValidationSchema}
       onSubmit={onSubmit}
            validate={(values) => {

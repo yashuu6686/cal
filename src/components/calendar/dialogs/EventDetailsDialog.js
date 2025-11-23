@@ -15,13 +15,13 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import dayjs from "dayjs";
 
-import {
-  setEditingSlot,
-  setForm,
-  setSelectedDays,
-  setStartTime,
-  setEndTime,
-} from "@/redux/store/slices/calendarSlice";
+// import {
+//   setEditingSlot,
+//   setForm,
+//   setSelectedDays,
+//   setStartTime,
+//   setEndTime,
+// } from "@/redux/store/slices/calendarSlice";
 import { formatEventTime } from "../utils/eventHelpers";
 
 export default function EventDetailsDialog({
@@ -30,39 +30,39 @@ export default function EventDetailsDialog({
   onClose,
   router,
 }) {
-  const dispatch = useDispatch();
-  const weekSchedule = useSelector((state) => state.calendar.weekSchedule);
+  // const dispatch = useDispatch();
+  // const weekSchedule = useSelector((state) => state.calendar.weekSchedule);
 
   // ===== EVENT HANDLERS =====
   const handleEdit = () => {
     if (!selectedEvent) return;
 
-    const eventDay = moment(selectedEvent.start).format("dddd");
-    const daySchedule = weekSchedule.find((d) => d.day === eventDay);
+    // const eventDay = moment(selectedEvent.start).format("dddd");
+    // const daySchedule = weekSchedule.find((d) => d.day === eventDay);
 
     if (daySchedule) {
       const slot = daySchedule.slots.find((s) => s.id === selectedEvent.id);
 
       if (slot) {
-        dispatch(
-          setForm({
-            serviceType: slot.serviceType,
-            speciality: slot.speciality,
-            startTime: dayjs(slot.start.toDate()),
-            endTime: dayjs(slot.end.toDate()),
-          })
-        );
+        // dispatch(
+        //   setForm({
+        //     serviceType: slot.serviceType,
+        //     speciality: slot.speciality,
+        //     startTime: dayjs(slot.start.toDate()),
+        //     endTime: dayjs(slot.end.toDate()),
+        //   })
+        // );
 
-        dispatch(setSelectedDays([eventDay]));
-        dispatch(setStartTime(slot.start));
-        dispatch(setEndTime(slot.end));
-        dispatch(
-          setEditingSlot({
-            id: slot.id,
-            days: [eventDay],
-            originalSlot: slot,
-          })
-        );
+        // dispatch(setSelectedDays([eventDay]));
+        // dispatch(setStartTime(slot.start));
+        // dispatch(setEndTime(slot.end));
+        // dispatch(
+        //   setEditingSlot({
+        //     id: slot.id,
+        //     days: [eventDay],
+        //     originalSlot: slot,
+        //   })
+        // );
 
         onClose();
       }

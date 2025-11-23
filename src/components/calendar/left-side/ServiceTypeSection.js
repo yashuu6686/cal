@@ -5,7 +5,7 @@ import {
   getServiceMaster,
   selectServices,
   selectSelectedServices,
-  toggleService, // ⭐ Import action
+  toggleService, 
 } from "@/redux/store/slices/calendarSlice";
 
 import CommonButton from "@/components/CommonButton";
@@ -14,7 +14,7 @@ import SectionHeader from "@/components/SectionHeader";
 const ServiceTypeSection = ({ disabled, onAddService }) => {
   const dispatch = useDispatch();
 
-  // ⭐ Use selectors
+  
   const services = useSelector(selectServices);
   const selectedServices = useSelector(selectSelectedServices);
 
