@@ -17,17 +17,14 @@ import {
   selectServiceTypesForDropdown, //  Import selector
 } from "@/redux/store/slices/calendarSlice";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TimePickerPair } from "@/components/timePickerUtils";
 
-export default function WorkingPlanView({ slots, setSlots, days ,wpErrors }) {
-
-
-   const getError = (dayIndex, slotIndex, field) => {
+export default function WorkingPlanView({ slots, setSlots, days, wpErrors }) {
+  const getError = (dayIndex, slotIndex, field) => {
     const key = `weekSchedule[${dayIndex}].slots[${slotIndex}].${field}`;
     return wpErrors?.[key] || "";
   };
- 
 
   const { calendar } = useSelector((state) => state.calendar);
   const serviceTypes = useSelector(selectServiceTypesForDropdown);
@@ -58,32 +55,33 @@ export default function WorkingPlanView({ slots, setSlots, days ,wpErrors }) {
     setSlots(mappedSlots);
   }, [calendar]);
 
-  const handleAddSlot = (day) => {
+ const handleAddSlot = useCallback((day) => {
     setSlots((prev) => ({
       ...prev,
-      [day]: [
-        ...prev[day],
-        { serviceType: "", startTime: null, endTime: null },
-      ],
+      [day]: [...prev[day], { serviceType: "", startTime: null, endTime: null }],
     }));
-  };
+  }, [setSlots]);
 
-  const handleChange = (day, index, field, value) => {
-    const updated = [...slots[day]];
-    updated[index][field] = value;
-    setSlots((prev) => ({ ...prev, [day]: updated }));
-  };
+  const handleChange = useCallback((day, index, field, value) => {
+    setSlots((prev) => {
+      const updated = [...prev[day]];
+      updated[index][field] = value;
+      return { ...prev, [day]: updated };
+    });
+  }, [setSlots]);
 
-  const removeSlot = (day, index) => {
-    const updated = [...slots[day]];
-    updated.splice(index, 1);
-    setSlots((prev) => ({ ...prev, [day]: updated }));
-  };
+  const removeSlot = useCallback((day, index) => {
+    setSlots((prev) => {
+      const updated = [...prev[day]];
+      updated.splice(index, 1);
+      return { ...prev, [day]: updated };
+    });
+  }, [setSlots]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{}}>
-        {days.map((day,dayIndex) => (
+        {days.map((day, dayIndex) => (
           <Box
             key={day}
             sx={{ mb: 1, border: "1px solid #e3f2fd", borderRadius: 2 }}
@@ -175,7 +173,7 @@ export default function WorkingPlanView({ slots, setSlots, days ,wpErrors }) {
                     }}
                     sx={{ flex: 1, mr: 1 }}
                     error={Boolean(getError(dayIndex, index, "serviceType"))}
-                  helperText={getError(dayIndex, index, "serviceType")}
+                    helperText={getError(dayIndex, index, "serviceType")}
                   >
                     {serviceTypes.length === 0 ? (
                       <MenuItem disabled>No services selected</MenuItem>
@@ -198,13 +196,17 @@ export default function WorkingPlanView({ slots, setSlots, days ,wpErrors }) {
 
                 <Box sx={{ display: "flex", mt: 2, gap: 1 }}>
                   <TimePickerPair
-        startValue={slot.startTime}
-        endValue={slot.endTime}
-        onStartChange={(val) => handleChange(day, index, "startTime", val)}
-        onEndChange={(val) => handleChange(day, index, "endTime", val)}
-        startError={getError(dayIndex, index, "start")}
-        endError={getError(dayIndex, index, "end")}
-      />
+                    startValue={slot.startTime}
+                    endValue={slot.endTime}
+                    onStartChange={(val) =>
+                      handleChange(day, index, "startTime", val)
+                    }
+                    onEndChange={(val) =>
+                      handleChange(day, index, "endTime", val)
+                    }
+                    startError={getError(dayIndex, index, "start")}
+                    endError={getError(dayIndex, index, "end")}
+                  />
                 </Box>
               </Box>
             ))}

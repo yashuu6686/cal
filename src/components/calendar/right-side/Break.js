@@ -4,8 +4,6 @@ import { TimePickerPair } from "@/components/timePickerUtils";
 import {
   Box,
   TextField,
-  Typography,
-  MenuItem,
   Checkbox,
   Autocomplete,
   Chip,
@@ -24,18 +22,17 @@ const days = [
   "Sunday",
 ];
 
-function Break({setBreakData,breakData}) {
-
+function Break({ setBreakData, breakData, breakErrors }) {
   const { selectedDays, breakStartTime, breakEndTime } = breakData;
- 
+
+  const getBreakError = (field) =>
+    breakErrors?.[`breakSelectedDays`] || breakErrors?.[field] || "";
 
   const allSelected = selectedDays.length === days.length;
 
   // console.log(breakData);
-  
 
-
-    const handleSelectDays = (event, newValue) => {
+  const handleSelectDays = (event, newValue) => {
     if (newValue.includes("Select All")) {
       setBreakData((prev) => ({
         ...prev,
@@ -63,7 +60,7 @@ function Break({setBreakData,breakData}) {
             },
           }}
           multiple
-           value={selectedDays}
+          value={selectedDays}
           onChange={handleSelectDays}
           disableCloseOnSelect
           options={["Select All", ...days]}
@@ -99,6 +96,8 @@ function Break({setBreakData,breakData}) {
               {...params}
               label="Select Days"
               fullWidth
+              error={Boolean(getBreakError("breakSelectedDays"))}
+              helperText={getBreakError("breakSelectedDays")}
               // placeholder={
               //   values.breakSelectedDays?.length === 0 ? "Select days" : ""
               // }
@@ -226,7 +225,7 @@ function Break({setBreakData,breakData}) {
                 },
               }}
             /> */}
-             <TimePickerPair
+            <TimePickerPair
               startValue={breakStartTime}
               endValue={breakEndTime}
               onStartChange={(val) =>
@@ -235,6 +234,8 @@ function Break({setBreakData,breakData}) {
               onEndChange={(val) =>
                 setBreakData((prev) => ({ ...prev, breakEndTime: val }))
               }
+              startError={getBreakError("startTime")}
+              endError={getBreakError("endTime")}
             />
           </Box>
         </LocalizationProvider>

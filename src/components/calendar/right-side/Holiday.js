@@ -9,7 +9,10 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-function Holiday({ holidayData, setHolidayData }) {
+function Holiday({ holidayData, setHolidayData,holidayErrors }) {
+
+  const getHolidayError = (field) => holidayErrors?.[field] || "";
+
 
    
  const { date, startTime, endTime } = holidayData;
@@ -32,6 +35,8 @@ function Holiday({ holidayData, setHolidayData }) {
           slotProps={{
             textField: {
               fullWidth: true,
+                error: Boolean(getHolidayError("holidayDate")),
+      helperText: getHolidayError("holidayDate"),
              
               margin: "normal",
               // sx: {
@@ -139,6 +144,9 @@ function Holiday({ holidayData, setHolidayData }) {
             onEndChange={(val) =>
               setHolidayData((prev) => ({ ...prev, endTime: val }))
             }
+
+            startError={getHolidayError("holidayStartTime")}
+  endError={getHolidayError("holidayEndTime")}
           />
         </Box>
 

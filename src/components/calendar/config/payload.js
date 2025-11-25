@@ -9,7 +9,7 @@ export const buildCalendarPayload = ({
   holidayData,
 }) => {
 
-  // ---- Services Payload ----
+
   const buildServicesPayload = () => {
     return services
       .filter((s) => selectedServices.includes(s._id))
@@ -21,12 +21,12 @@ export const buildCalendarPayload = ({
       }));
   };
 
-  // ---- Specialties Payload ----
+
   const buildSpecialtiesPayload = () => {
     return specialties.filter((s) => selectedSpecialties.includes(s._id));
   };
 
-  // ---- Breaks for a day ----
+
   const buildBreaksForDay = (day) => {
     if (!breakData.selectedDays.includes(day)) return [];
 
@@ -38,7 +38,7 @@ export const buildCalendarPayload = ({
     ];
   };
 
-  // ---- Services for a day ----
+ 
   const buildServicesForDay = (daySlots) => {
     return daySlots.map((s) => ({
       keyIdentifier: s.serviceType.keyIdentifier,
@@ -48,7 +48,7 @@ export const buildCalendarPayload = ({
     }));
   };
 
-  // ---- Weekly Availability ----
+  
   const buildAvailability = () => {
     return days.map((day) => ({
       day,
@@ -57,7 +57,7 @@ export const buildCalendarPayload = ({
     }));
   };
 
-  // ---- Holidays ----
+
   const buildHolidays = () => {
     if (!holidayData.date) return [];
 
@@ -70,7 +70,6 @@ export const buildCalendarPayload = ({
     ];
   };
 
-  // ---- FINAL PAYLOAD ----
   return {
     specialties: buildSpecialtiesPayload(),
     services: buildServicesPayload(),

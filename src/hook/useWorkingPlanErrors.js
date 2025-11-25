@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
 
-export function useWorkingPlanErrors(setWorkingPlanErrors) {
-  const [errors, setErrors] = useState({});
+// export function useWorkingPlanErrors(setWorkingPlanErrors) {
+//   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    if (setWorkingPlanErrors) {
-      setWorkingPlanErrors(errors);
-    }
-  }, [errors, setWorkingPlanErrors]);
+//   useEffect(() => {
+//     if (setWorkingPlanErrors) {
+//       setWorkingPlanErrors(errors);
+//     }
+//   }, [errors, setWorkingPlanErrors]);
 
-  return [errors, setErrors];
-}
+//   return [errors, setErrors];
+// }

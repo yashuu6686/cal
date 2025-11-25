@@ -104,7 +104,7 @@ export default function CommonDataDialog({
           variant="contained"
           sx={{
             color: "#fff",
-            fontWeight: 600,
+            fontWeight: 400,
             textTransform: "none",
             px: 3,
             borderRadius: 3,
@@ -112,7 +112,7 @@ export default function CommonDataDialog({
             transition: "all 0.3s ease",
           }}
         >
-          ✓ Close
+           Close
         </Button>
       </DialogActions>
     </Dialog>

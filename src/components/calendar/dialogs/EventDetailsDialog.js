@@ -34,40 +34,40 @@ export default function EventDetailsDialog({
   // const weekSchedule = useSelector((state) => state.calendar.weekSchedule);
 
   // ===== EVENT HANDLERS =====
-  const handleEdit = () => {
-    if (!selectedEvent) return;
+  // const handleEdit = () => {
+  //   if (!selectedEvent) return;
 
-    // const eventDay = moment(selectedEvent.start).format("dddd");
-    // const daySchedule = weekSchedule.find((d) => d.day === eventDay);
+  //   // const eventDay = moment(selectedEvent.start).format("dddd");
+  //   // const daySchedule = weekSchedule.find((d) => d.day === eventDay);
 
-    if (daySchedule) {
-      const slot = daySchedule.slots.find((s) => s.id === selectedEvent.id);
+  //   if (daySchedule) {
+  //     const slot = daySchedule.slots.find((s) => s.id === selectedEvent.id);
 
-      if (slot) {
-        // dispatch(
-        //   setForm({
-        //     serviceType: slot.serviceType,
-        //     speciality: slot.speciality,
-        //     startTime: dayjs(slot.start.toDate()),
-        //     endTime: dayjs(slot.end.toDate()),
-        //   })
-        // );
+  //     if (slot) {
+  //       // dispatch(
+  //       //   setForm({
+  //       //     serviceType: slot.serviceType,
+  //       //     speciality: slot.speciality,
+  //       //     startTime: dayjs(slot.start.toDate()),
+  //       //     endTime: dayjs(slot.end.toDate()),
+  //       //   })
+  //       // );
 
-        // dispatch(setSelectedDays([eventDay]));
-        // dispatch(setStartTime(slot.start));
-        // dispatch(setEndTime(slot.end));
-        // dispatch(
-        //   setEditingSlot({
-        //     id: slot.id,
-        //     days: [eventDay],
-        //     originalSlot: slot,
-        //   })
-        // );
+  //       // dispatch(setSelectedDays([eventDay]));
+  //       // dispatch(setStartTime(slot.start));
+  //       // dispatch(setEndTime(slot.end));
+  //       // dispatch(
+  //       //   setEditingSlot({
+  //       //     id: slot.id,
+  //       //     days: [eventDay],
+  //       //     originalSlot: slot,
+  //       //   })
+  //       // );
 
-        onClose();
-      }
-    }
-  };
+  //       onClose();
+  //     }
+  //   }
+  // };
 
   // ===== COMPUTED VALUES =====
   const getEventDetails = () => {
@@ -382,7 +382,7 @@ export default function EventDetailsDialog({
           onClick={() => router.push("/xyz/preview")}
           sx={{
             textTransform: "none",
-            fontWeight: 600,
+            fontWeight: 400,
             px: 4,
           }}
         >

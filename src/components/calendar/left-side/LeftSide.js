@@ -3,15 +3,10 @@ import React, { useEffect, useState } from "react";
 import { Paper, Box, Typography, Button, Divider } from "@mui/material";
 import LoadingOverlay from "./LoadingOverlay";
 import ErrorAlert from "./ErrorAlert";
-// import Step1Form from "./Step1Form";
-// import Step2Form from "./Step2Form";
 import AddServiceDialog from "./AddServiceDialog";
-
-// import { useCalendarState } from "@/hook/useCalendarState";
-// import { useCalendarAPI } from "@/hook/useCalendarAPI ";
 import ServiceTypeSection from "./ServiceTypeSection";
 import SpecialitiesSection from "./SpecialitiesSection";
-import WorkingPlanView from "./WorkingPlanView";
+import WorkingPlanView from "./working-plan/WorkingPlanView";
 import Holiday from "../right-side/Holiday";
 import Break from "../right-side/Break";
 import { useSelector } from "react-redux";
@@ -20,7 +15,9 @@ import {
   createDoctorCalendar,
   getDoctorCalendar,
 } from "@/redux/store/slices/calendarSlice";
-import { workingPlanSchema } from "../validation/validation";
+import { workingPlanSchema, step2ValidationSchema } from "../validation/validation"; // ADD THIS IMPORT
+import { buildCalendarPayload } from "../config/payload";
+import CommonDialogBox from "@/components/CommonDialogBox";
 
 const days = [
   "Sunday",
@@ -38,7 +35,6 @@ function LeftSide() {
   const [slots, setSlots] = useState(
     days.reduce((acc, day) => ({ ...acc, [day]: [] }), {})
   );
-  // console.log(slots);
 
   const [breakData, setBreakData] = useState({
     selectedDays: [],
@@ -54,12 +50,12 @@ function LeftSide() {
 
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [wpErrors, setWpErrors] = useState({});
+  const [breakErrors, setBreakErrors] = useState({});
+  const [holidayErrors, setHolidayErrors] = useState({});
 
+  const [showMissingDialog, setShowMissingDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getDoctorCalendar());
-  }, [dispatch]);
 
   const {
     isLoading,
@@ -72,7 +68,100 @@ function LeftSide() {
     services,
   } = useSelector((state) => state.calendar);
 
-  const handlePublishOrUpdate = () => {
+  useEffect(() => {
+    dispatch(getDoctorCalendar());
+  }, [dispatch]);
+
+  const validateWorkingPlan = async () => {
+    const weekSchedule = days.map((day) => ({
+      day,
+      slots: slots[day].map((slot) => ({
+        serviceType: slot.serviceType,
+        start: slot.startTime,
+        end: slot.endTime,
+      })),
+    }));
+
+    try {
+      await workingPlanSchema.validate({ weekSchedule }, { abortEarly: false });
+      setWpErrors({});
+      return true;
+    } catch (err) {
+      const formatted = {};
+      (err.inner || []).forEach((e) => {
+        formatted[e.path] = e.message;
+      });
+      setWpErrors(formatted);
+      return false;
+    }
+  };
+
+  const validateAll = async () => {
+    // 1️⃣ Working Plan validate
+    const wpOk = await validateWorkingPlan();
+    if (!wpOk) {
+      setStep(1);
+      return false;
+    }
+
+    // 2️⃣ Step-2 (Break + Holiday) validate
+    try {
+      await step2ValidationSchema.validate(
+        {
+          breakSelectedDays: breakData.selectedDays,
+          startTime: breakData.breakStartTime,
+          endTime: breakData.breakEndTime,
+          holidayDate: holidayData.date,
+          holidayStartTime: holidayData.startTime,
+          holidayEndTime: holidayData.endTime,
+        },
+        { abortEarly: false }
+      );
+
+      // Clear errors if validation passes
+      setBreakErrors({});
+      setHolidayErrors({});
+      return true;
+    } catch (err) {
+      console.log("STEP2 VALIDATION ERRORS:", err.inner);
+
+      const breakErr = {};
+      const holidayErr = {};
+
+      (err.inner || []).forEach((e) => {
+        console.log("Error path:", e.path, "Message:", e.message);
+        
+        // Map break errors
+        if (e.path === "breakSelectedDays") {
+          breakErr["breakSelectedDays"] = e.message;
+        } else if (e.path === "startTime") {
+          breakErr["startTime"] = e.message;
+        } else if (e.path === "endTime") {
+          breakErr["endTime"] = e.message;
+        }
+        // Map holiday errors
+        else if (e.path === "holidayDate") {
+          holidayErr["holidayDate"] = e.message;
+        } else if (e.path === "holidayStartTime") {
+          holidayErr["holidayStartTime"] = e.message;
+        } else if (e.path === "holidayEndTime") {
+          holidayErr["holidayEndTime"] = e.message;
+        }
+      });
+
+      console.log("Break Errors:", breakErr);
+      console.log("Holiday Errors:", holidayErr);
+
+      setBreakErrors(breakErr);
+      setHolidayErrors(holidayErr);
+      return false;
+    }
+  };
+
+  const handlePublishOrUpdate = async () => {
+    const ok = await validateAll();
+    if (!ok) return; // IMPORTANT: Don't proceed if validation fails
+    
     const payload = buildCalendarPayload({
       selectedServices,
       services,
@@ -85,36 +174,58 @@ function LeftSide() {
     });
 
     console.log("FINAL PAYLOAD:", payload);
-
     dispatch(createDoctorCalendar(payload));
+      setBreakData({
+    selectedDays: [],
+    breakStartTime: null,
+    breakEndTime: null,
+  });
+
+  setHolidayData({
+    date: null,
+    startTime: null,
+    endTime: null,
+  });
+
+  // ⭐ CLEAR ERRORS ALSO
+  setBreakErrors({});
+  setHolidayErrors({});
+
+    setStep(1);
   };
 
-  const validateWorkingPlan = async () => {
-    const weekSchedule = days.map((day) => ({
-      day,
-      slots: slots[day].map((slot) => ({
-        serviceType: slot.serviceType?.name || "",
-        start: slot.startTime,
-        end: slot.endTime,
-      })),
-    }));
-
-    try {
-      await workingPlanSchema.validate({ weekSchedule }, { abortEarly: false });
-
-      setWpErrors({});
-      return true;
-    } catch (err) {
-      const formatted = {};
-     (err.inner || []).forEach((e) => {
-      formatted[e.path] = e.message;
-    });
-
-      setWpErrors(formatted);
+  const checkRequiredBeforePublish = () => {
+    if (!selectedServices || selectedServices.length === 0) {
+      setDialogMessage(
+        "Please select at least one Service Type before continuing."
+      );
+      setShowMissingDialog(true);
       return false;
     }
+
+    if (!selectedSpecialties || selectedSpecialties.length === 0) {
+      setDialogMessage(
+        "Please select at least one Speciality before continuing."
+      );
+      setShowMissingDialog(true);
+      return false;
+    }
+
+    const hasSlot = days.some((d) => slots[d].length > 0);
+
+    if (!hasSlot) {
+      setDialogMessage(
+        "Please add at least one working slot before publishing."
+      );
+      setShowMissingDialog(true);
+      return false;
+    }
+
+    return true;
   };
+
   const nextStep = async () => {
+    if (!checkRequiredBeforePublish()) return;
     const ok = await validateWorkingPlan();
     if (!ok) return;
     setStep(2);
@@ -195,6 +306,7 @@ function LeftSide() {
               days={days}
               wpErrors={wpErrors}
             />
+
             <Box sx={{ mt: 3, display: "flex", justifyContent: "end" }}>
               {(!isCalendarPublished || isEditMode) && (
                 <Button
@@ -211,9 +323,14 @@ function LeftSide() {
 
         {step === 2 && (
           <>
-            <Break breakData={breakData} setBreakData={setBreakData} />
+            <Break
+              breakData={breakData}
+              setBreakData={setBreakData}
+              breakErrors={breakErrors}
+            />
             <Divider sx={{ my: 2, borderColor: "#bbdefb" }} />
             <Holiday
+              holidayErrors={holidayErrors}
               holidayData={holidayData}
               setHolidayData={setHolidayData}
             />
@@ -223,22 +340,18 @@ function LeftSide() {
                 variant="outlined"
                 sx={{
                   mr: 0.5,
-                  // borderRadius: 2.5,
-                  // fontWeight: 600,
                   fontSize: "0.9rem",
                   textTransform: "none",
                 }}
-                onClick={()=>setStep(1)}
+                onClick={() => setStep(1)}
               >
                 Back
               </Button>
               <Button
                 type="submit"
                 variant="contained"
-                // disabled={isSubmitting}
                 onClick={handlePublishOrUpdate}
                 sx={{ textTransform: "none" }}
-                //   sx={buttonGradientStyles}
               >
                 {isCalendarPublished ? "Update Calendar" : "Publish Calendar"}
               </Button>
@@ -248,6 +361,15 @@ function LeftSide() {
       </Box>
 
       <AddServiceDialog />
+      <CommonDialogBox
+        open={showMissingDialog}
+        onClose={() => setShowMissingDialog(false)}
+        onConfirm={() => setShowMissingDialog(false)}
+        title="Missing Information"
+        message={dialogMessage}
+        confirmText="OK"
+        hideCancel={true}
+      />
     </Paper>
   );
 }
