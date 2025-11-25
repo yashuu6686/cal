@@ -1,79 +1,80 @@
-import dayjs from "dayjs";
-
-
-export const generateCalendarPayload = ({
+export const buildCalendarPayload = ({
   selectedServices,
-  selectedSpecialities,
-  weekSchedule,
-  breaks,
-  holidays,
-  pendingSlots = [],
-  breakSelectedDays = [],
-  startTime,
-  endTime,
-  holidayValues = {},
+  services,
+  selectedSpecialties,
+  specialties,
+  days,
+  slots,
+  breakData,
+  holidayData,
 }) => {
-  //  Merge pending slots into existing week schedule
-  const updatedWeekSchedule = weekSchedule.map((dayItem) => {
-    const additionalSlots = pendingSlots
-      .filter((slot) => slot.days.includes(dayItem.day))
-      .map((slot) => ({
-        start: dayjs(slot.start).format("HH:mm"),
-        end: dayjs(slot.end).format("HH:mm"),
-        serviceType: slot.serviceType,
-        speciality: slot.speciality,
+
+  // ---- Services Payload ----
+  const buildServicesPayload = () => {
+    return services
+      .filter((s) => selectedServices.includes(s._id))
+      .map((s) => ({
+        keyIdentifier: s.keyIdentifier,
+        duration: s.duration,
+        name: s.name,
+        addressId: s.addressId || null,
       }));
+  };
 
-    return {
-      ...dayItem,
-      slots: [
-        ...dayItem.slots.map((s) => ({
-          ...s,
-          start: dayjs(s.start).format("HH:mm"),
-          end: dayjs(s.end).format("HH:mm"),
-        })),
-        ...additionalSlots,
-      ],
-    };
-  });
+  // ---- Specialties Payload ----
+  const buildSpecialtiesPayload = () => {
+    return specialties.filter((s) => selectedSpecialties.includes(s._id));
+  };
 
-  //  Merge any unsaved breaks
-  const updatedBreaks = [
-    ...breaks,
-    ...(breakSelectedDays.length && startTime && endTime
-      ? [
-          {
-            days: breakSelectedDays,
-            startTime: dayjs(startTime).format("HH:mm"),
-            endTime: dayjs(endTime).format("HH:mm"),
-          },
-        ]
-      : []),
-  ];
+  // ---- Breaks for a day ----
+  const buildBreaksForDay = (day) => {
+    if (!breakData.selectedDays.includes(day)) return [];
 
-  //  Merge any unsaved holidays
-  const updatedHolidays = [
-    ...holidays,
-    ...(holidayValues?.date
-      ? [
-          {
-            date: dayjs(holidayValues.date).format("YYYY-MM-DD"),
-            startTime: holidayValues.startTime
-              ? dayjs(holidayValues.startTime).format("HH:mm")
-              : null,
-            endTime: holidayValues.endTime
-              ? dayjs(holidayValues.endTime).format("HH:mm")
-              : null,
-          },
-        ]
-      : []),
-  ];
+    return [
+      {
+        breakStartTime: breakData.breakStartTime?.format("HH:mm"),
+        breakEndTime: breakData.breakEndTime?.format("HH:mm"),
+      },
+    ];
+  };
 
+  // ---- Services for a day ----
+  const buildServicesForDay = (daySlots) => {
+    return daySlots.map((s) => ({
+      keyIdentifier: s.serviceType.keyIdentifier,
+      name: s.serviceType.name,
+      startTime: s.startTime?.format("HH:mm"),
+      endTime: s.endTime?.format("HH:mm"),
+    }));
+  };
+
+  // ---- Weekly Availability ----
+  const buildAvailability = () => {
+    return days.map((day) => ({
+      day,
+      breaks: buildBreaksForDay(day),
+      services: buildServicesForDay(slots[day]),
+    }));
+  };
+
+  // ---- Holidays ----
+  const buildHolidays = () => {
+    if (!holidayData.date) return [];
+
+    return [
+      {
+        date: holidayData.date.format("YYYY-MM-DD"),
+        startTime: holidayData.startTime?.format("HH:mm") || null,
+        endTime: holidayData.endTime?.format("HH:mm") || null,
+      },
+    ];
+  };
+
+  // ---- FINAL PAYLOAD ----
   return {
-    services: selectedServices.map((s) => s.type),
-    specialities: selectedSpecialities.map((s) => s.type),
-    weekSchedule: updatedWeekSchedule,
-    breaks: updatedBreaks,
-    holidays: updatedHolidays,
+    specialties: buildSpecialtiesPayload(),
+    services: buildServicesPayload(),
+    availability: buildAvailability(),
+    holidays: buildHolidays(),
   };
 };

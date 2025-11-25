@@ -153,7 +153,7 @@ export default function BreakTable() {
   // DELETE BREAK
   // -------------------------------
   const handleDeleteDay = (breakIndex, dayIndex) => {
-    console.log("Delete row:", breakIndex, dayIndex);
+    // console.log("Delete row:", breakIndex, dayIndex);
   };
 
   return (

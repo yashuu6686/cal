@@ -24,8 +24,30 @@ const days = [
   "Sunday",
 ];
 
-function Break({ errors = {}, touched = {}, values, setFieldValue }) {
-  const allSelected = values.breakSelectedDays?.length === days.length;
+function Break({setBreakData,breakData}) {
+
+  const { selectedDays, breakStartTime, breakEndTime } = breakData;
+ 
+
+  const allSelected = selectedDays.length === days.length;
+
+  // console.log(breakData);
+  
+
+
+    const handleSelectDays = (event, newValue) => {
+    if (newValue.includes("Select All")) {
+      setBreakData((prev) => ({
+        ...prev,
+        selectedDays: days,
+      }));
+    } else {
+      setBreakData((prev) => ({
+        ...prev,
+        selectedDays: newValue,
+      }));
+    }
+  };
 
   return (
     <Box>
@@ -41,20 +63,10 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
             },
           }}
           multiple
+           value={selectedDays}
+          onChange={handleSelectDays}
           disableCloseOnSelect
           options={["Select All", ...days]}
-          value={values.breakSelectedDays || []}
-          onChange={(event, newValue) => {
-            if (newValue.includes("Select All")) {
-              if (values.breakSelectedDays?.length === days.length) {
-                setFieldValue("breakSelectedDays", []);
-              } else {
-                setFieldValue("breakSelectedDays", days);
-              }
-            } else {
-              setFieldValue("breakSelectedDays", newValue);
-            }
-          }}
           getOptionLabel={(option) => option}
           renderOption={(props, option, { selected }) => {
             const isSelectAll = option === "Select All";
@@ -65,8 +77,8 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                   checked={isSelectAll ? allSelected : selected}
                   indeterminate={
                     isSelectAll &&
-                    values.breakSelectedDays?.length > 0 &&
-                    values.breakSelectedDays?.length < days.length
+                    selectedDays.length > 0 &&
+                    selectedDays.length < days.length
                   }
                   sx={{
                     color: "#1976d2",
@@ -87,13 +99,9 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
               {...params}
               label="Select Days"
               fullWidth
-              placeholder={
-                values.breakSelectedDays?.length === 0 ? "Select days" : ""
-              }
-              error={
-                touched.breakSelectedDays && Boolean(errors.breakSelectedDays)
-              }
-              helperText={touched.breakSelectedDays && errors.breakSelectedDays}
+              // placeholder={
+              //   values.breakSelectedDays?.length === 0 ? "Select days" : ""
+              // }
               sx={{
                 cursor: "pointer",
                 "& .MuiOutlinedInput-root": {
@@ -218,13 +226,15 @@ function Break({ errors = {}, touched = {}, values, setFieldValue }) {
                 },
               }}
             /> */}
-            <TimePickerPair
-              startValue={values.startTime}
-              endValue={values.endTime}
-              onStartChange={(val) => setFieldValue("startTime", val)}
-              onEndChange={(val) => setFieldValue("endTime", val)}
-              startError={touched.startTime && errors.startTime}
-              endError={touched.endTime && errors.endTime}
+             <TimePickerPair
+              startValue={breakStartTime}
+              endValue={breakEndTime}
+              onStartChange={(val) =>
+                setBreakData((prev) => ({ ...prev, breakStartTime: val }))
+              }
+              onEndChange={(val) =>
+                setBreakData((prev) => ({ ...prev, breakEndTime: val }))
+              }
             />
           </Box>
         </LocalizationProvider>

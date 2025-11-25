@@ -6,12 +6,12 @@ import CommonButton from "@/components/CommonButton";
 import SectionHeader from "@/components/SectionHeader";
 import { getSpecialtyMaster } from "@/redux/store/slices/calendarSlice";
 
-const SpecialitiesSection = ({ disabled }) => {
+const SpecialitiesSection = ({ disabled, setSelectedSpecialties,selectedSpecialties }) => {
   const dispatch = useDispatch();
   const { specialties } = useSelector((state) => state.calendar);
   const { calendar } = useSelector((state) => state.calendar);
 
-  const [selected, setSelected] = useState([]);
+  // const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     dispatch(getSpecialtyMaster());
@@ -47,12 +47,12 @@ const SpecialitiesSection = ({ disabled }) => {
       });
     }
 
-    console.log("Active Specialty IDs:", activeSpecialtyIds); // Debug
-    setSelected(activeSpecialtyIds);
-  }, [calendar, specialties]); // calendar aur specialties dono ko track karo
+    // console.log("Active Specialty IDs:", activeSpecialtyIds); // Debug
+    setSelectedSpecialties(activeSpecialtyIds);
+  }, [calendar, specialties]); 
 
   const handleToggle = (id) => {
-    setSelected((prev) =>
+    setSelectedSpecialties((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
@@ -63,7 +63,7 @@ const SpecialitiesSection = ({ disabled }) => {
 
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1  }}>
         {specialties.map((item) => {
-          const isActive = selected.includes(item._id);
+          const isActive = selectedSpecialties.includes(item._id);
 
           return (
             // <Box >

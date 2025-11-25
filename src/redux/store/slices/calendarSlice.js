@@ -9,6 +9,17 @@ import moment from "moment";
 import axios from "axios";
 import api from "@/components/calendar/utils/axios";
 
+export const createDoctorCalendar = createAsyncThunk(
+  "calendar/createDoctorCalendar",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await axios.post("/createDoctorCalendar", payload);
+      return res.data;  // here "data" = your full payload
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "API Error");
+    }
+  }
+);
 
 
 export const getSpecialtyMaster = createAsyncThunk(
@@ -85,6 +96,7 @@ const initialState = {
   calendar: null,
   specialties: [],
   services: [],
+  data:null,
   selectedServices: [],
   loading: false,
   error: null,
@@ -144,7 +156,7 @@ const calendarScheduleSlice = createSlice({
         state.selectedServices.push(serviceId);
       }
     },
-    //  Action to clear selected services
+  
     clearSelectedServices: (state) => {
       state.selectedServices = [];
     },
@@ -163,10 +175,7 @@ const calendarScheduleSlice = createSlice({
     updateHoliday: (state, action) => {
       const { index, date, startTime, endTime } = action.payload;
 
-      console.log("REDUCER - Before:", JSON.stringify(state.holidays));
-
       if (!state.holidays || !state.holidays[index]) {
-        console.log("REDUCER - holidays not found or invalid index");
         return;
       }
 
@@ -177,7 +186,6 @@ const calendarScheduleSlice = createSlice({
         endTime,
       };
 
-      console.log("REDUCER - After:", JSON.stringify(state.holidays));
     },
   },
 
@@ -213,7 +221,7 @@ const calendarScheduleSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      // getDoctorCalendar.fulfilled case mein yeh changes karein:
+      
 
       .addCase(getDoctorCalendar.fulfilled, (state, action) => {
         state.loading = false;
@@ -312,6 +320,18 @@ const calendarScheduleSlice = createSlice({
       .addCase(getDoctorCalendar.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+        .addCase(createDoctorCalendar.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createDoctorCalendar.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload; 
+      })
+      .addCase(createDoctorCalendar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -357,6 +377,7 @@ export const selectServiceTypesForDropdown = createSelector(
         value: service.name,
         duration: service.duration,
         id: service._id,
+         keyIdentifier: service.keyIdentifier, 
       }));
   }
 );

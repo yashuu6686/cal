@@ -48,7 +48,7 @@ function Preview() {
         // FIX: Get duration from slot, or calculate from selected service
         const intervalMinutes = slot.duration || 15;
         
-        console.log(`Service: ${slot.serviceType}, Duration: ${intervalMinutes} minutes`);
+        // console.log(`Service: ${slot.serviceType}, Duration: ${intervalMinutes} minutes`);
         
         const intervals = generateTimeSlots(start, end, intervalMinutes);
 

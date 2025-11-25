@@ -9,10 +9,12 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
+function Holiday({ holidayData, setHolidayData }) {
 
    
-
+ const { date, startTime, endTime } = holidayData;
+//  console.log(holidayData);
+ 
    
   return (
     <Box>
@@ -23,13 +25,14 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
         <DesktopDatePicker
           minDate={dayjs().startOf("day")}
           label="Select Date"
-          value={values.holidayDate}
-          onChange={(newValue) => setFieldValue("holidayDate", newValue)}
+           value={date}
+             onChange={(val) =>
+            setHolidayData((prev) => ({ ...prev, date: val }))
+          }
           slotProps={{
             textField: {
               fullWidth: true,
-              error: touched.holidayDate && Boolean(errors.holidayDate),
-              helperText: touched.holidayDate && errors.holidayDate,
+             
               margin: "normal",
               // sx: {
               //   mt: 1,
@@ -128,13 +131,14 @@ function Holiday({ errors = {}, touched = {}, values, setFieldValue }) {
           /> */}
 
           <TimePickerPair
-            //  fullWidth={fullWidth}
-            startValue={values.holidayStartTime}
-            endValue={values.holidayEndTime}
-            onStartChange={(val) => setFieldValue("holidayStartTime", val)}
-            onEndChange={(val) => setFieldValue("holidayEndTime", val)}
-            startError={touched.holidayStartTime && errors.holidayStartTime}
-            endError={touched.holidayEndTime && errors.holidayEndTime}
+          startValue={startTime}
+            endValue={endTime}
+            onStartChange={(val) =>
+              setHolidayData((prev) => ({ ...prev, startTime: val }))
+            }
+            onEndChange={(val) =>
+              setHolidayData((prev) => ({ ...prev, endTime: val }))
+            }
           />
         </Box>
 

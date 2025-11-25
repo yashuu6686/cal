@@ -94,7 +94,7 @@ export default function EventDetailsDialog({
   const { serviceType, specialities } = getEventDetails();
   
   useEffect(() => {
-    console.log("Selected Event Specialities: ", selectedEvent?.specialities);
+    // console.log("Selected Event Specialities: ", selectedEvent?.specialities);
   });
   // ===== RENDER =====
   return (
