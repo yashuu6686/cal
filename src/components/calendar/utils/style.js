@@ -23,7 +23,7 @@ const baseTheme = createTheme({
       // hover: "rgb(198, 228, 251)",
       color: "#fffff",
       backgroundColor: "#4414d4ff",
-      borderRadius: "8px 8px 0 0",
+      // borderRadius: "4px 4px 0 0",
       boxShadow:
         "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
     },
@@ -75,7 +75,7 @@ const theam = createTheme(baseTheme, {
           width: "100%",
           height: "100%px",
           aligItems:"center",
-          borderRadius: "20px",
+          borderRadius: "15px",
           backgroundColor: baseTheme.palette.main,
           boxShadow: baseTheme.palette.action.boxShadow,
         },

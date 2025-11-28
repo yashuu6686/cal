@@ -1,7 +1,6 @@
 import React from "react";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-
 export const CommonTimePicker = ({
   label,
   value,
@@ -14,15 +13,26 @@ export const CommonTimePicker = ({
 }) => {
   return (
     <TimePicker
-    fullWidth
       disabled={disabled}
       label={label}
       value={value}
+      sx={{
+        borderRadius: "15px",
+        background: "transparint",
+        transition: "0.25s",
+        
+        ".MuiPickersOutlinedInput-root": {
+          boxShadow:
+            "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -100px 8px #fff",
+          borderRadius: "15px",
+        },
+        
+      }}
       onChange={onChange}
       slotProps={{
         textField: {
           fullWidth,
-          // size,
+          size,
           error: Boolean(error),
           helperText: error || helperText,
         },
@@ -30,7 +40,6 @@ export const CommonTimePicker = ({
     />
   );
 };
-
 
 export const TimePickerPair = ({
   startValue,
@@ -49,6 +58,7 @@ export const TimePickerPair = ({
         onChange={onStartChange}
         error={startError}
         disabled={disabled}
+        // size="small"
       />
       <CommonTimePicker
         label="End Time"
@@ -56,6 +66,7 @@ export const TimePickerPair = ({
         onChange={onEndChange}
         error={endError}
         disabled={disabled}
+        // size="small"
       />
     </>
   );

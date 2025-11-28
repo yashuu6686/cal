@@ -24,6 +24,7 @@ import * as yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
 import { TableActionButtons } from "@/components/TableActionButtons";
 import {
+  deleteHoliday,
   selectCalendar,
   updateHoliday,
   // deleteHoliday,
@@ -136,9 +137,7 @@ export default function HolidayTable() {
   };
 
   const handleSaveHolidayInlineEdit = async () => {
-  // console.log("Save clicked");
-  // console.log("editHolidayData:", editHolidayData);
-  // console.log("editingHolidayIndex:", editingHolidayIndex);
+
   
   try {
     await holidayValidationSchema.validate(editHolidayData, {
@@ -148,8 +147,6 @@ export default function HolidayTable() {
         editIndex: editingHolidayIndex,
       },
     });
-
-    console.log("Validation passed");
 
     const payload = {
       index: editingHolidayIndex,
@@ -162,13 +159,10 @@ export default function HolidayTable() {
         : null,
     };
     
-    // console.log("Dispatching payload:", payload);
-
     dispatch(updateHoliday(payload));
 
     handleCancelHolidayInlineEdit();
   } catch (err) {
-    console.log("Validation error:", err);
     let errors = {};
     if (err.inner) {
       err.inner.forEach((e) => {
@@ -180,16 +174,16 @@ export default function HolidayTable() {
 };
 
   const handleDeleteHoliday = (index) => {
-    // dispatch(deleteHoliday(index));
-  };
+  dispatch(deleteHoliday(index));
+};
 
-  if (!calendar) {
-    return (
-      <Box sx={{ p: 2, textAlign: "center" }}>
-        <Typography>Loading holidays...</Typography>
-      </Box>
-    );
-  }
+  // if (!calendar) {
+  //   return (
+  //     <Box sx={{ p: 2, textAlign: "center" }}>
+  //       <Typography>Loading holidays...</Typography>
+  //     </Box>
+  //   );
+  // }
 
   if (holidays.length === 0) {
     return (
@@ -324,7 +318,7 @@ export default function HolidayTable() {
                     onEdit={() =>
                       handleStartHolidayInlineEdit(index, holiday)
                     }
-                    // onDelete={() => handleDeleteHoliday(index)}
+                    onDelete={() => handleDeleteHoliday(index)}
                     onSave={handleSaveHolidayInlineEdit}
                     onCancel={handleCancelHolidayInlineEdit}
                   />

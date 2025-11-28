@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const buildCalendarPayload = ({
   selectedServices,
   services,
@@ -7,9 +9,10 @@ export const buildCalendarPayload = ({
   slots,
   breakData,
   holidayData,
+  masterProfileId,
+  advanceBooking,
+  calendar, //  Add calendar parameter
 }) => {
-
-
   const buildServicesPayload = () => {
     return services
       .filter((s) => selectedServices.includes(s._id))
@@ -21,24 +24,30 @@ export const buildCalendarPayload = ({
       }));
   };
 
-
   const buildSpecialtiesPayload = () => {
     return specialties.filter((s) => selectedSpecialties.includes(s._id));
   };
 
-
   const buildBreaksForDay = (day) => {
-    if (!breakData.selectedDays.includes(day)) return [];
+   
+    if (breakData.selectedDays.includes(day) && breakData.breakStartTime && breakData.breakEndTime) {
+      return [
+        {
+          breakStartTime: breakData.breakStartTime.format("HH:mm"),
+          breakEndTime: breakData.breakEndTime.format("HH:mm"),
+        },
+      ];
+    }
 
-    return [
-      {
-        breakStartTime: breakData.breakStartTime?.format("HH:mm"),
-        breakEndTime: breakData.breakEndTime?.format("HH:mm"),
-      },
-    ];
+   
+     const existingDayData = calendar?.availability?.find((item) => item.day === day);
+  if (existingDayData?.breaks && existingDayData.breaks.length > 0) {
+    return existingDayData.breaks.map(({ _id, ...rest }) => rest); 
+  }
+
+  return [];
   };
 
- 
   const buildServicesForDay = (daySlots) => {
     return daySlots.map((s) => ({
       keyIdentifier: s.serviceType.keyIdentifier,
@@ -48,7 +57,6 @@ export const buildCalendarPayload = ({
     }));
   };
 
-  
   const buildAvailability = () => {
     return days.map((day) => ({
       day,
@@ -57,17 +65,32 @@ export const buildCalendarPayload = ({
     }));
   };
 
-
   const buildHolidays = () => {
-    if (!holidayData.date) return [];
+    let holidays = [];
 
-    return [
-      {
-        date: holidayData.date.format("YYYY-MM-DD"),
+
+    if (calendar?.holidays && calendar.holidays.length > 0) {
+      holidays = calendar.holidays.map((h) => ({
+        date: dayjs(h.date).format("YYYY-MM-DD"),
+        startTime: h.startTime || null,
+        endTime: h.endTime || null,
+      }));
+    }
+
+
+    if (holidayData?.date) {
+      holidays.push({
+        date: dayjs(holidayData.date).format("YYYY-MM-DD"),
         startTime: holidayData.startTime?.format("HH:mm") || null,
         endTime: holidayData.endTime?.format("HH:mm") || null,
-      },
-    ];
+      });
+    }
+
+    return holidays;
+  };
+
+  const masterProfileID = () => {
+    return masterProfileId;
   };
 
   return {
@@ -75,5 +98,8 @@ export const buildCalendarPayload = ({
     services: buildServicesPayload(),
     availability: buildAvailability(),
     holidays: buildHolidays(),
+    masterProfileId: masterProfileID(),
+    advanceBookingDays: advanceBooking.advanceBookingDays,
+    checkInTime: advanceBooking.checkInTime,
   };
 };

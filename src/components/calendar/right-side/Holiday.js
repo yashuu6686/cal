@@ -9,16 +9,12 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-function Holiday({ holidayData, setHolidayData,holidayErrors }) {
-
+function Holiday({ holidayData, setHolidayData, holidayErrors, clearError }) {
   const getHolidayError = (field) => holidayErrors?.[field] || "";
 
+  const { date, startTime, endTime } = holidayData;
+  //  console.log(holidayData);
 
-   
- const { date, startTime, endTime } = holidayData;
-//  console.log(holidayData);
- 
-   
   return (
     <Box>
       <SectionHeader title="Holiday" />
@@ -28,39 +24,41 @@ function Holiday({ holidayData, setHolidayData,holidayErrors }) {
         <DesktopDatePicker
           minDate={dayjs().startOf("day")}
           label="Select Date"
-           value={date}
-             onChange={(val) =>
-            setHolidayData((prev) => ({ ...prev, date: val }))
-          }
+          value={date}
+          onChange={(val) => {
+            setHolidayData((prev) => ({ ...prev, date: val }));
+            clearError("holidayDate"); // 🧹 Clear instantly
+          }}
           slotProps={{
             textField: {
+              size: "small",
               fullWidth: true,
-                error: Boolean(getHolidayError("holidayDate")),
-      helperText: getHolidayError("holidayDate"),
-             
+              error: Boolean(getHolidayError("holidayDate")),
+              helperText: getHolidayError("holidayDate"),
+
               margin: "normal",
-              // sx: {
-              //   mt: 1,
-              //   "& .MuiOutlinedInput-root": {
-              //     borderRadius: 2.5,
-              //     boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
-              //     "&:hover fieldset": {
-              //       borderColor: "#1976d2",
-              //     },
-              //     "&.Mui-focused fieldset": {
-              //       borderColor: "#1976d2",
-              //       borderWidth: 2,
-              //     },
-              //   },
-              //   "& .MuiInputLabel-root.Mui-focused": {
-              //     color: "#1976d2",
-              //   },
-              //   ".MuiPickersInputBase-root": {
-              //     boxShadow:
-              //       "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
-              //     borderRadius: 3,
-              //   },
-              // },
+              sx: {
+                mt: 1,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2.5,
+                  boxShadow: "0 2px 8px rgba(25, 118, 210, 0.12)",
+                  "&:hover fieldset": {
+                    borderColor: "#1976d2",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#1976d2",
+                    borderWidth: 2,
+                  },
+                },
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "#1976d2",
+                },
+                ".MuiPickersInputBase-root": {
+                  boxShadow:
+                    "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -2px 8px #fff",
+                  borderRadius: 3,
+                },
+              },
             },
           }}
         />
@@ -136,17 +134,18 @@ function Holiday({ holidayData, setHolidayData,holidayErrors }) {
           /> */}
 
           <TimePickerPair
-          startValue={startTime}
+            startValue={startTime}
             endValue={endTime}
-            onStartChange={(val) =>
-              setHolidayData((prev) => ({ ...prev, startTime: val }))
-            }
-            onEndChange={(val) =>
-              setHolidayData((prev) => ({ ...prev, endTime: val }))
-            }
-
+            onStartChange={(val) => {
+              setHolidayData((prev) => ({ ...prev, startTime: val }));
+              clearError("holidayStartTime"); // 🧹 clear start error
+            }}
+            onEndChange={(val) => {
+              setHolidayData((prev) => ({ ...prev, endTime: val }));
+              clearError("holidayEndTime"); // 🧹 clear end error
+            }}
             startError={getHolidayError("holidayStartTime")}
-  endError={getHolidayError("holidayEndTime")}
+            endError={getHolidayError("holidayEndTime")}
           />
         </Box>
 

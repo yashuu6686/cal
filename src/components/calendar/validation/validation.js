@@ -3,108 +3,97 @@ import * as yup from "yup";
 
 // Working Plan Validation Schema
 export const workingPlanSchema = yup.object().shape({
-  weekSchedule: yup
-    .mixed()
+  weekSchedule: yup.mixed().test("validate-slots", function (weekSchedule) {
+    if (!weekSchedule || !Array.isArray(weekSchedule)) return true;
 
-    .test("validate-slots", function (weekSchedule) {
-      if (!weekSchedule || !Array.isArray(weekSchedule)) return true;
+    for (let dayIndex = 0; dayIndex < weekSchedule.length; dayIndex++) {
+      const dayData = weekSchedule[dayIndex];
+      if (!dayData?.slots) continue;
 
-      const { selectedServices } = this.options.context || {};
+      for (let slotIndex = 0; slotIndex < dayData.slots.length; slotIndex++) {
+        const slot = dayData.slots[slotIndex];
 
-      for (let dayIndex = 0; dayIndex < weekSchedule.length; dayIndex++) {
-        const dayData = weekSchedule[dayIndex];
-        if (!dayData?.slots) continue;
+        // Validate service type
+        if (!slot.serviceType) {
+          return this.createError({
+            path: `weekSchedule[${dayIndex}].slots[${slotIndex}].serviceType`,
+            message: "Service type is required",
+          });
+        }
 
-        for (let slotIndex = 0; slotIndex < dayData.slots.length; slotIndex++) {
-          const slot = dayData.slots[slotIndex];
+        // Validate start time
+        if (!slot.start) {
+          return this.createError({
+            path: `weekSchedule[${dayIndex}].slots[${slotIndex}].start`,
+            message: "Start time is required",
+          });
+        }
 
-          // Validate service type
-          if (!slot.serviceType) {
-            return this.createError({
-              path: `weekSchedule[${dayIndex}].slots[${slotIndex}].serviceType`,
-              message: "Service type is required",
-            });
-          }
+        // Validate end time
+        if (!slot.end) {
+          return this.createError({
+            path: `weekSchedule[${dayIndex}].slots[${slotIndex}].end`,
+            message: "End time is required",
+          });
+        }
 
-          // Validate start time
-          if (!slot.start) {
-            return this.createError({
-              path: `weekSchedule[${dayIndex}].slots[${slotIndex}].start`,
-              message: "Start time is required",
-            });
-          }
+        // Validate end after start
+        if (
+          slot.start &&
+          slot.end &&
+          !dayjs(slot.end).isAfter(dayjs(slot.start))
+        ) {
+          return this.createError({
+            path: `weekSchedule[${dayIndex}].slots[${slotIndex}].end`,
+            message: "End time must be after start time",
+          });
+        }
 
-          // Validate end time
-          if (!slot.end) {
+        //  FIXED: Validate minimum duration using serviceType.duration
+        if (slot.start && slot.end && slot.serviceType?.duration) {
+          const startTime = dayjs(slot.start);
+          const endTime = dayjs(slot.end);
+          const actualDuration = endTime.diff(startTime, "minute");
+
+          // Convert duration to number (in case it's string)
+          const requiredDuration = parseInt(slot.serviceType.duration);
+
+          if (actualDuration < requiredDuration) {
             return this.createError({
               path: `weekSchedule[${dayIndex}].slots[${slotIndex}].end`,
-              message: "End time is required",
+              message: `${slot.serviceType.name} requires at least ${requiredDuration} minutes`,
             });
           }
+        }
+      }
 
-          // Validate end after start
-          if (
-            slot.start &&
-            slot.end &&
-            !dayjs(slot.end).isAfter(dayjs(slot.start))
-          ) {
-            return this.createError({
-              path: `weekSchedule[${dayIndex}].slots[${slotIndex}].end`,
-              message: "End time must be after start time",
-            });
-          }
+      // Check overlaps within same day
+      if (dayData.slots.length > 1) {
+        for (let i = 0; i < dayData.slots.length; i++) {
+          for (let j = i + 1; j < dayData.slots.length; j++) {
+            const slot1 = dayData.slots[i];
+            const slot2 = dayData.slots[j];
 
-          // Validate minimum duration
-          if (slot.start && slot.end && slot.serviceType && selectedServices) {
-            const service = selectedServices.find(
-              (s) => s.type === slot.serviceType
-            );
+            if (slot1.start && slot1.end && slot2.start && slot2.end) {
+              const overlap =
+                dayjs(slot1.start).isBefore(dayjs(slot2.end)) &&
+                dayjs(slot1.end).isAfter(dayjs(slot2.start));
 
-            if (service) {
-              const duration = dayjs(slot.end).diff(
-                dayjs(slot.start),
-                "minute"
-              );
-              const required = parseInt(service.time);
-
-              if (duration < required) {
+              if (overlap) {
                 return this.createError({
-                  path: `weekSchedule[${dayIndex}].slots[${slotIndex}].end`,
-                  message: `Slot must be at least ${required} minutes`,
+                  path: `weekSchedule[${dayIndex}].slots[${i}].start`,
+                  message: "Time slots are already booked.",
                 });
               }
             }
           }
         }
-
-        // Check overlaps within same day
-        if (dayData.slots.length > 1) {
-          for (let i = 0; i < dayData.slots.length; i++) {
-            for (let j = i + 1; j < dayData.slots.length; j++) {
-              const slot1 = dayData.slots[i];
-              const slot2 = dayData.slots[j];
-
-              if (slot1.start && slot1.end && slot2.start && slot2.end) {
-                const overlap =
-                  dayjs(slot1.start).isBefore(dayjs(slot2.end)) &&
-                  dayjs(slot1.end).isAfter(dayjs(slot2.start));
-
-                if (overlap) {
-                  return this.createError({
-                    path: `weekSchedule[${dayIndex}].slots[${i}].start`,
-                    message: "Time slots are already booked.",
-                  });
-                }
-              }
-            }
-          }
-        }
       }
+    }
 
-      return true;
-    }),
+    return true;
+  }),
 });
-
 // Holiday Validation Schema
 
 export const holidayValidationSchema = (isPublishingOrUpdating = false) =>
@@ -294,6 +283,7 @@ export const addServiceSchema = yup.object().shape({
 });
 
 //  Step 2 Combined Validation Schema (Break + Holiday)
+//  Step 2 Combined Validation Schema (Break + Holiday)
 export const step2ValidationSchema = yup.object().shape({
   breakSelectedDays: yup
     .array()
@@ -350,21 +340,29 @@ export const step2ValidationSchema = yup.object().shape({
         const { startTime, breakSelectedDays } = this.parent;
         const { breaks, editIndex } = this.options.context || {};
 
-        if (!startTime || !endTime || !breakSelectedDays?.length) return true;
-        if (!breaks || breaks.length === 0) return true;
+        if (!startTime || !endTime || !breakSelectedDays?.length) {
+        
+          return true;
+        }
+
+        if (!breaks || breaks.length === 0) {
+        
+          return true;
+        }
 
         const newStartTime = dayjs(startTime).format("HH:mm");
         const newEndTime = dayjs(endTime).format("HH:mm");
-
         const today = dayjs().format("YYYY-MM-DD");
+
         const breakStart = dayjs(
           `${today} ${newStartTime}`,
           "YYYY-MM-DD HH:mm"
         );
         const breakEnd = dayjs(`${today} ${newEndTime}`, "YYYY-MM-DD HH:mm");
 
-        const hasOverlap = breakSelectedDays.some((day) => {
+        const hasOverlap = breakSelectedDays.some((selectedDay) => {
           return breaks.some((existingBreak, index) => {
+            // Skip if editing same break
             if (
               editIndex !== null &&
               editIndex !== undefined &&
@@ -373,23 +371,37 @@ export const step2ValidationSchema = yup.object().shape({
               return false;
             }
 
-            if (!existingBreak.days.includes(day)) return false;
-            if (!existingBreak.startTime || !existingBreak.endTime)
+            // ✅ FIXED: Support both "days" array and "day" string
+            const breakDays = existingBreak.days || [existingBreak.day];
+
+            if (!breakDays.includes(selectedDay)) {
               return false;
+            }
+
+            // ✅ FIXED: Support both formats
+            const existingStartTime =
+              existingBreak.startTime || existingBreak.breakStartTime;
+            const existingEndTime =
+              existingBreak.endTime || existingBreak.breakEndTime;
+
+            if (!existingStartTime || !existingEndTime) {
+              return false;
+            }
 
             const existingStart = dayjs(
-              `${today} ${existingBreak.startTime}`,
+              `${today} ${existingStartTime}`,
               "YYYY-MM-DD HH:mm"
             );
             const existingEnd = dayjs(
-              `${today} ${existingBreak.endTime}`,
+              `${today} ${existingEndTime}`,
               "YYYY-MM-DD HH:mm"
             );
 
-            return (
+            const isOverlapping =
               breakStart.isBefore(existingEnd) &&
-              breakEnd.isAfter(existingStart)
-            );
+              breakEnd.isAfter(existingStart);
+
+            return isOverlapping;
           });
         });
 
@@ -402,7 +414,7 @@ export const step2ValidationSchema = yup.object().shape({
     .mixed()
     .nullable()
     .test("is-valid-date", "Please select a valid date", function (value) {
-      if (!value) return true; // allow empty
+      if (!value) return true;
       return dayjs(value).isValid();
     }),
 
@@ -444,7 +456,6 @@ export const step2ValidationSchema = yup.object().shape({
       "Both start and end time must be provided or left empty",
       function (value) {
         const { holidayStartTime, holidayDate } = this.parent;
-        // When date selected but one time missing → invalid
         if (holidayDate && (!holidayStartTime || !value)) return false;
         return true;
       }
@@ -501,4 +512,19 @@ export const step2ValidationSchema = yup.object().shape({
         return !hasOverlap;
       }
     ),
+});
+export const advanceBookingSchema = yup.object().shape({
+  advanceBookingDays: yup
+    .number()
+    .typeError("Please enter a valid number")
+    .required("Advance booking days is required")
+    .min(1, "Minimum 1 day required")
+    .max(100, "Maximum limit is 100 days"),
+
+  checkInTime: yup
+    .number()
+    .typeError("Please enter a valid number")
+    .required("Check-in time is required")
+    .min(1, "Minimum check-in time is 1 minute")
+    .max(100, "Maximum allowed is 100 minutes"),
 });

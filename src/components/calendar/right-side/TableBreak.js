@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -15,63 +15,11 @@ import {
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import * as yup from "yup";
 
 import { TableActionButtons } from "@/components/TableActionButtons";
 import { useSelector, useDispatch } from "react-redux";
-import { updateBreak } from "@/redux/store/slices/calendarSlice";
-
-// ----------------------------------------
-// VALIDATION SCHEMA
-// ----------------------------------------
-const breakValidationSchema = yup.object().shape({
-  startTime: yup.mixed().required("Break start time is required"),
-  endTime: yup
-    .mixed()
-    .required("Break end time is required")
-    .test("is-after", "End time must be after start time", function (value) {
-      const { startTime } = this.parent;
-      return value && startTime
-        ? dayjs(value).isAfter(dayjs(startTime))
-        : true;
-    })
-    .test(
-      "no-overlap",
-      "This time slot overlaps with existing break.",
-      function (endTime) {
-        const { startTime } = this.parent;
-        const { breaks, currentDay, editIndex } = this.options.context;
-
-        if (!startTime || !endTime) return true;
-
-        const newStart = dayjs(startTime).format("HH:mm");
-        const newEnd = dayjs(endTime).format("HH:mm");
-
-        const today = dayjs().format("YYYY-MM-DD");
-
-        const breakStart = dayjs(`${today} ${newStart}`, "YYYY-MM-DD HH:mm");
-        const breakEnd = dayjs(`${today} ${newEnd}`, "YYYY-MM-DD HH:mm");
-
-        return !breaks.some((b, i) => {
-          if (i === editIndex) return false; // skip self while editing
-          if (b.day !== currentDay) return false;
-
-          const existingStart = dayjs(
-            `${today} ${b.breakStartTime}`,
-            "YYYY-MM-DD HH:mm"
-          );
-          const existingEnd = dayjs(
-            `${today} ${b.breakEndTime}`,
-            "YYYY-MM-DD HH:mm"
-          );
-
-          return (
-            breakStart.isBefore(existingEnd) && breakEnd.isAfter(existingStart)
-          );
-        });
-      }
-    ),
-});
+import { deleteBreak, updateBreak } from "@/redux/store/slices/calendarSlice";
+import { breakValidationSchema } from "../validation/validation";
 
 export default function BreakTable() {
   const dispatch = useDispatch();
@@ -87,34 +35,30 @@ export default function BreakTable() {
   });
   const [fieldErrors, setFieldErrors] = useState({});
 
-  // -------------------------------
-  // START EDIT
-  // -------------------------------
   const handleStartInlineEdit = (rowId, item) => {
     setEditingBreakIndex(rowId);
 
+    const startTimeObj = item.breakStartTime
+      ? dayjs(item.breakStartTime, "HH:mm")
+      : null;
+    const endTimeObj = item.breakEndTime
+      ? dayjs(item.breakEndTime, "HH:mm")
+      : null;
+
     setEditBreakData({
-      startTime: item.breakStartTime
-        ? dayjs(item.breakStartTime, "HH:mm")
-        : null,
-      endTime: item.breakEndTime ? dayjs(item.breakEndTime, "HH:mm") : null,
+      startTime: startTimeObj,
+      endTime: endTimeObj,
     });
 
     setFieldErrors({});
   };
 
-  // -------------------------------
-  // CANCEL EDIT
-  // -------------------------------
   const handleCancelInlineEdit = () => {
     setEditingBreakIndex(null);
     setEditBreakData({ startTime: null, endTime: null });
     setFieldErrors({});
   };
 
-  // -------------------------------
-  // SAVE INLINE EDIT
-  // -------------------------------
   const handleSaveInlineEdit = async (breakIndex, dayIndex, day) => {
     try {
       // Validate using Yup Schema
@@ -127,34 +71,37 @@ export default function BreakTable() {
         },
       });
 
-      // If valid -> update redux
+      const startTimeFormatted = editBreakData.startTime.format("HH:mm");
+      const endTimeFormatted = editBreakData.endTime.format("HH:mm");
+
       dispatch(
         updateBreak({
           breakIndex,
           dayIndex,
-          startTime: editBreakData.startTime.format("HH:mm"),
-          endTime: editBreakData.endTime.format("HH:mm"),
+          startTime: startTimeFormatted,
+          endTime: endTimeFormatted,
         })
       );
 
       handleCancelInlineEdit();
     } catch (err) {
+      console.error(" Validation Failed:", err);
       let errors = {};
       if (err.inner) {
         err.inner.forEach((e) => {
           errors[e.path] = e.message;
         });
       }
+
       setFieldErrors(errors);
     }
   };
 
-  // -------------------------------
-  // DELETE BREAK
-  // -------------------------------
-  const handleDeleteDay = (breakIndex, dayIndex) => {
-    // console.log("Delete row:", breakIndex, dayIndex);
-  };
+  const handleDeleteBreak = (dayIndex, breakIndex) => {
+  
+    dispatch(deleteBreak({ dayIndex, breakIndex }));
+  
+};
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -178,7 +125,7 @@ export default function BreakTable() {
           <TableBody>
             {breaks.map((item) => {
               const rowId = `${item.breakIndex}-${item.dayIndex}`;
-
+              const isEditing = editingBreakIndex === rowId;
               return (
                 <TableRow key={rowId} sx={{ borderTop: "1px solid #e0e0e0" }}>
                   {/* Day */}
@@ -188,15 +135,16 @@ export default function BreakTable() {
 
                   {/* Start Time */}
                   <TableCell sx={cellStyle} align="center">
-                    {editingBreakIndex === rowId ? (
+                    {isEditing ? (
                       <TimePicker
                         value={editBreakData.startTime}
-                        onChange={(val) =>
-                          setEditBreakData({
-                            ...editBreakData,
+                        onChange={(val) => {
+                         
+                          setEditBreakData((prev) => ({
+                            ...prev,
                             startTime: val,
-                          })
-                        }
+                          }));
+                        }}
                         slotProps={{
                           textField: {
                             size: "small",
@@ -209,7 +157,9 @@ export default function BreakTable() {
                     ) : (
                       <Typography sx={textStyle}>
                         {item.breakStartTime
-                          ? dayjs(item.breakStartTime, "HH:mm").format("hh:mm A")
+                          ? dayjs(item.breakStartTime, "HH:mm").format(
+                              "hh:mm A"
+                            )
                           : "Not set"}
                       </Typography>
                     )}
@@ -217,15 +167,16 @@ export default function BreakTable() {
 
                   {/* End Time */}
                   <TableCell sx={cellStyle} align="center">
-                    {editingBreakIndex === rowId ? (
+                    {isEditing ? (
                       <TimePicker
                         value={editBreakData.endTime}
-                        onChange={(val) =>
-                          setEditBreakData({
-                            ...editBreakData,
+                        onChange={(val) => {
+                          
+                          setEditBreakData((prev) => ({
+                            ...prev,
                             endTime: val,
-                          })
-                        }
+                          }));
+                        }}
                         slotProps={{
                           textField: {
                             size: "small",
@@ -247,11 +198,9 @@ export default function BreakTable() {
                   {/* Actions */}
                   <TableCell align="center">
                     <TableActionButtons
-                      isEditing={editingBreakIndex === rowId}
+                      isEditing={isEditing}
                       onEdit={() => handleStartInlineEdit(rowId, item)}
-                      onDelete={() =>
-                        handleDeleteDay(item.breakIndex, item.dayIndex)
-                      }
+                      onDelete={() => handleDeleteBreak(item.dayIndex, item.breakIndex)} 
                       onSave={() =>
                         handleSaveInlineEdit(
                           item.breakIndex,
@@ -272,9 +221,6 @@ export default function BreakTable() {
   );
 }
 
-// -----------------------------------
-// STYLES
-// -----------------------------------
 const headStyle = {
   color: "#fff",
   fontWeight: 700,

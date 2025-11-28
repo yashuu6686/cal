@@ -56,13 +56,3 @@ export const TableActionButtons = ({
   );
 };
 
-// Usage in tables:
-// <TableCell align="center" sx={{ py: 1.5 }}>
-//   <TableActionButtons
-//     isEditing={editingIndex === index}
-//     onEdit={() => handleStartEdit(index, item)}
-//     onDelete={() => handleDelete(index)}
-//     onSave={handleSave}
-//     onCancel={handleCancel}
-//   />
-// </TableCell>

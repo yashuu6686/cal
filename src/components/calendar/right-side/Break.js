@@ -1,13 +1,7 @@
 "use client";
 import SectionHeader from "@/components/SectionHeader";
 import { TimePickerPair } from "@/components/timePickerUtils";
-import {
-  Box,
-  TextField,
-  Checkbox,
-  Autocomplete,
-  Chip,
-} from "@mui/material";
+import { Box, TextField, Checkbox, Autocomplete, Chip } from "@mui/material";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import React from "react";
@@ -22,13 +16,15 @@ const days = [
   "Sunday",
 ];
 
-function Break({ setBreakData, breakData, breakErrors }) {
+function Break({ setBreakData, breakData, breakErrors, clearError }) {
   const { selectedDays, breakStartTime, breakEndTime } = breakData;
 
   const getBreakError = (field) =>
     breakErrors?.[`breakSelectedDays`] || breakErrors?.[field] || "";
 
   const allSelected = selectedDays.length === days.length;
+
+  
 
   // console.log(breakData);
 
@@ -44,6 +40,7 @@ function Break({ setBreakData, breakData, breakErrors }) {
         selectedDays: newValue,
       }));
     }
+     clearError("breakSelectedDays");
   };
 
   return (
@@ -94,6 +91,7 @@ function Break({ setBreakData, breakData, breakErrors }) {
           renderInput={(params) => (
             <TextField
               {...params}
+              size="small"
               label="Select Days"
               fullWidth
               error={Boolean(getBreakError("breakSelectedDays"))}
@@ -228,12 +226,14 @@ function Break({ setBreakData, breakData, breakErrors }) {
             <TimePickerPair
               startValue={breakStartTime}
               endValue={breakEndTime}
-              onStartChange={(val) =>
-                setBreakData((prev) => ({ ...prev, breakStartTime: val }))
-              }
-              onEndChange={(val) =>
-                setBreakData((prev) => ({ ...prev, breakEndTime: val }))
-              }
+              onStartChange={(val) => {
+                setBreakData((prev) => ({ ...prev, breakStartTime: val }));
+                clearError("startTime");
+              }}
+              onEndChange={(val) => {
+                setBreakData((prev) => ({ ...prev, breakEndTime: val }));
+                clearError("endTime");
+              }}
               startError={getBreakError("startTime")}
               endError={getBreakError("endTime")}
             />

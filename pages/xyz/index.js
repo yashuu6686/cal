@@ -14,29 +14,33 @@ import HolidayDialog from "@/components/calendar/dialogs/HolidayDialog";
 import CustomToolbar from "@/components/calendar/right-side/CustomToolbar";
 
 import {
+  selectIsFieldsDisabled,
   setOpenDialog,
   setOpenHolidayDialog,
 } from "@/redux/store/slices/calendarSlice";
 import { calendarStyles } from "@/components/calendar/styles/calendarStyles";
 
+
 const localizer = momentLocalizer(moment);
 
 export default function CalendarMerge() {
+
+   const isFieldsDisabled = useSelector(selectIsFieldsDisabled);
+
+
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // ===== REDUX STATE =====
   const events = useSelector((state) => state.calendar.events);
   const isCalendarPublished = useSelector(
     (state) => state.calendar.isCalendarPublished
   );
   const isEditMode = useSelector((state) => state.calendar.isEditMode);
 
-  // ===== LOCAL STATE =====
   const [open, setOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // ===== EVENT HANDLERS =====
+
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setOpen(true);
@@ -55,12 +59,7 @@ export default function CalendarMerge() {
     dispatch(setOpenHolidayDialog(true));
   };
 
-  const handleCloseHolidayDialog = () => {
-    dispatch(setOpenHolidayDialog(false));
-  };
 
-  // ===== COMPUTED VALUES =====
-  const isFieldsDisabled = isCalendarPublished && !isEditMode;
 
   const eventStyleGetter = () => ({
     style: {
@@ -90,12 +89,12 @@ export default function CalendarMerge() {
     >
       <Grid container spacing={{ xs: 0.5, sm: 1 }}>
         {/* Left Sidebar */}
-        <Grid size={{ xs: 12, sm: 12, md: 4.5, lg: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 4.5, lg: 2.9 }}>
           <LeftSide />
         </Grid>
 
         {/* Main Calendar */}
-        <Grid size={{ xs: 12, sm: 12, md: 7.5, lg: 9 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 7.5, lg: 9.1 }}>
           <Paper 
             elevation={2} 
             sx={{
@@ -117,7 +116,7 @@ export default function CalendarMerge() {
                 // height: 'calc(100vh - 100px)',
                 // minHeight: '500px',
                 // width: '100vh',
-                height:"109vh"
+                height:"95.4vh"
               }}
               eventPropGetter={eventStyleGetter}
               components={{
