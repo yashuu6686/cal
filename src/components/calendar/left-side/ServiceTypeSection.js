@@ -157,7 +157,7 @@ const ServiceTypeSection = ({
         }
       />
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.9, }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "2px", }}>
         {services.map((item) => {
           const isActive = selectedServices.includes(item._id);
           const serviceImage = getServiceImage(item.name);

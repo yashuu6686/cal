@@ -16,8 +16,8 @@ export default function CommonDialogBox({
   message = "Are you sure you want to continue?",
   confirmText = "Confirm",
   cancelText = "Cancel",
-  confirmColor = "primary", // primary | error | success | warning | info
-  hideCancel = false, // New prop to hide cancel button
+  confirmColor = "primary", 
+  hideCancel = false, 
 }) {
   return (
     <Dialog
@@ -80,7 +80,7 @@ export default function CommonDialogBox({
           sx={{
             textTransform: "none",
             borderRadius: "8px",
-            fontWeight: 600,
+            fontWeight: 400,
             // px: 3,
           }}
         >

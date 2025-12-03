@@ -110,6 +110,7 @@ const initialState = {
   data: null,
   result: null,
   selectedServices: [],
+
   loading: false,
   error: null,
 
@@ -253,17 +254,27 @@ const calendarScheduleSlice = createSlice({
     },
 
     deleteSlot(state, action) {
-  const { dayIndex, slotIndex } = action.payload;
+      const { dayIndex, slotIndex, slotId } = action.payload;
 
-  if (!state.calendar?.availability?.[dayIndex]?.services?.[slotIndex]) return;
+     
+      const slot = state.calendar?.availability?.[dayIndex]?.services?.[slotIndex];
+      
+   
+      const idToDelete = slotId || slot?._id;
+      
+      if (!idToDelete) {
+        console.warn('⚠️ deleteSlot: No slot ID found for deletion');
+        return;
+      }
 
-  // Remove from calendar main structure
-  state.calendar.availability[dayIndex].services.splice(slotIndex, 1);
+  
+      if (state.calendar?.availability?.[dayIndex]?.services) {
+        state.calendar.availability[dayIndex].services.splice(slotIndex, 1);
+      }
 
-  // Re-sync events from updated data (optional)
-  state.events = [];
-},
-
+      
+      state.events = state.events.filter((ev) => ev.serviceId !== idToDelete);
+    },
 
     updateEvents: (state, action) => {
       state.events = action.payload;
@@ -307,9 +318,8 @@ const calendarScheduleSlice = createSlice({
         state.loading = false;
         state.calendar = action.payload;
         state.holidays = action.payload?.holidays || [];
-         state.isCalendarPublished = !!action.payload?._id;
+        state.isCalendarPublished = !!action.payload?._id;
 
-        // Breaks mapping (existing code)
         state.breaks =
           action.payload?.availability?.flatMap((dayItem, dayIndex) =>
             dayItem.breaks.map((b, breakIndex) => ({
@@ -320,13 +330,12 @@ const calendarScheduleSlice = createSlice({
             }))
           ) || [];
 
-        // ⭐ NEW: weekSchedule ko API data se populate karein
         if (action.payload?.availability) {
           state.weekSchedule = action.payload.availability.map((dayItem) => ({
             day: dayItem.day,
             slots: dayItem.services.map((service) => ({
               id: nanoid(),
-              start: dayjs(`2000-01-01 ${service.startTime}`), // dayjs object
+              start: dayjs(`2000-01-01 ${service.startTime}`), 
               end: dayjs(`2000-01-01 ${service.endTime}`),
               serviceType: service.name,
               speciality: ["General"],
@@ -353,7 +362,6 @@ const calendarScheduleSlice = createSlice({
         }
         state.selectedServices = Array.from(activeServiceIds);
 
-        // ⭐ NEW: Events bhi update karein taaki calendar mein show ho
         const newEvents = [];
         state.weekSchedule.forEach((item) => {
           const dayNum = dayToNumber[item.day];
@@ -366,6 +374,7 @@ const calendarScheduleSlice = createSlice({
 
             newEvents.push({
               // id: slot.id,
+
               serviceId: slot._id,
               title: `${slot.serviceType} ${specialitiesText}`,
               start: slot.start
@@ -411,12 +420,10 @@ const calendarScheduleSlice = createSlice({
         state.loading = false;
         state.data = action.payload;
         state.isCalendarPublished = true;
-
       })
       .addCase(createDoctorCalendar.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-       
       })
 
       .addCase(updateDoctorCalendar.pending, (state) => {
@@ -429,7 +436,7 @@ const calendarScheduleSlice = createSlice({
         state.result = action.payload;
         state.success = true;
         state.isCalendarPublished = true;
-          state.isEditMode = false;
+        state.isEditMode = false;
 
         if (action.payload?.data) {
           state.calendar = {
@@ -479,10 +486,8 @@ export const selectSelectedServices = (state) =>
 export const selectLoading = (state) => state.calendar.loading;
 export const selectError = (state) => state.calendar.error;
 
-
 export const selectIsFieldsDisabled = (state) =>
   state.calendar.isCalendarPublished && !state.calendar.isEditMode;
-
 
 export const selectServiceTypesForDropdown = createSelector(
   [

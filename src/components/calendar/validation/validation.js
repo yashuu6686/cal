@@ -67,7 +67,6 @@ export const workingPlanSchema = yup.object().shape({
         }
       }
 
-      // Check overlaps within same day
       if (dayData.slots.length > 1) {
         for (let i = 0; i < dayData.slots.length; i++) {
           for (let j = i + 1; j < dayData.slots.length; j++) {
@@ -81,7 +80,7 @@ export const workingPlanSchema = yup.object().shape({
 
               if (overlap) {
                 return this.createError({
-                  path: `weekSchedule[${dayIndex}].slots[${i}].start`,
+                  path: `weekSchedule[${dayIndex}].slots[${j}].start`,
                   message: "Time slots are already booked.",
                 });
               }
@@ -341,12 +340,10 @@ export const step2ValidationSchema = yup.object().shape({
         const { breaks, editIndex } = this.options.context || {};
 
         if (!startTime || !endTime || !breakSelectedDays?.length) {
-        
           return true;
         }
 
         if (!breaks || breaks.length === 0) {
-        
           return true;
         }
 
@@ -519,12 +516,12 @@ export const advanceBookingSchema = yup.object().shape({
     .typeError("Please enter a valid number")
     .required("Advance booking days is required")
     .min(1, "Minimum 1 day required")
-    .max(100, "Maximum limit is 100 days"),
+    .max(99, "Maximum limit is 100 days"),
 
   checkInTime: yup
     .number()
     .typeError("Please enter a valid number")
     .required("Check-in time is required")
     .min(1, "Minimum check-in time is 1 minute")
-    .max(100, "Maximum allowed is 100 minutes"),
+    .max(99, "Maximum allowed is 100 minutes"),
 });

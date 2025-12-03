@@ -24,8 +24,6 @@ function Break({ setBreakData, breakData, breakErrors, clearError }) {
 
   const allSelected = selectedDays.length === days.length;
 
-  
-
   // console.log(breakData);
 
   const handleSelectDays = (event, newValue) => {
@@ -40,16 +38,17 @@ function Break({ setBreakData, breakData, breakErrors, clearError }) {
         selectedDays: newValue,
       }));
     }
-     clearError("breakSelectedDays");
+    clearError("breakSelectedDays");
   };
 
   return (
-    <Box>
+    <Box sx={{ gap: 1 }}>
       <SectionHeader title="Break" />
 
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2, display: "flex", gap: 1 }}>
         <Autocomplete
           sx={{
+            //  width: "280px",
             mb: 2,
             cursor: "pointer",
             ".MuiAutocomplete-inputRoot": {
@@ -96,9 +95,6 @@ function Break({ setBreakData, breakData, breakErrors, clearError }) {
               fullWidth
               error={Boolean(getBreakError("breakSelectedDays"))}
               helperText={getBreakError("breakSelectedDays")}
-              // placeholder={
-              //   values.breakSelectedDays?.length === 0 ? "Select days" : ""
-              // }
               sx={{
                 cursor: "pointer",
                 "& .MuiOutlinedInput-root": {

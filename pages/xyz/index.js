@@ -89,12 +89,12 @@ export default function CalendarMerge() {
     >
       <Grid container spacing={{ xs: 0.5, sm: 1 }}>
         {/* Left Sidebar */}
-        <Grid size={{ xs: 12, sm: 12, md: 4.5, lg: 2.9 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 4.5, lg: 4.5 }}>
           <LeftSide />
         </Grid>
 
         {/* Main Calendar */}
-        <Grid size={{ xs: 12, sm: 12, md: 7.5, lg: 9.1 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 7.5, lg: 7.5 }}>
           <Paper 
             elevation={2} 
             sx={{

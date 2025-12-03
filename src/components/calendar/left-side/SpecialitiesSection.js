@@ -106,7 +106,7 @@ const SpecialitiesSection = ({
     <Box sx={{ mb: 2 }}>
       <SectionHeader title="Specialities" />
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap",  gap: "2px", }}>
         {specialties.map((item) => {
           const isActive = selectedSpecialties.includes(item._id);
           const serviceImage = getServiceImage(item.name);
@@ -119,6 +119,7 @@ const SpecialitiesSection = ({
               onClick={() => handleToggle(item._id)}
               selected={isActive}
               sx={{
+                 ml:"2px",
                 width: "105px",
                 height: "65px",
                 flexDirection: "column",
@@ -205,7 +206,7 @@ const SpecialitiesSection = ({
             onChange={(e) => {
               let value = Number(e.target.value);
 
-              if (value > 100) value = 100;
+              if (value > 99) value = 99;
 
               setAdvanceBooking((prev) => ({
                 ...prev,
@@ -228,7 +229,7 @@ const SpecialitiesSection = ({
             onChange={(e) => {
               let value = Number(e.target.value);
 
-              if (value > 100) value = 100; // 👈 limit
+              if (value > 99) value = 99; 
 
               setAdvanceBooking((prev) => ({ ...prev, checkInTime: value }));
             }}

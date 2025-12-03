@@ -25,6 +25,8 @@ import { buildCalendarPayload } from "../config/payload";
 import CommonDialogBox from "@/components/CommonDialogBox";
 import dayjs from "dayjs";
 
+import EditIcon from "@mui/icons-material/Edit";
+
 const days = [
   "Sunday",
   "Monday",
@@ -110,6 +112,7 @@ function LeftSide() {
 
       if (item.services && item.services.length > 0) {
         mappedSlots[dayName] = item.services.map((srv) => ({
+          _id: srv._id,
           serviceType: {
             id: srv._id || srv.id,
             name: srv.name,
@@ -387,7 +390,7 @@ function LeftSide() {
                   onClick={handleEdit}
                   sx={{ backgroundColor: "white", textTransform: "none" }}
                 >
-                  Edit
+                  {/* Edit */} <EditIcon />
                 </Button>
               )}
             </Box>

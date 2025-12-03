@@ -71,7 +71,7 @@ function Preview() {
     style: {
       backgroundColor: "#e3f2fd",
       border: "2px solid #1976d2",
-      borderRadius: "12px",
+      borderRadius: "10px",
       color: "#000",
       boxShadow: "0 4px 12px rgba(25, 118, 210, 0.2)",
       display: "flex",

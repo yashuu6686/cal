@@ -17,21 +17,28 @@ export const CommonTimePicker = ({
       label={label}
       value={value}
       sx={{
+        flex: 1,
+    minWidth: 0,
         borderRadius: "15px",
         background: "transparint",
         transition: "0.25s",
-        
+        // width:"155px",
         ".MuiPickersOutlinedInput-root": {
+                height: 40,                         
           boxShadow:
             "inset 4px 2px 8px rgba(95, 157, 231, .48), inset -4px -100px 8px #fff",
           borderRadius: "15px",
         },
+        ".MuiIconButton-root":{
+          padding:"3px"
+        }
         
       }}
       onChange={onChange}
       slotProps={{
         textField: {
-          fullWidth,
+      
+          // fullWidth,
           size,
           error: Boolean(error),
           helperText: error || helperText,
